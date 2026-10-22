@@ -1,0 +1,175 @@
+// LabelLoom project schema. All lengths are millimetres unless noted.
+export const SCHEMA_VERSION = 1;
+
+export type ObjType = 'text' | 'rect' | 'ellipse' | 'triangle' | 'line' | 'barcode' | 'qr' | 'image' | 'svg';
+
+export interface GradientStop { offset: number; color: string }
+export type Fill =
+  | { type: 'none' }
+  | { type: 'solid'; color: string }
+  | { type: 'linear'; angle: number; stops: GradientStop[] }
+  | { type: 'radial'; stops: GradientStop[] };
+
+export interface Shadow { dx: number; dy: number; blur: number; color: string; opacity: number }
+export interface Outline { width: number; color: string; double: boolean; width2: number; color2: string }
+export interface Effects { shadow?: Shadow; outline?: Outline }
+
+export type RuleOp = 'eq' | 'neq' | 'contains' | 'empty' | 'notEmpty' | 'hangul' | 'latin' | 'longer';
+
+export interface StyleRule {
+  /** column to test; empty string = this object's own resolved content */
+  column: string;
+  op: RuleOp;
+  value: string;
+  set: {
+    hidden?: boolean;
+    color?: string; // text color / barcode color / shape fill
+    stroke?: string;
+    fontSize?: number;
+    text?: string;
+  };
+}
+
+interface Base {
+  id: string;
+  type: ObjType;
+  name: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  rotation: number; // degrees, around box centre
+  opacity: number;
+  locked: boolean;
+  hidden: boolean;
+  groupId?: string;
+  rules: StyleRule[];
+  hideIfEmpty: boolean;
+}
+
+export type TextFit = 'none' | 'shrink' | 'stretch';
+
+export interface TextObj extends Base {
+  type: 'text';
+  content: string; // template, e.g. "{{이름}}"
+  fontFamily: string;
+  fontSize: number; // pt
+  minFontSize: number; // pt, for shrink
+  bold: boolean;
+  italic: boolean;
+  underline: boolean;
+  align: 'left' | 'center' | 'right';
+  vAlign: 'top' | 'middle' | 'bottom';
+  multiline: boolean;
+  fit: TextFit;
+  letterSpacing: number; // mm
+  lineHeight: number; // multiple of font size
+  ellipsis: boolean;
+  fill: Fill;
+  effects: Effects;
+}
+
+export interface ShapeObj extends Base {
+  type: 'rect' | 'ellipse' | 'triangle' | 'line';
+  fill: Fill;
+  stroke: string;
+  strokeWidth: number;
+  cornerRadius: number;
+  dash: boolean;
+  effects: Effects;
+}
+
+export interface BarcodeObj extends Base {
+  type: 'barcode';
+  content: string;
+  symbology: string; // bwip-js bcid
+  showText: boolean;
+  textSize: number; // pt
+  color: string;
+  background: string; // '' = transparent
+  keepAspect: boolean;
+}
+
+export interface QrObj extends Base {
+  type: 'qr';
+  content: string;
+  symbology: 'qrcode' | 'datamatrix' | 'gs1datamatrix' | 'azteccode' | 'pdf417' | 'maxicode' | 'gs1qrcode';
+  errorLevel: 'L' | 'M' | 'Q' | 'H';
+  quietZone: number; // modules
+  color: string;
+  background: string;
+  logo?: string; // data url
+  logoScale: number; // 0..0.35 of box
+}
+
+export interface ImageObj extends Base {
+  type: 'image';
+  src: string; // data url
+  fit: 'contain' | 'cover' | 'stretch';
+}
+
+export interface SvgObj extends Base {
+  type: 'svg';
+  svg: string; // raw svg markup
+  fit: 'contain' | 'stretch';
+}
+
+export type LabelObject = TextObj | ShapeObj | BarcodeObj | QrObj | ImageObj | SvgObj;
+
+export interface Design {
+  id: string;
+  name: string;
+  objects: LabelObject[];
+  /** back side, used for duplex printing */
+  back?: LabelObject[];
+}
+
+export interface DesignRule { column: string; op: RuleOp; value: string; designId: string }
+
+export interface Paper {
+  name: string;
+  width: number;
+  height: number;
+  labelWidth: number;
+  labelHeight: number;
+  cornerRadius: number;
+  cols: number;
+  rows: number;
+  marginLeft: number;
+  marginTop: number;
+  gapX: number;
+  gapY: number;
+  /** safe-area inset shown as a guide inside each label */
+  safeMargin: number;
+  bleed: number;
+  dpi: number;
+  background?: { src: string; fit: 'contain' | 'cover' | 'stretch'; opacity: number; print: boolean };
+  labelColor: string;
+}
+
+export interface Calibration { offsetX: number; offsetY: number; scaleX: number; scaleY: number }
+
+export interface Row {
+  id: string;
+  print: boolean;
+  copies: number;
+  printed?: string; // ISO timestamp of last output
+  values: Record<string, string>;
+}
+
+export interface DataTable { columns: string[]; rows: Row[] }
+
+export interface EmbeddedFont { family: string; data: string /* base64 */; format: 'truetype' | 'opentype' | 'woff' | 'woff2' }
+
+export interface Project {
+  app: 'labelloom';
+  version: number;
+  name: string;
+  paper: Paper;
+  designs: Design[];
+  designRules: DesignRule[];
+  fonts: EmbeddedFont[];
+  data: DataTable;
+  calibration: Calibration;
+  seqStart: number;
+}
