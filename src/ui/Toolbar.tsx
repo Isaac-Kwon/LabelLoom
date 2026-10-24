@@ -47,6 +47,7 @@ export function Toolbar({ onOpen, onSave }: { onOpen: () => void; onSave: (saveA
           <button onClick={() => s.open('calibration')}>프린터 정렬 보정…</button>
           <hr />
           <button onClick={() => s.open('shortcuts')}>단축키 <kbd>?</kbd></button>
+          <button onClick={() => s.open('about')}>프로그램 정보…</button>
         </div>
       </div>
       <input className="project-name" value={project.name} title={fileName || '저장되지 않음'}

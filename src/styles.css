@@ -288,6 +288,12 @@ div.card { border: 1px solid var(--border-strong); background: var(--panel); cur
 .keys { border-collapse: collapse; width: 100%; }
 .keys td { padding: 4px 6px; border-bottom: 1px solid var(--border); vertical-align: top; }
 .keys td:first-child { white-space: nowrap; }
+.about-head { margin-bottom: 12px; }
+.about-head h3 { margin: 0; font-size: 18px; }
+.about-text { white-space: pre-line; margin: 8px 0 12px; line-height: 1.6; }
+.about h4 { margin: 16px 0 6px; font-size: 13px; }
+.about .row-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+.license-text { max-height: 320px; overflow: auto; margin: 8px 0 0; padding: 8px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 6px; font-size: 11px; line-height: 1.45; white-space: pre-wrap; }
 
 .update-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 6px 12px; background: var(--accent-soft); border-bottom: 1px solid var(--border); flex: none; }
 .update-bar .err { color: var(--warn-text); }
@@ -338,6 +344,7 @@ div.card { border: 1px solid var(--border-strong); background: var(--panel); cur
 }
 
 @media screen { #print-root { display: none; } }
+
 /* inline content editor on the canvas */
 .inline-editor { position: absolute; z-index: 5; width: 280px; display: grid; gap: 6px; padding: 8px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18); font-size: 12px; }
 .inline-editor .ie-head { display: flex; justify-content: space-between; font-weight: 600; }

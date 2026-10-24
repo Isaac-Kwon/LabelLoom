@@ -1,5 +1,8 @@
 import bwipjs from 'bwip-js/browser';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import ABOUT from '../about.json';
+import { OWN_LICENSE, THIRD_PARTY_LICENSES } from 'virtual:licenses';
+import { BUILD_DATE, BUILD_DETAIL, VERSION } from '../build';
 import { printPages } from '../io/export';
 import { fontFromFile, localFontsSupported, queryLocalFonts, registerFonts } from '../io/fonts';
 import { loadRecent, openProjectFile, pickFile, type RecentEntry } from '../io/project';
@@ -391,6 +394,52 @@ export function ShortcutsDialog() {
   return (
     <Modal title="단축키" onClose={close}>
       <table className="keys"><tbody>{KEYS.map(([k, v]) => <tr key={k}><td><kbd>{k}</kbd></td><td>{v}</td></tr>)}</tbody></table>
+    </Modal>
+  );
+}
+
+/* ---------- about (content lives in src/about.json) ---------- */
+
+const linked = (text: string, url?: string): ReactNode =>
+  url ? <a href={url} target="_blank" rel="noreferrer">{text}</a> : text;
+
+export function AboutDialog() {
+  const { close } = useStore.getState();
+  const info = [
+    ...ABOUT.info.filter((r) => r.value),
+    { label: '버전', value: `v${VERSION}`, url: '' },
+    { label: '빌드', value: BUILD_DATE, url: '' },
+  ];
+  const credits = ABOUT.credits.filter((c) => c.name);
+  const [text, setText] = useState<'own' | 'third' | null>(null);
+  const toggle = (t: 'own' | 'third') => setText(text === t ? null : t);
+  return (
+    <Modal title="프로그램 정보" onClose={close}>
+      <div className="about">
+        <div className="about-head">
+          <h3>{ABOUT.name}</h3>
+          {ABOUT.subtitle && <div className="muted">{ABOUT.subtitle}</div>}
+        </div>
+        {ABOUT.description && <p className="about-text">{ABOUT.description}</p>}
+        <table className="keys"><tbody>
+          {info.map((r) => (
+            <tr key={r.label}><td className="muted">{r.label}</td><td title={r.label === '빌드' ? BUILD_DETAIL : undefined}>{linked(r.value, r.url)}</td></tr>
+          ))}
+        </tbody></table>
+        {ABOUT.notice && <p className="about-text">{ABOUT.notice}</p>}
+        {credits.length > 0 && <>
+          <h4>사용한 오픈소스</h4>
+          <table className="keys small"><tbody>
+            {credits.map((c) => <tr key={c.name}><td>{linked(c.name, c.url)}</td><td className="muted">{c.license}</td></tr>)}
+          </tbody></table>
+        </>}
+        {ABOUT.copyright && <p className="muted small">{ABOUT.copyright}</p>}
+        <div className="row-btns">
+          <button className={text === 'own' ? 'on' : ''} onClick={() => toggle('own')}>LabelLoom 라이선스 전문</button>
+          <button className={text === 'third' ? 'on' : ''} onClick={() => toggle('third')}>오픈소스 라이선스 전문</button>
+        </div>
+        {text && <pre className="license-text">{text === 'own' ? OWN_LICENSE : THIRD_PARTY_LICENSES}</pre>}
+      </div>
     </Modal>
   );
 }

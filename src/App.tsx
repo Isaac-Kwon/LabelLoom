@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { version } from '../package.json';
+import { BUILD_DETAIL, BUILD_LABEL } from './build';
 import { registerFonts } from './io/fonts';
 import { forgetFileHandle, loadAutosave, openProjectFile, parseProject, pushRecent, saveAutosave, saveProjectFile } from './io/project';
 import { decodeShare, readShareHash } from './io/share';
@@ -9,7 +9,7 @@ import { useStore } from './store';
 import { act } from './store';
 import { Canvas, isTyping } from './ui/Canvas';
 import { DataPanel } from './ui/DataPanel';
-import { CalibrationDialog, FontsDialog, ReprintDialog, SerialDialog, ShareDialog, ShortcutsDialog, StartDialog } from './ui/Dialogs';
+import { AboutDialog, CalibrationDialog, FontsDialog, ReprintDialog, SerialDialog, ShareDialog, ShortcutsDialog, StartDialog } from './ui/Dialogs';
 import { ExportDialog } from './ui/ExportDialog';
 import { ImportDialog } from './ui/ImportDialog';
 import { QuickDialog } from './ui/QuickPrint';
@@ -18,11 +18,6 @@ import { LeftPanel } from './ui/LeftPanel';
 import { loadMediaInto } from './ui/media';
 import { copy, duplicate, group, nudge, paste, reorder, selectAll, ungroup } from './ui/ops';
 import { CanvasBar, Toolbar } from './ui/Toolbar';
-
-const COMMIT = import.meta.env.VITE_COMMIT_SHA?.slice(0, 7);
-const BUILT = new Date(__BUILD_TIME__);
-const pad = (n: number) => String(n).padStart(2, '0');
-const BUILD_LABEL = `v${version} · ${COMMIT ?? 'dev'} · ${BUILT.getFullYear()}-${pad(BUILT.getMonth() + 1)}-${pad(BUILT.getDate())} ${pad(BUILT.getHours())}:${pad(BUILT.getMinutes())}`;
 
 const TOOL_KEYS: Record<string, Parameters<ReturnType<typeof useStore.getState>['setTool']>[0]> = {
   v: 'select', t: 'text', r: 'rect', o: 'ellipse', l: 'line', b: 'barcode', q: 'qr', i: 'image',
@@ -193,9 +188,10 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
       {dialog === 'calibration' && <CalibrationDialog />}
       {dialog === 'fonts' && <FontsDialog />}
       {dialog === 'shortcuts' && <ShortcutsDialog />}
+      {dialog === 'about' && <AboutDialog />}
       {dropping && <div className="drop-overlay">파일을 놓으세요 — .json 프로젝트 · xlsx/csv 데이터 · 이미지/SVG</div>}
       {toast && <div className="toast">{toast}</div>}
-      <div className="build-tag" title={[import.meta.env.VITE_COMMIT_SHA, __BUILD_TIME__].filter(Boolean).join(' · ')}>{BUILD_LABEL}</div>
+      <div className="build-tag" title={BUILD_DETAIL}>{BUILD_LABEL}</div>
     </div>
   );
 }

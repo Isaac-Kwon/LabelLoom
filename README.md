@@ -75,4 +75,4 @@ src/
 LabelLoom은 [GNU LGPL v3 이상](COPYING.LESSER)(LGPL-3.0-or-later)으로 배포합니다. LGPL v3는 GPL v3에 권한을 더하는 방식이라 [GPL v3 전문](COPYING)도 함께 둡니다.
 
 함께 묶이는 오픈소스 라이브러리는 모두 MIT, ISC, Zlib, Apache-2.0 같은 허용형 라이선스입니다. 두 라이선스 중 하나를 고르는 라이브러리는 JSZip은 MIT, DOMPurify는 Apache-2.0을 따릅니다.
-빌드할 때 `licenses.ts`가 각 라이브러리의 라이선스 전문을 모아 `dist/THIRD_PARTY_LICENSES.txt`에 넣습니다.
+빌드할 때 `licenses.ts`가 각 라이브러리의 라이선스 전문을 모아 앱 안(**파일 › 프로그램 정보**)과 `dist/THIRD_PARTY_LICENSES.txt`에 넣습니다. 따라서 페이지를 저장한 사본에도 라이선스가 함께 남습니다.
