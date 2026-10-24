@@ -285,6 +285,7 @@ Enter 완료 · Shift+Enter 줄바꿈 · Esc 취소	Enter done · Shift+Enter ne
 여기에 붙여넣기	Paste here	Incolla qui	Coller ici
 모두 선택	Select all	Seleziona tutto	Tout sélectionner
 화면에 맞추기	Fit to screen	Adatta allo schermo	Ajuster à l'écran
+폭에 맞추기	Fit to width	Adatta alla larghezza	Ajuster à la largeur
 내용 편집	Edit content	Modifica contenuto	Modifier le contenu
 표 칸 편집	Edit table cells	Modifica celle	Modifier les cellules
 파일 바꾸기…	Replace file…	Sostituisci file…	Remplacer le fichier…
@@ -998,6 +999,7 @@ GitHub 이슈 페이지에서 질문·버그 제보·기능 요청	Ask questions
 다시 실행	Redo	Ripeti	Rétablir
 축소	Zoom out	Riduci	Zoom arrière
 화면에 맞추기 (Ctrl+0) · 100% = 실제 크기	Fit to screen (Ctrl+0) · 100% = actual size	Adatta allo schermo (Ctrl+0) · 100% = dimensioni reali	Ajuster à l'écran (Ctrl+0) · 100 % = taille réelle
+폭에 맞추고 가운데로 (Ctrl+Shift+0)	Fit to width and center (Ctrl+Shift+0)	Adatta alla larghezza e centra (Ctrl+Shift+0)	Ajuster à la largeur et centrer (Ctrl+Shift+0)
 확대	Zoom in	Ingrandisci	Zoom avant
 디자인을 링크로 공유 (서버에 저장되지 않음)	Share the design as a link (nothing is stored on a server)	Condividi il design con un link (nulla viene salvato su un server)	Partager le design par lien (rien n'est stocké sur un serveur)
 링크 공유	Share link	Condividi link	Partager le lien

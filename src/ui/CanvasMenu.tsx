@@ -38,6 +38,7 @@ export function CanvasMenu({ x, y, at, onEdit, onClose }: {
       { label: m('모두 선택'), key: 'Ctrl+A', run: selectAll, disabled: !objects.some((o) => !o.locked && !o.hidden) },
       'sep',
       { label: m('화면에 맞추기'), key: 'Ctrl+0', run: () => window.dispatchEvent(new Event('labelloom:fit')) },
+      { label: m('폭에 맞추기'), key: 'Ctrl+Shift+0', run: () => window.dispatchEvent(new Event('labelloom:fit-width')) },
     );
   } else {
     const one = sel.length === 1 ? sel[0] : null;

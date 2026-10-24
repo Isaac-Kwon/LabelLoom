@@ -81,11 +81,14 @@ export function Canvas() {
   const preprint = useMemo(() => (paper.preprint?.show ? preprintMarkup(paper) : ''), [paper]);
 
   /* ---------- view fitting ---------- */
-  const fit = useCallback(() => {
+  const lastZoom = useRef(zoom);
+  // 'width' fills the canvas width (a tall label may then run past the top and bottom)
+  const fit = useCallback((mode: 'all' | 'width' = 'all') => {
     const el = wrap.current;
     if (!el) return;
     const w = el.clientWidth, h = el.clientHeight;
-    const z = Math.max(0.5, Math.min(40, Math.min((w - 90) / LW, (h - 90) / LH)));
+    const z = Math.max(0.5, Math.min(40, mode === 'width' ? (w - 90) / LW : Math.min((w - 90) / LW, (h - 90) / LH)));
+    lastZoom.current = z;
     useStore.getState().setZoom(z);
     setPan({ x: (w - LW * z) / 2 + 9, y: (h - LH * z) / 2 + 9 });
   }, [LW, LH]);
@@ -99,12 +102,16 @@ export function Canvas() {
   useEffect(() => { fit(); }, [fit]);
   useEffect(() => {
     const h = () => fit();
+    const hw = () => fit('width');
     window.addEventListener('labelloom:fit', h);
-    return () => window.removeEventListener('labelloom:fit', h);
+    window.addEventListener('labelloom:fit-width', hw);
+    return () => {
+      window.removeEventListener('labelloom:fit', h);
+      window.removeEventListener('labelloom:fit-width', hw);
+    };
   }, [fit]);
 
   // zoom buttons keep the label centre fixed
-  const lastZoom = useRef(zoom);
   useEffect(() => {
     if (lastZoom.current === zoom) return;
     if (!dragRef.current) {

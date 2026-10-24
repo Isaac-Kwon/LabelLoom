@@ -133,6 +133,7 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
       if (mod && (e.key === '[' || e.code === 'BracketLeft')) { e.preventDefault(); reorder(e.shiftKey ? 'back' : 'backward'); return; }
       if (mod && (k === '=' || k === '+')) { e.preventDefault(); s.setZoom(s.zoom * 1.25); return; }
       if (mod && k === '-') { e.preventDefault(); s.setZoom(s.zoom / 1.25); return; }
+      if (mod && e.shiftKey && e.code === 'Digit0') { e.preventDefault(); window.dispatchEvent(new Event('labelloom:fit-width')); return; }
       if (mod && k === '0') { e.preventDefault(); window.dispatchEvent(new Event('labelloom:fit')); return; }
       if (mod) return;
       if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); act.removeSelected(); return; }

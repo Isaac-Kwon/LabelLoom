@@ -74,6 +74,7 @@ export function Toolbar({ onOpen, onSave }: { onOpen: () => void; onSave: (saveA
         <button className="icon" onClick={() => s.setZoom(zoom / 1.25)} title={t('축소')}>−</button>
         <button className="zoom" onClick={() => window.dispatchEvent(new Event('labelloom:fit'))} title={t('화면에 맞추기 (Ctrl+0) · 100% = 실제 크기')}>{Math.round((zoom / PX_PER_MM_100) * 100)}%</button>
         <button className="icon" onClick={() => s.setZoom(zoom * 1.25)} title={t('확대')}>＋</button>
+        <button className="icon" onClick={() => window.dispatchEvent(new Event('labelloom:fit-width'))} title={t('폭에 맞추고 가운데로 (Ctrl+Shift+0)')}>↔</button>
       </div>
       <button onClick={() => s.open('share')} title={t('디자인을 링크로 공유 (서버에 저장되지 않음)')}>{t('링크 공유')}</button>
       <InstallButton />
