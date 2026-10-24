@@ -473,6 +473,7 @@ export function CalibrationDialog() {
         <AlignScope x={cal.offsetX} y={cal.offsetY} />
       </div>
       <p className="muted small">{t('보정값은 프로젝트에 저장되며 인쇄·PDF 출력에 적용됩니다 (내보내기 창에서 끌 수 있음).')}</p>
+      <p className="muted small">⚠ {t('테스트 페이지로 맞춰 두어도 프린터가 용지를 비뚤게 물거나 급지 위치가 장마다 달라지면 조금씩 어긋날 수 있습니다. 용지 가이드를 용지 폭에 맞게 붙이고, 많이 인쇄할 때는 중간중간 확인하세요.')}</p>
     </Modal>
   );
 }

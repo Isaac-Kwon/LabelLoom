@@ -471,6 +471,7 @@ export const en = {
   "X 배율": "X scale",
   "Y 배율": "Y scale",
   "보정값은 프로젝트에 저장되며 인쇄·PDF 출력에 적용됩니다 (내보내기 창에서 끌 수 있음).": "The correction is saved in the project and applied to printing and PDF (you can turn it off in the export window).",
+  "테스트 페이지로 맞춰 두어도 프린터가 용지를 비뚤게 물거나 급지 위치가 장마다 달라지면 조금씩 어긋날 수 있습니다. 용지 가이드를 용지 폭에 맞게 붙이고, 많이 인쇄할 때는 중간중간 확인하세요.": "Even after matching the test page, prints can still be slightly off if the printer pulls the paper in at an angle or feeds each sheet a little differently. Set the paper guides snugly against the paper and check now and then during long runs.",
   "인쇄가 오른쪽·아래로 밀림": "Print lands right/low",
   "X −, Y − 입력": "Enter X −, Y −",
   "인쇄가 왼쪽·위로 치우침": "Print lands left/high",

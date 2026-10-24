@@ -473,6 +473,7 @@ export const fr: Record<Msg, string> = {
   "X 배율": "Échelle X",
   "Y 배율": "Échelle Y",
   "보정값은 프로젝트에 저장되며 인쇄·PDF 출력에 적용됩니다 (내보내기 창에서 끌 수 있음).": "La correction est enregistrée dans le projet et appliquée à l'impression et au PDF (désactivable dans la fenêtre d'export).",
+  "테스트 페이지로 맞춰 두어도 프린터가 용지를 비뚤게 물거나 급지 위치가 장마다 달라지면 조금씩 어긋날 수 있습니다. 용지 가이드를 용지 폭에 맞게 붙이고, 많이 인쇄할 때는 중간중간 확인하세요.": "Même après réglage avec la page de test, l'impression peut rester légèrement décalée si l'imprimante entraîne le papier de travers ou l'alimente différemment à chaque feuille. Serrez les guides contre le papier et vérifiez de temps en temps lors des longues séries.",
   "인쇄가 오른쪽·아래로 밀림": "Impression décalée à droite/en bas",
   "X −, Y − 입력": "Saisir X −, Y −",
   "인쇄가 왼쪽·위로 치우침": "Impression décalée à gauche/en haut",
