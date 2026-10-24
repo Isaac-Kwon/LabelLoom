@@ -20,7 +20,9 @@ import { copy, duplicate, group, nudge, paste, reorder, selectAll, ungroup } fro
 import { CanvasBar, Toolbar } from './ui/Toolbar';
 
 const COMMIT = import.meta.env.VITE_COMMIT_SHA?.slice(0, 7);
-const BUILD_LABEL = `v${version} · ${COMMIT ?? 'dev'}`;
+const BUILT = new Date(__BUILD_TIME__);
+const pad = (n: number) => String(n).padStart(2, '0');
+const BUILD_LABEL = `v${version} · ${COMMIT ?? 'dev'} · ${BUILT.getFullYear()}-${pad(BUILT.getMonth() + 1)}-${pad(BUILT.getDate())} ${pad(BUILT.getHours())}:${pad(BUILT.getMinutes())}`;
 
 const TOOL_KEYS: Record<string, Parameters<ReturnType<typeof useStore.getState>['setTool']>[0]> = {
   v: 'select', t: 'text', r: 'rect', o: 'ellipse', l: 'line', b: 'barcode', q: 'qr', i: 'image',
@@ -184,7 +186,7 @@ export default function App({ initial }: { initial?: Project }) {
       {dialog === 'shortcuts' && <ShortcutsDialog />}
       {dropping && <div className="drop-overlay">파일을 놓으세요 — .json 프로젝트 · xlsx/csv 데이터 · 이미지/SVG</div>}
       {toast && <div className="toast">{toast}</div>}
-      <div className="build-tag" title={import.meta.env.VITE_COMMIT_SHA}>{BUILD_LABEL}</div>
+      <div className="build-tag" title={[import.meta.env.VITE_COMMIT_SHA, __BUILD_TIME__].filter(Boolean).join(' · ')}>{BUILD_LABEL}</div>
     </div>
   );
 }

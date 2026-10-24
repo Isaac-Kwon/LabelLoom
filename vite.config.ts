@@ -6,6 +6,7 @@ import { viteSingleFile } from 'vite-plugin-singlefile';
 export default defineConfig({
   base: '/LabelLoom/',
   plugins: [react(), viteSingleFile()],
+  define: { __BUILD_TIME__: JSON.stringify(new Date().toISOString()) },
   build: {
     target: 'es2022',
     chunkSizeWarningLimit: 8000,
