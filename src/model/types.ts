@@ -214,6 +214,21 @@ export interface Row {
 
 export interface DataTable { columns: string[]; rows: Row[] }
 
+/** Table pulled from a URL (CSV · xlsx); io/remote.ts fetches it again and merges new rows. */
+export interface DataSource {
+  url: string;
+  sheet?: string;
+  headerRow: number; // 0-based
+  trim: boolean;
+  /** source header -> target column name ('' = skip) */
+  mapping: Record<string, string>;
+  copiesColumn?: string;
+  /** column that matches fetched rows to existing ones ('' = compare whole rows) */
+  key: string;
+  /** seconds between automatic refreshes, 0 = only by hand */
+  interval: number;
+}
+
 export interface EmbeddedFont { family: string; data: string /* base64 */; format: 'truetype' | 'opentype' | 'woff' | 'woff2' }
 
 /** Duplex layout last used for this project, so quick print and other machines follow it. */
@@ -228,6 +243,7 @@ export interface Project {
   designRules: DesignRule[];
   fonts: EmbeddedFont[];
   data: DataTable;
+  dataSource?: DataSource;
   calibration: Calibration;
   seqStart: number;
   duplex?: DuplexSettings;

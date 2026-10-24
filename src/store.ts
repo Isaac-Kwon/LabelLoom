@@ -31,7 +31,11 @@ interface State {
   clipboard: LabelObject[];
   /** set while a table is edited cell by cell on the canvas */
   cellSel: CellSel | null;
+  /** state of the last fetch from project.dataSource */
+  sync: SyncState;
 }
+
+export interface SyncState { busy: boolean; at?: string; error?: string }
 
 interface Actions {
   /** Replace the project, recording history unless `noHistory`. */
@@ -55,6 +59,7 @@ interface Actions {
   setFileName(n: string): void;
   setClipboard(objs: LabelObject[]): void;
   setCellSel(c: CellSel | null): void;
+  setSync(s: Partial<SyncState>): void;
 }
 
 const HISTORY = 100;
@@ -79,6 +84,7 @@ export const useStore = create<State & Actions>((set, get) => {
     toast: '',
     clipboard: [],
     cellSel: null,
+    sync: { busy: false },
 
     setProject(p, opts) {
       const s = get();
@@ -139,6 +145,7 @@ export const useStore = create<State & Actions>((set, get) => {
     setFileName: (n) => set({ fileName: n }),
     setClipboard: (objs) => set({ clipboard: objs }),
     setCellSel: (c) => set({ cellSel: c }),
+    setSync: (x) => set({ sync: { ...get().sync, ...x } }),
   };
 
   function fixView() {

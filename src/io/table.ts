@@ -7,11 +7,44 @@ import { download } from './export';
 export interface ParsedSheet { sheetNames: string[]; sheet: string; grid: string[][]; merged: number }
 
 export async function readTableFile(file: File, sheet?: string): Promise<ParsedSheet> {
-  const buf = await file.arrayBuffer();
-  const isText = /\.(csv|tsv|txt)$/i.test(file.name);
+  return parseTable(new Uint8Array(await file.arrayBuffer()), /\.(csv|tsv|txt)$/i.test(file.name), sheet);
+}
+
+/** Fetch a CSV or spreadsheet from a server. The server must allow cross-origin requests (CORS). */
+export async function fetchTable(url: string, sheet?: string): Promise<ParsedSheet> {
+  let res: Response;
+  try {
+    res = await fetch(sourceUrl(url), { cache: 'no-store' });
+  } catch {
+    throw new Error(t('서버에 연결할 수 없습니다. 주소와 인터넷 연결을 확인하고, 서버가 다른 사이트의 요청(CORS)을 허용하는지 확인하세요.'));
+  }
+  if (!res.ok) throw new Error(t('서버 응답 오류: {status}', { status: `${res.status} ${res.statusText}`.trim() }));
+  const bytes = new Uint8Array(await res.arrayBuffer());
+  // xlsx/ods are ZIPs (PK), xls is an OLE file; anything else is read as text
+  const binary = (bytes[0] === 0x50 && bytes[1] === 0x4b) || (bytes[0] === 0xd0 && bytes[1] === 0xcf);
+  if (!binary && /^\s*<(!doctype|html)/i.test(new TextDecoder().decode(bytes.slice(0, 200)))) {
+    throw new Error(t('표 대신 웹 페이지가 왔습니다. CSV 파일로 바로 받아지는 주소인지, 로그인 없이 열리는지 확인하세요.'));
+  }
+  return parseTable(bytes, !binary, sheet);
+}
+
+/** Google Sheets page links → their CSV export; other URLs as they are. */
+export function sourceUrl(url: string): string {
+  const u = url.trim();
+  const g = u.match(/^https:\/\/docs\.google\.com\/spreadsheets\/d\/([\w-]+)\/?(?:(?:edit|view|htmlview)\b.*)?(?:[?#].*)?$/);
+  if (g && g[1] !== 'e') {
+    const gid = u.match(/[#?&]gid=(\d+)/)?.[1];
+    return `https://docs.google.com/spreadsheets/d/${g[1]}/export?format=csv${gid ? `&gid=${gid}` : ''}`;
+  }
+  const pub = u.match(/^(https:\/\/docs\.google\.com\/spreadsheets\/d\/e\/[\w-]+)\/pubhtml(?:\?(.*))?$/);
+  if (pub) return `${pub[1]}/pub?${pub[2] ? pub[2] + '&' : ''}output=csv`;
+  return u;
+}
+
+function parseTable(bytes: Uint8Array, isText: boolean, sheet?: string): ParsedSheet {
   const wb = isText
-    ? XLSX.read(decodeText(new Uint8Array(buf)), { type: 'string', raw: true })
-    : XLSX.read(buf, { type: 'array', cellDates: true });
+    ? XLSX.read(decodeText(bytes), { type: 'string', raw: true })
+    : XLSX.read(bytes, { type: 'array', cellDates: true });
   const name = sheet && wb.SheetNames.includes(sheet) ? sheet : wb.SheetNames[0];
   const ws = wb.Sheets[name];
   const grid = XLSX.utils.sheet_to_json<string[]>(ws, { header: 1, raw: false, defval: '', blankrows: false })
@@ -59,6 +92,43 @@ export function gridToRows(grid: string[][], o: ImportOptions): { columns: strin
 export function mergeTable(cur: DataTable, add: { columns: string[]; rows: Row[] }, mode: 'replace' | 'append'): DataTable {
   if (mode === 'replace') return { columns: add.columns, rows: add.rows };
   return { columns: [...new Set([...cur.columns, ...add.columns])], rows: [...cur.rows, ...add.rows] };
+}
+
+/**
+ * Merge rows fetched again from a data source. A row whose key matches an existing row takes its new
+ * values (print check, copies and print history stay); new keys are appended; rows missing from the
+ * source are kept. Without a key, or with an empty key cell, the whole row is the key.
+ */
+export function syncTable(cur: DataTable, add: { columns: string[]; rows: Row[] }, key: string, takeCopies: boolean) {
+  const keyOf = (r: Row) => {
+    const k = key && (r.values[key] ?? '').trim().toLowerCase();
+    return k ? 'k' + k : 'v' + add.columns.map((c) => (r.values[c] ?? '').trim()).join('\u0001');
+  };
+  const pool = new Map<string, number[]>();
+  cur.rows.forEach((r, i) => { const k = keyOf(r); pool.set(k, [...(pool.get(k) ?? []), i]); });
+  const rows = [...cur.rows];
+  let added = 0, updated = 0;
+  for (const r of add.rows) {
+    const i = pool.get(keyOf(r))?.shift();
+    if (i === undefined) { rows.push(r); added++; continue; }
+    const old = rows[i];
+    const copies = takeCopies ? r.copies : old.copies;
+    if (copies === old.copies && add.columns.every((c) => (old.values[c] ?? '') === (r.values[c] ?? ''))) continue;
+    rows[i] = { ...old, values: { ...old.values, ...r.values }, copies };
+    updated++;
+  }
+  const columns = [...new Set([...cur.columns, ...add.columns])];
+  const table = added || updated || columns.length !== cur.columns.length ? { columns, rows } : cur;
+  return { table, added, updated };
+}
+
+/** A column that identifies a person (ID, then e-mail), to match rows when a data source is refreshed. */
+export function guessKey(columns: string[]): string {
+  for (const g of [SYNONYMS[6], SYNONYMS[7]]) {
+    const hit = columns.find((c) => g.some((x) => norm(x) === norm(c)));
+    if (hit) return hit;
+  }
+  return '';
 }
 
 /** Columns exportTable adds in front of the data; read back in any UI language. */

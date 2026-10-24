@@ -1,10 +1,12 @@
 import { useMemo, useRef, useState } from 'react';
 import { locale, getLang, t, tn } from '../i18n';
+import { refreshSource } from '../io/remote';
 import { exportTable, findDuplicates } from '../io/table';
 import { newRow } from '../model/defaults';
 import type { Project, Row } from '../model/types';
 import { pickDesign } from '../render/resolve';
 import { useStore } from '../store';
+import { INTERVALS, intervalLabel } from './ImportDialog';
 
 const ROW_H = 26;
 
@@ -23,6 +25,8 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
   const project = useStore((s) => s.project);
   const currentRow = useStore((s) => s.currentRow);
   const filter = useStore((s) => s.filter);
+  const sync = useStore((s) => s.sync);
+  const source = project.dataSource;
   const { commit, setCurrentRow, setFilter, open } = useStore.getState();
   const { columns, rows } = project.data;
   const [scroll, setScroll] = useState(0);
@@ -117,6 +121,18 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
         <strong>{t('데이터')}</strong>
         <span className="muted small">{t('{rows}행 · 인쇄 {labels}장 · 출력됨 {printed}', { rows: rows.length, labels: totalLabels, printed: printedCount })}</span>
         <button onClick={() => open('import')}>{t('가져오기 (xlsx·csv)')}</button>
+        {source && (
+          <span className="sync-status" title={source.url}>
+            <button onClick={() => void refreshSource(true)} disabled={sync.busy}>⟳ {t('URL 새로고침')}</button>
+            <select value={source.interval} title={t('자동 새로고침')}
+              onChange={(e) => commit((p) => (p.dataSource ? { ...p, dataSource: { ...p.dataSource, interval: Number(e.target.value) } } : p))}>
+              {INTERVALS.map((s) => <option key={s} value={s}>{intervalLabel(s)}</option>)}
+            </select>
+            {sync.error
+              ? <span className="sync-err small" title={sync.error}>⚠ {t('새로고침 실패')}</span>
+              : sync.at && <span className="muted small">{new Date(sync.at).toLocaleTimeString(locale(), { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>}
+          </span>
+        )}
         <div className="dropdown">
           <button>{t('내보내기')} ▾</button>
           <div className="menu">
@@ -155,6 +171,7 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
             }}>{t('중복 검사…')}</button>
             {dupKeys && <button onClick={() => setDupKeys(null)}>{t('중복 표시 끄기')}</button>}
             <button onClick={clearPrinted}>{t('인쇄 기록 지우기')}</button>
+            {source && <button onClick={() => { if (confirm(t('URL 연결을 끊을까요? 지금 데이터는 그대로 남습니다.'))) commit((p) => ({ ...p, dataSource: undefined })); }}>{t('URL 연결 끊기')}</button>}
             <button onClick={() => open('reprint')}>{t('현장 재발행 / 현장 등록')}</button>
           </div>
         </div>

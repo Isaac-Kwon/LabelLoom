@@ -3,6 +3,7 @@ import { BUILD_DETAIL, BUILD_LABEL } from './build';
 import { t } from './i18n';
 import { registerFonts } from './io/fonts';
 import { forgetFileHandle, isProjectFile, loadAutosave, openProjectFile, pushRecent, readProjectFile, saveAutosave, saveProjectFile } from './io/project';
+import { useRemoteSync } from './io/remote';
 import { decodeShare, readShareHash } from './io/share';
 import { migrateProject } from './model/defaults';
 import type { Project } from './model/types';
@@ -99,6 +100,8 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
     const t = setTimeout(() => void saveAutosave(project), 800);
     return () => clearTimeout(t);
   }, [project, ready]);
+
+  useRemoteSync(ready);
 
   useEffect(() => { try { localStorage.setItem('labelloom.dataH', String(dataH)); } catch { /* ignore */ } }, [dataH]);
 
