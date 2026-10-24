@@ -184,6 +184,7 @@ textarea.content { font-family: ui-monospace, Consolas, "Malgun Gothic", monospa
 .row-nav input { width: 56px; text-align: center; }
 .canvas-wrap { flex: 1; position: relative; overflow: hidden; background: var(--canvas); touch-action: none; }
 .canvas-svg { position: absolute; inset: 0; display: block; user-select: none; }
+body.canvas-dragging { user-select: none; -webkit-user-select: none; }
 .hit { cursor: move; }
 .hit.locked { cursor: default; }
 .label-content { pointer-events: none; }

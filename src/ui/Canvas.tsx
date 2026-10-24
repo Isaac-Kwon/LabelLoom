@@ -116,6 +116,23 @@ export function Canvas() {
     return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up); };
   }, []);
 
+  // a drag that leaves the canvas would otherwise start a text selection across the
+  // surrounding panels (user-select on the svg alone does not stop it)
+  const dragging = drag !== null;
+  useLayoutEffect(() => {
+    if (!dragging) return;
+    const block = (e: Event) => e.preventDefault();
+    window.getSelection()?.removeAllRanges();
+    document.body.classList.add('canvas-dragging');
+    document.addEventListener('selectstart', block);
+    document.addEventListener('dragstart', block);
+    return () => {
+      document.body.classList.remove('canvas-dragging');
+      document.removeEventListener('selectstart', block);
+      document.removeEventListener('dragstart', block);
+    };
+  }, [dragging]);
+
   const toMm = (e: { clientX: number; clientY: number }) => {
     const r = wrap.current!.getBoundingClientRect();
     return { x: (e.clientX - r.left - pan.x) / zoom, y: (e.clientY - r.top - pan.y) / zoom };
