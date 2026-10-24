@@ -19,9 +19,12 @@ The grey text on the label is a **guide object that never prints**. It has a ⊘
 
 ## Step 1 — Add a text box
 
+Adding an object always takes two moves: **pick a tool → click or drag in the editing area in the middle**. Pressing the tool button alone adds nothing.
+
 1. Press **Text** (`T`) in the toolbar.
-2. Click on the label for a text box of the default size, or drag to draw one.
-3. After placing an object the tool goes back to **Select** (`V`).
+2. Click on the label in the **editing area (canvas) in the middle**. A text box of the default size appears there and you can type right away.
+   Press and drag instead to make a box of the size you drag.
+3. After placing an object the tool goes back to **Select** (`V`). Press the tool again to add another.
 
 ## Step 2 — Style it in the properties panel
 
@@ -34,10 +37,12 @@ With the text box selected, look at the properties panel on the right.
 
 ## Step 3 — Add shapes
 
-1. Pick **Rectangle** (`R`) or **Line** (`L`) and drag on the label.
-2. Drag to move, use the corner handles to resize and the rotation handle to turn it.
+1. Press **Rectangle** (`R`) or **Line** (`L`) in the toolbar.
+2. In the **editing area in the middle**, press and drag diagonally: the rectangle fills what you drag. For a line, drag from its start to its end.
+   A plain click gives the default size.
+3. Drag the shape to move it, use the corner handles to resize and the rotation handle to turn it.
    Hold `Shift` while dragging to move only horizontally or vertically; `Alt` turns snapping off.
-3. If a shape hides the text, drag it lower in the **Layers** list, or right-click it and choose **Send to back**.
+4. If a shape hides the text, drag it lower in the **Layers** list, or right-click it and choose **Send to back**.
 
 ## Step 4 — Line things up
 

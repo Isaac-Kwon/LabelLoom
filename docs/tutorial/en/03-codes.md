@@ -26,7 +26,7 @@ Select the barcode on the canvas and look at the **Barcode** section of the prop
 
 ## Step 2 — Add a QR code
 
-1. Pick **QR code** (`Q`) in the toolbar and place it in an empty spot.
+1. Press **QR code** (`Q`) in the toolbar, then in the **editing area in the middle** click an empty spot on the label, or press and drag, to place it.
 2. In **QR / 2D code**, choose the type (QR, Data Matrix, PDF417 …) and the **Error correction** level.
    With a **Logo** in the middle, raise error correction to Q or H.
 3. The content can be a URL, contact details, Wi‑Fi settings or any `{{column name}}`.

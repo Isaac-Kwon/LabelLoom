@@ -44,6 +44,9 @@ const objects = (s: State): LabelObject[] => {
 const count = (s: State, f: (o: LabelObject) => boolean) => objects(s).filter(f).length;
 const selected = (s: State, f: (o: LabelObject) => boolean) => objects(s).some((o) => s.selection.includes(o.id) && f(o));
 const isShape = (o: LabelObject) => o.type === 'rect' || o.type === 'ellipse' || o.type === 'triangle' || o.type === 'line';
+const isShapeTool = (s: State) => s.tool === 'rect' || s.tool === 'ellipse' || s.tool === 'triangle' || s.tool === 'line';
+const texts = (s: State) => count(s, (o) => o.type === 'text' && !o.noPrint);
+const qrs = (s: State) => count(s, (o) => o.type === 'qr');
 const bound = (o: LabelObject) => 'content' in o && /\{\{/.test(o.content);
 
 const fromTemplate = (id: string, name: string): Project => {
@@ -81,9 +84,11 @@ export const LESSONS: Lesson[] = [
     make: firstLabel,
     steps: [
       { text: m('50×30 mm 빈 라벨을 열었습니다. 글자와 도형을 넣고 다듬은 뒤 인쇄까지 해 봅니다.') },
-      { target: 'tool-text', text: m('도구 막대에서 텍스트(T)를 고르고 라벨 위를 클릭하거나 끌어서 글상자를 만드세요.'), done: (s) => count(s, (o) => o.type === 'text' && !o.noPrint) > 0 },
+      { target: 'tool-text', text: m('도구 막대에서 텍스트(T)를 누르세요. 도구를 고르기만 해서는 아무것도 생기지 않습니다.'), done: (s) => s.tool === 'text' || texts(s) > 0 },
+      { target: 'canvas', text: m('이제 가운데 편집 화면의 라벨 위를 클릭하세요. 그 자리에 글상자가 생기고 바로 글자를 입력할 수 있습니다. 마우스를 누른 채 끌면 끈 크기만큼 글상자가 생깁니다.'), done: (s) => texts(s) > 0 },
       { target: 'inspector', text: m('오른쪽 속성 패널에서 내용, 글꼴 크기, 굵게, 정렬을 바꿔 보세요. 캔버스에서 글상자를 더블클릭해도 내용을 고칠 수 있습니다.') },
-      { target: 'tool-rect', text: m('사각형(R)이나 선(L)으로 테두리나 띠를 그려 보세요. 끌어서 옮기고, 모서리 핸들로 크기를 바꿉니다.'), done: (s) => count(s, isShape) > 0 },
+      { target: 'tool-rect', text: m('이번에는 도형입니다. 도구 막대에서 사각형(R)이나 선(L)을 누르세요.'), done: (s) => isShapeTool(s) || count(s, isShape) > 0 },
+      { target: 'canvas', text: m('가운데 편집 화면에서 마우스를 누른 채 대각선으로 끌어 사각형을 그리세요. 선은 시작점에서 끝점까지 끕니다. 클릭만 하면 기본 크기로 생깁니다. 그린 뒤에는 끌어서 옮기고, 모서리 핸들로 크기를 바꿉니다.'), done: (s) => count(s, isShape) > 0 },
       { target: 'canvas', text: m('Shift+클릭으로 개체를 여러 개 고르면 속성 패널에 정렬·분배 버튼이 나옵니다. 방향키는 0.5 mm, Shift+방향키는 5 mm씩 옮깁니다.') },
       { target: 'undo', text: m('실수했으면 실행 취소(Ctrl+Z)를 누르세요. 작업은 브라우저에 자동 저장되고, 파일로 남기려면 파일 › 저장(Ctrl+S)을 씁니다.') },
       { target: 'tab-paper', text: m('용지 탭에서 라벨 크기, 한 장의 칸 수, 여백을 바꿉니다. 시판 라벨지는 새로 만들기의 기성 라벨 용지 탭에서 고를 수 있습니다.') },
@@ -113,7 +118,8 @@ export const LESSONS: Lesson[] = [
       { text: m('자산관리 라벨을 열었습니다. 바코드와 QR이 자산번호 열의 값을 담습니다.') },
       { target: 'canvas', text: m('캔버스에서 바코드를 클릭하세요.'), done: (s) => selected(s, (o) => o.type === 'barcode') },
       { target: 'barcode', text: m('종류에서 Code128, EAN-13 같은 규격을 고릅니다. 값이 규격에 맞지 않거나 막대가 너무 가늘면 경고가 나옵니다.') },
-      { target: 'tool-qr', text: m('QR 코드(Q)를 골라 라벨의 빈 곳에 하나 더 넣어 보세요.'), done: (s) => count(s, (o) => o.type === 'qr') > 1 },
+      { target: 'tool-qr', text: m('QR 코드를 하나 더 넣어 봅니다. 도구 막대에서 QR 코드(Q)를 누르세요.'), done: (s) => s.tool === 'qr' || qrs(s) > 1 },
+      { target: 'canvas', text: m('가운데 편집 화면에서 라벨의 빈 곳을 클릭하거나, 마우스를 누른 채 끌어 QR 코드를 넣으세요.'), done: (s) => qrs(s) > 1 },
       { target: 'content', text: m('내용에 URL이나 {{열 이름}}을 넣습니다. 서식 요소 목록에서 일련번호({{#seq:0000}})나 오늘 날짜({{@date:YYYY-MM-DD}})도 넣을 수 있습니다.') },
       { target: 'serial', text: m('명단이 없어도 일련번호 생성으로 번호 열을 만들 수 있습니다. 눌러 보세요.'), done: (s) => s.dialog === 'serial' },
       { text: m('시작 번호, 증감, 자릿수, 접두·접미를 정하고 적용하면 데이터 표에 번호 열이 생깁니다. 그 열을 바코드 내용에 넣으면 라벨마다 다른 바코드가 나옵니다.') },
