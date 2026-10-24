@@ -6,7 +6,7 @@ import { OBJ_TYPES, typeLabel } from '../model/defaults';
 import type { BarcodeObj, Effects, Fill, ImageObj, LabelObject, ObjType, QrObj, ShapeObj, StyleRule, TextObj } from '../model/types';
 import { barcodeSvg, code2dSvg, CODES_2D, moduleSizeMm, SYMBOLOGIES } from '../render/barcode';
 import { findPicture, isUrl, usedPictureKeys } from '../render/images';
-import { previewCtx, resolveObject, RULE_OPS } from '../render/resolve';
+import { FILTERS, previewCtx, resolveObject, RULE_OPS } from '../render/resolve';
 import { act, currentObjects, useStore } from '../store';
 import { Check, Color, Num, Row, Section, Select, Seg } from './controls';
 import { addPictures, pickImageInto, pictureFromUrl, saveRowPictures } from './media';
@@ -183,6 +183,20 @@ function ContentSection({ o, title, hint }: { o: TextObj | BarcodeObj | QrObj | 
     act.update([o.id], { content: o.content.slice(0, s) + tok + o.content.slice(e) } as Partial<LabelObject>);
     setTimeout(() => { ta?.focus(); ta?.setSelectionRange(s + tok.length, s + tok.length); }, 0);
   };
+  // a filter goes at the end of the {{…}} the cursor is in (or the one just before it)
+  const addFilter = (f: string) => {
+    const ta = ref.current;
+    const pos = ta?.selectionStart ?? o.content.length;
+    const open = o.content.lastIndexOf('{{', Math.max(0, pos - 1));
+    const close = open < 0 ? -1 : o.content.indexOf('}}', open);
+    if (open < 0 || close < 0 || o.content.slice(open + 2, close).includes('{')) {
+      useStore.getState().notify(t('값을 바꿀 {{열}} 안에 커서를 두세요.'));
+      return;
+    }
+    act.update([o.id], { content: o.content.slice(0, close) + '|' + f + o.content.slice(close) } as Partial<LabelObject>);
+    const at = close + 1 + f.length;
+    setTimeout(() => { ta?.focus(); ta?.setSelectionRange(at, at); }, 0);
+  };
   const row = project.data.rows[currentRow];
   const resolved = resolveObject(o, previewCtx(row, currentRow, project.seqStart)).content;
   return (
@@ -198,6 +212,10 @@ function ContentSection({ o, title, hint }: { o: TextObj | BarcodeObj | QrObj | 
         <select value="" onChange={(e) => e.target.value && insert(e.target.value)} title={t('서식 요소 삽입')}>
           <option value="">+ {t('서식 요소')}</option>
           {TOKENS.map((x) => <option key={x.l} value={x.v}>{t(x.l)}</option>)}
+        </select>
+        <select value="" onChange={(e) => e.target.value && addFilter(e.target.value)} title={t('커서가 있는 {{열}}의 값을 바꿉니다 (예: {{이름|upper}})')}>
+          <option value="">+ {t('값 변환')}</option>
+          {FILTERS.map((x) => <option key={x.example} value={x.example}>{t(x.label)}</option>)}
         </select>
       </div>
       <div className="preview-value" title={t('현재 행으로 계산된 값')}>{resolved ? resolved.replace(/[\x00-\x1f]/g, (c) => (c === '\n' ? '↵' : '·')) : <span className="muted">{t('(빈 값)')}</span>}</div>

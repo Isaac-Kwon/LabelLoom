@@ -4,7 +4,7 @@ import { refreshSource } from '../io/remote';
 import { exportTable, findDuplicates } from '../io/table';
 import { newRow } from '../model/defaults';
 import type { Project, Row } from '../model/types';
-import { pickDesign } from '../render/resolve';
+import { pickDesign, renameColumnInDesigns } from '../render/resolve';
 import { useStore } from '../store';
 import { INTERVALS, intervalLabel } from './ImportDialog';
 
@@ -57,15 +57,9 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
     const name = prompt(t('열 이름 변경 (디자인의 {{열 이름}}도 함께 바뀝니다)'), c);
     if (!name || name === c || columns.includes(name)) return;
     commit((p) => {
-      const re = new RegExp(`\\{\\{\\s*${c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\}\\}`, 'g');
-      const fix = <T extends { rules: { column: string }[] }>(o: T): T => ({
-        ...o, ...('content' in o ? { content: (o as unknown as { content: string }).content.replace(re, `{{${name}}}`) } : {}),
-        rules: o.rules.map((r) => (r.column === c ? { ...r, column: name } : r)),
-      });
+      const q = renameColumnInDesigns(p, c, name);
       return {
-        ...p,
-        designs: p.designs.map((d) => ({ ...d, objects: d.objects.map(fix), back: d.back?.map(fix) })),
-        designRules: p.designRules.map((r) => (r.column === c ? { ...r, column: name } : r)),
+        ...q,
         data: {
           columns: p.data.columns.map((x) => (x === c ? name : x)),
           rows: p.data.rows.map((r) => { const { [c]: v, ...rest } = r.values; return { ...r, values: { ...rest, [name]: v ?? '' } }; }),
