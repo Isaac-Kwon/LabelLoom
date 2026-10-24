@@ -7,6 +7,8 @@
   GitHub Pages에 올려도 되고, 파일을 내려받아 `file://`로 열어도 똑같이 동작합니다. 인터넷 연결은 필요 없습니다.
 - 작업 중인 내용은 브라우저(IndexedDB)에 자동 저장됩니다.
 
+처음이라면 **[튜토리얼](docs/tutorial/README.md)**([English](docs/tutorial/en/README.md))부터 보세요. 앱 안에서는 **F1**로 같은 과정을 따라 할 수 있습니다.
+
 ## 주요 기능
 
 | 영역 | 기능 |
