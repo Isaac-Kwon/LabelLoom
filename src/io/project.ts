@@ -1,9 +1,11 @@
 import { t } from '../i18n';
 import { migrateProject } from '../model/defaults';
 import type { Project } from '../model/types';
+import { isZipFile, projectFromZip, projectToZip } from './archive';
 import { download, safeName } from './export';
 
 export const EXT = '.labelloom.json';
+export const ZIP_EXT = '.labelloom.zip';
 
 /* ---------- tiny IndexedDB key-value store ---------- */
 
@@ -110,16 +112,31 @@ export async function openProjectFile(): Promise<{ project: Project; name: strin
   let file: File | null = null;
   if (w.showOpenFilePicker) {
     try {
-      const [h] = await w.showOpenFilePicker({ types: [{ description: t('LabelLoom 프로젝트'), accept: { 'application/json': ['.json'] } }] });
-      handle = h;
+      const [h] = await w.showOpenFilePicker({ types: [{ description: t('LabelLoom 프로젝트'), accept: { 'application/json': ['.json'], 'application/zip': ['.zip'] } }] });
       file = await h.getFile();
+      handle = isZipFile(file) ? null : h; // Ctrl+S writes JSON, so it must not go back into a ZIP
     } catch (e) {
       if ((e as DOMException).name === 'AbortError') return null;
     }
   }
-  if (!file) { handle = null; file = await pickFile('.json,application/json'); }
+  if (!file) { handle = null; file = await pickFile(PROJECT_ACCEPT); }
   if (!file) return null;
-  return { project: parseProject(await file.text()), name: file.name };
+  return { project: await readProjectFile(file), name: file.name };
+}
+
+export const PROJECT_ACCEPT = '.json,application/json,.zip,application/zip';
+export const isProjectFile = (f: File) => /\.json$/i.test(f.name) || isZipFile(f);
+
+/** A .json project or a .zip made by saveProjectZip. */
+export async function readProjectFile(f: File): Promise<Project> {
+  return isZipFile(f) ? migrateProject(await projectFromZip(f)) : parseProject(await f.text());
+}
+
+/** Project with its pictures and fonts as separate files in a ZIP (original bytes); returns the file name. */
+export async function saveProjectZip(p: Project): Promise<string> {
+  const name = safeName(p.name) + ZIP_EXT;
+  download(await projectToZip(p), name);
+  return name;
 }
 
 export function parseProject(text: string): Project {

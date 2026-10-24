@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { t } from './i18n';
 import { registerFonts } from './io/fonts';
-import { kvGet, kvSet, parseProject, pickFile } from './io/project';
+import { kvGet, kvSet, pickFile, PROJECT_ACCEPT, readProjectFile } from './io/project';
 import { copyQuickLink, decodeShare, quickShareCode, readShareHash } from './io/share';
 import { migrateProject } from './model/defaults';
 import type { Project, Row } from './model/types';
@@ -72,7 +72,7 @@ export function QuickApp({ onEdit, onBack, start, onPrinted }: {
 
   const loadFile = async (f: File | null) => {
     if (!f) return;
-    try { use(parseProject(await f.text())); notify(t('템플릿을 불러왔습니다: {name}', { name: f.name })); } catch (e) { notify((e as Error).message); }
+    try { use(await readProjectFile(f)); notify(t('템플릿을 불러왔습니다: {name}', { name: f.name })); } catch (e) { notify((e as Error).message); }
   };
   // recording only makes sense for the editor's own project, not another template opened here
   const fromEditor = !!onPrinted && !!start && project === start;
@@ -84,7 +84,7 @@ export function QuickApp({ onEdit, onBack, start, onPrinted }: {
     window.addEventListener('keydown', k);
     return () => window.removeEventListener('keydown', k);
   }, [canGoBack, onBack]);
-  const choose = async () => loadFile(await pickFile('.json,application/json'));
+  const choose = async () => loadFile(await pickFile(PROJECT_ACCEPT));
 
   return (
     <div className="quick-app"
@@ -108,11 +108,11 @@ export function QuickApp({ onEdit, onBack, start, onPrinted }: {
           : ready && (
             <button className="quick-drop" onClick={choose}>
               <strong>{t('템플릿 파일을 끌어다 놓거나 클릭해서 고르세요')}</strong>
-              <span className="muted">{t('LabelLoom에서 저장한 .labelloom.json 파일 · 공유받은 빠른 출력 링크로도 열 수 있습니다')}</span>
+              <span className="muted">{t('LabelLoom에서 저장한 .labelloom.json · .labelloom.zip 파일 · 공유받은 빠른 출력 링크로도 열 수 있습니다')}</span>
             </button>
           )}
       </main>
-      {dropping && <DropOverlay title={t('템플릿을 여기에 놓으세요')} kinds={['.labelloom.json']} />}
+      {dropping && <DropOverlay title={t('템플릿을 여기에 놓으세요')} kinds={['.labelloom.json', '.labelloom.zip']} />}
       {toast && <div className="toast">{toast}</div>}
     </div>
   );

@@ -8,7 +8,7 @@ ko	en	it	fr
 공유 링크를 읽을 수 없습니다: {error}	Cannot read the shared link: {error}	Impossibile leggere il link condiviso: {error}	Impossible de lire le lien partagé : {error}
 저장했습니다: {name}	Saved: {name}	Salvato: {name}	Enregistré : {name}
 여기에 놓으세요	Drop here	Rilascia qui	Déposez ici
-.json 프로젝트	.json project	Progetto .json	Projet .json
+.json · .zip 프로젝트	.json · .zip project	Progetto .json · .zip	Projet .json · .zip
 xlsx · csv 데이터	xlsx · csv data	Dati xlsx · csv	Données xlsx · csv
 이미지 · SVG	Image · SVG	Immagine · SVG	Image · SVG
 # pwa.tsx
@@ -51,7 +51,7 @@ LabelLoom을 독립된 앱 창으로 쓸 수 있습니다. 설치한 앱은 지�
 편집기에서 수정	Edit in editor	Modifica nell'editor	Modifier dans l'éditeur
 편집기 열기	Open editor	Apri editor	Ouvrir l'éditeur
 템플릿 파일을 끌어다 놓거나 클릭해서 고르세요	Drop a template file here or click to choose one	Trascina qui un file modello o fai clic per sceglierlo	Déposez un fichier modèle ici ou cliquez pour en choisir un
-LabelLoom에서 저장한 .labelloom.json 파일 · 공유받은 빠른 출력 링크로도 열 수 있습니다	A .labelloom.json file saved from LabelLoom · a shared quick print link also works	Un file .labelloom.json salvato da LabelLoom · funziona anche un link di stampa rapida condiviso	Un fichier .labelloom.json enregistré depuis LabelLoom · un lien d'impression rapide partagé fonctionne aussi
+LabelLoom에서 저장한 .labelloom.json · .labelloom.zip 파일 · 공유받은 빠른 출력 링크로도 열 수 있습니다	A .labelloom.json or .labelloom.zip file saved from LabelLoom · a shared quick print link also works	Un file .labelloom.json o .labelloom.zip salvato da LabelLoom · funziona anche un link di stampa rapida condiviso	Un fichier .labelloom.json ou .labelloom.zip enregistré depuis LabelLoom · un lien d'impression rapide partagé fonctionne aussi
 템플릿을 여기에 놓으세요	Drop the template here	Rilascia qui il modello	Déposez le modèle ici
 # store.ts
 {name} 복사본	{name} copy	{name} copia	{name} copie
@@ -72,10 +72,19 @@ SVG 렌더링 실패	SVG rendering failed	Rendering SVG non riuscito	Échec du r
 # io/project.ts
 LabelLoom 프로젝트	LabelLoom project	Progetto LabelLoom	Projet LabelLoom
 JSON 형식이 올바르지 않습니다.	The JSON is not valid.	Il JSON non è valido.	Le JSON n'est pas valide.
+# io/archive.ts
+ZIP 파일을 열 수 없습니다.	Cannot open the ZIP file.	Impossibile aprire il file ZIP.	Impossible d'ouvrir le fichier ZIP.
+ZIP 안에 {name}이(가) 없습니다.	{name} is missing from the ZIP.	{name} manca nel file ZIP.	{name} est absent du ZIP.
 # io/share.ts
 복사하지 못했습니다. 주소창의 주소를 직접 복사하세요.	Could not copy. Copy the address from the address bar instead.	Copia non riuscita. Copia l'indirizzo dalla barra degli indirizzi.	Copie impossible. Copiez l'adresse depuis la barre d'adresse.
-링크를 복사했습니다 ({kb} KB — 길어서 메신저에서 잘릴 수 있습니다. 이미지를 줄이거나 템플릿 파일로 공유하세요)	Link copied ({kb} KB — long enough to be cut off in messengers. Use smaller images or share the template file)	Link copiato ({kb} KB — è lungo e potrebbe essere troncato nelle app di messaggistica. Riduci le immagini o condividi il file del modello)	Lien copié ({kb} Ko — assez long pour être tronqué dans les messageries. Réduisez les images ou partagez le fichier du modèle)
 빠른 출력 링크를 복사했습니다.	Quick print link copied.	Link di stampa rapida copiato.	Lien d'impression rapide copié.
+링크를 복사했습니다 ({kb} KB). 길어서 메신저에서 잘릴 수 있으니 템플릿 파일로 공유하세요. 주요 원인: {cause}	Link copied ({kb} KB). It is long enough to be cut off in messengers, so share the template file instead. Main cause: {cause}	Link copiato ({kb} KB). È abbastanza lungo da essere troncato nelle app di messaggistica: condividi invece il file del modello. Causa principale: {cause}	Lien copié ({kb} Ko). Il est assez long pour être tronqué dans les messageries : partagez plutôt le fichier du modèle. Cause principale : {cause}
+그림 {n}개	{n} image(s)	{n} immagini	{n} image(s)
+SVG 그래픽 {n}개	{n} SVG graphic(s)	{n} grafiche SVG	{n} graphique(s) SVG
+명단 {rows}행 × {cols}열	List of {rows} rows × {cols} columns	Elenco di {rows} righe × {cols} colonne	Liste de {rows} lignes × {cols} colonnes
+내장 글꼴 {n}개	{n} embedded font(s)	{n} font incorporati	{n} police(s) intégrée(s)
+디자인 자체 (개체 {n}개)	The design itself ({n} objects)	Il design stesso ({n} oggetti)	Le design lui-même ({n} objets)
+{what} ({kb} KB, {pct}%)	{what} ({kb} KB, {pct}%)	{what} ({kb} KB, {pct}%)	{what} ({kb} Ko, {pct} %)
 # io/table.ts
 열{n}	Column{n}	Colonna{n}	Colonne{n}
 인쇄	Print	Stampa	Imprimer
@@ -391,11 +400,22 @@ xlsx (데이터만)	xlsx (data only)	xlsx (solo dati)	xlsx (données seules)
 이미지 포함	Include images	Includi immagini	Inclure les images
 내장 글꼴 포함 (링크가 매우 길어짐)	Include embedded fonts (makes the link very long)	Includi i font incorporati (il link diventa molto lungo)	Inclure les polices intégrées (lien très long)
 길이 {n}자 ({kb} KB)	Length {n} characters ({kb} KB)	Lunghezza {n} caratteri ({kb} KB)	Longueur {n} caractères ({kb} Ko)
- — 메신저나 일부 브라우저에서 잘릴 수 있습니다. 이미지를 빼거나 JSON 파일로 저장해 공유하세요.	 — may be cut off in messengers or some browsers. Leave out images, or save as a JSON file and share that.	 — potrebbe essere troncato nelle app di messaggistica o in alcuni browser. Escludi le immagini o salva un file JSON e condividi quello.	 — risque d'être tronqué dans les messageries ou certains navigateurs. Retirez les images ou enregistrez un fichier JSON à partager.
+데이터(명단) 포함	Include data (list)	Includi i dati (elenco)	Inclure les données (liste)
+내장 글꼴 포함	Include embedded fonts	Includi i font incorporati	Inclure les polices intégrées
+링크와 같은 내용을 .labelloom.json 파일로 받습니다	Downloads the same content as the link as a .labelloom.json file	Scarica lo stesso contenuto del link come file .labelloom.json	Télécharge le même contenu que le lien dans un fichier .labelloom.json
+JSON 파일로 받기	Download JSON file	Scarica file JSON	Télécharger le fichier JSON
+링크와 같은 내용을 .labelloom.zip 파일로 받습니다. 그림과 글꼴이 원본 파일로 들어갑니다	Downloads the same content as the link as a .labelloom.zip file, with the images and fonts as their original files	Scarica lo stesso contenuto del link come file .labelloom.zip, con immagini e font come file originali	Télécharge le même contenu que le lien dans un fichier .labelloom.zip, avec les images et polices dans leurs fichiers d'origine
+ZIP 파일로 받기	Download ZIP file	Scarica file ZIP	Télécharger le fichier ZIP
+링크가 길어 메신저나 일부 브라우저에서 잘릴 수 있습니다. 파일로 받아서 보내세요.	The link is long enough to be cut off in messengers or some browsers. Download it as a file and send that instead.	Il link è abbastanza lungo da essere troncato nelle app di messaggistica o in alcuni browser. Scaricalo come file e invia quello.	Le lien est assez long pour être tronqué dans les messageries ou certains navigateurs. Téléchargez-le en fichier et envoyez celui-ci.
+주요 원인: {cause}	Main cause: {cause}	Causa principale: {cause}	Cause principale : {cause}
+'{option}'을(를) 꺼도 {kb} KB라 여전히 깁니다.	Even with '{option}' off it would be {kb} KB, still too long.	Anche disattivando '{option}' sarebbe {kb} KB, ancora troppo lungo.	Même sans « {option} », il ferait {kb} Ko, encore trop long.
+'{option}'을(를) 끄면 {kb} KB로 줄지만, 받는 쪽에는 그만큼 빠진 채로 열립니다.	Turning off '{option}' brings it down to {kb} KB, but it opens without that part for the recipient.	Disattivando '{option}' scende a {kb} KB, ma il destinatario lo aprirà senza quella parte.	Sans « {option} », il descend à {kb} Ko, mais le destinataire l'ouvrira sans cette partie.
+링크에서 뺄 수 있는 부분이 아니므로 파일로 보내야 합니다.	This part cannot be left out of the link, so send a file instead.	Questa parte non può essere esclusa dal link: invia un file.	Cette partie ne peut pas être retirée du lien : envoyez un fichier.
+구성: {list}	Made of: {list}	Composizione: {list}	Composition : {list}
 링크가 길어 QR 코드로 만들 수 없습니다.	The link is too long for a QR code.	Il link è troppo lungo per un codice QR.	Le lien est trop long pour un code QR.
 용지·크기	Paper · size	Carta · formato	Papier · format
 새로 만들기	New	Nuovo	Nouveau
-프로젝트 열기 (.json)	Open project (.json)	Apri progetto (.json)	Ouvrir un projet (.json)
+프로젝트 열기 (.json · .zip)	Open project (.json · .zip)	Apri progetto (.json · .zip)	Ouvrir un projet (.json · .zip)
 현재 작업 계속	Continue current work	Continua il lavoro attuale	Continuer le travail en cours
 템플릿	Templates	Modelli	Modèles
 용지	Paper	Carta	Papier
@@ -989,6 +1009,8 @@ Room A, Room B  또는  Day 1, Day 2	Room A, Room B  or  Day 1, Day 2	Sala A, Sa
 다른 이름으로 저장…	Save as…	Salva con nome…	Enregistrer sous…
 -디자인만	-design-only	-solo-design	-design-seul
 디자인만 저장 (데이터 제외)	Save design only (without data)	Salva solo il design (senza dati)	Enregistrer le design seul (sans données)
+ZIP으로 저장 (그림·글꼴 원본 포함)	Save as ZIP (with original images and fonts)	Salva come ZIP (con immagini e font originali)	Enregistrer en ZIP (avec images et polices d'origine)
+그림과 글꼴을 원본 파일 그대로 project.json과 함께 ZIP으로 묶습니다. 열기로 다시 불러올 수 있습니다	Packs the images and fonts as their original files, together with project.json, into a ZIP. Open it again with Open	Raccoglie immagini e font come file originali, insieme a project.json, in un file ZIP. Si riapre con Apri	Regroupe les images et polices dans leurs fichiers d'origine, avec project.json, dans un ZIP. Rouvrez-le avec Ouvrir
 링크로 공유…	Share as link…	Condividi con un link…	Partager par lien…
 글꼴 관리…	Fonts…	Font…	Polices…
 프로그램 정보…	About…	Informazioni…	À propos…

@@ -1,4 +1,4 @@
-import { serialize } from '../io/project';
+import { saveProjectZip, serialize } from '../io/project';
 import { download, safeName } from '../io/export';
 import { getLang, LANGS, m, setLang, t } from '../i18n';
 import type { ObjType } from '../model/types';
@@ -43,6 +43,8 @@ export function Toolbar({ onOpen, onSave }: { onOpen: () => void; onSave: (saveA
           <button onClick={() => onSave(false)}>{t('저장')} <kbd>Ctrl+S</kbd></button>
           <button onClick={() => onSave(true)}>{t('다른 이름으로 저장…')} <kbd>Ctrl+Shift+S</kbd></button>
           <button onClick={() => download(new Blob([serialize(project, { includeData: false })], { type: 'application/json' }), safeName(project.name) + t('-디자인만') + '.labelloom.json')}>{t('디자인만 저장 (데이터 제외)')}</button>
+          <button onClick={async () => { try { s.notify(t('저장했습니다: {name}', { name: await saveProjectZip(project) })); } catch (e) { s.notify((e as Error).message); } }}
+            title={t('그림과 글꼴을 원본 파일 그대로 project.json과 함께 ZIP으로 묶습니다. 열기로 다시 불러올 수 있습니다')}>{t('ZIP으로 저장 (그림·글꼴 원본 포함)')}</button>
           <hr />
           <button onClick={() => s.open('share')}>{t('링크로 공유…')}</button>
           <button onClick={() => s.open('fonts')}>{t('글꼴 관리…')}</button>

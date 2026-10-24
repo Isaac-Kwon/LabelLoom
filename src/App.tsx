@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { BUILD_DETAIL, BUILD_LABEL } from './build';
 import { t } from './i18n';
 import { registerFonts } from './io/fonts';
-import { forgetFileHandle, loadAutosave, openProjectFile, parseProject, pushRecent, saveAutosave, saveProjectFile } from './io/project';
+import { forgetFileHandle, isProjectFile, loadAutosave, openProjectFile, pushRecent, readProjectFile, saveAutosave, saveProjectFile } from './io/project';
 import { decodeShare, readShareHash } from './io/share';
 import { migrateProject } from './model/defaults';
 import type { Project } from './model/types';
@@ -159,8 +159,8 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
     const f = e.dataTransfer.files[0];
     if (!f) return;
     const s = useStore.getState();
-    if (/\.json$/i.test(f.name)) {
-      try { loadProject(parseProject(await f.text()), f.name); } catch (err) { s.notify((err as Error).message); }
+    if (isProjectFile(f)) {
+      try { loadProject(await readProjectFile(f), f.name); } catch (err) { s.notify((err as Error).message); }
     } else if (/\.(xlsx|xls|xlsm|csv|tsv|ods)$/i.test(f.name)) {
       s.open('import', f);
     } else if (/^image\//.test(f.type) || /\.svg$/i.test(f.name)) {
@@ -196,7 +196,7 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
       {dialog === 'about' && <AboutDialog />}
       {dialog === 'preprint' && <PreprintWizard />}
       {dialog === 'table' && <TableWizard />}
-      {dropping && <DropOverlay title={t('여기에 놓으세요')} kinds={[t('.json 프로젝트'), t('xlsx · csv 데이터'), t('이미지 · SVG')]} />}
+      {dropping && <DropOverlay title={t('여기에 놓으세요')} kinds={[t('.json · .zip 프로젝트'), t('xlsx · csv 데이터'), t('이미지 · SVG')]} />}
       {toast && <div className="toast">{toast}</div>}
       <div className="build-tag" title={BUILD_DETAIL}>{BUILD_LABEL}</div>
     </div>

@@ -7,7 +7,7 @@ import { getLang, loc, locale, m, t, tn, tx, type Msg } from '../i18n';
 import { printPages } from '../io/export';
 import { fontFromFile, localFontsSupported, queryLocalFonts, registerFonts } from '../io/fonts';
 import { loadRecent, openProjectFile, pickFile, type RecentEntry } from '../io/project';
-import { encodeShare, shareUrl, type ShareKind } from '../io/share';
+import { downloadShareFile, downloadShareZip, encodeShare, kbOf, LINK_LIMIT, mainCause, measureShare, partLabel, shareUrl, type ShareKind, type SharePart, type SharePartSize } from '../io/share';
 import { newProject, newRow } from '../model/defaults';
 import { customPaper, labelSize, loadUserPresets, PAPER_KIND_LABEL, paperKind, type PaperKind } from '../model/presets';
 import { soldIn, STOCK_VENDOR_LABEL, stockItems, stockMatches, type StockCountry, type StockVendor } from '../model/stock';
@@ -82,24 +82,48 @@ export function SerialDialog() {
 
 /* ---------- share URL ---------- */
 
+const SHARE_OPTION: Partial<Record<SharePart, Msg>> = { images: m('이미지 포함'), data: m('데이터(명단) 포함'), fonts: m('내장 글꼴 포함') };
+
 export function ShareDialog() {
   const project = useStore((s) => s.project);
   const { close, notify } = useStore.getState();
   const [o, setO] = useState({ includeData: false, includeImages: true, includeFonts: false });
   const [kind, setKind] = useState<ShareKind>('p');
   const [url, setUrl] = useState('');
+  const [parts, setParts] = useState<SharePartSize[] | null>(null);
   useEffect(() => {
     let live = true;
-    encodeShare(project, o).then((code) => live && setUrl(shareUrl(code, kind))).catch((e) => setUrl(t('오류: {error}', { error: e.message })));
+    (async () => {
+      const code = await encodeShare(project, o);
+      const u = shareUrl(code, kind);
+      if (!live) return;
+      setUrl(u);
+      setParts(null);
+      if (new Blob([u]).size > LINK_LIMIT) {
+        const ps = await measureShare(project, o, code);
+        if (live) setParts(ps);
+      }
+    })().catch((e) => live && setUrl(t('오류: {error}', { error: e.message })));
     return () => { live = false; };
   }, [project, o, kind]);
-  const kb = (new Blob([url]).size / 1024).toFixed(1);
+  const size = new Blob([url]).size;
+  const long = size > LINK_LIMIT;
   const qr = useMemo(() => {
     if (!url || url.length > 2200) return '';
     try { return bwipjs.toSVG({ bcid: 'qrcode', text: url, eclevel: 'L', scale: 1 } as never); } catch { return ''; }
   }, [url]);
+  // what makes the link long, measured; leaving that part out is suggested only when it is an option and would be enough
+  const main = parts?.[0];
+  const option = main && SHARE_OPTION[main.part];
+  const smaller = main ? size - main.bytes : 0;
+  // pictures and fonts keep their original files in a ZIP, so suggest it when they make the link long
+  const zipFirst = main?.part === 'images' || main?.part === 'fonts';
   return (
-    <Modal title={t('링크로 공유')} onClose={close} wide footer={<><span className="spacer" /><button onClick={close}>{t('닫기')}</button><button className="primary" onClick={async () => { await navigator.clipboard.writeText(url); notify(t('링크를 복사했습니다.')); }}>{t('링크 복사')}</button></>}>
+    <Modal title={t('링크로 공유')} onClose={close} wide footer={<><span className="spacer" /><button onClick={close}>{t('닫기')}</button>
+      <button className={long && !zipFirst ? 'primary' : ''} onClick={() => downloadShareFile(project, o)} title={t('링크와 같은 내용을 .labelloom.json 파일로 받습니다')}>{t('JSON 파일로 받기')}</button>
+      <button className={long && zipFirst ? 'primary' : ''} onClick={() => downloadShareZip(project, o).catch((e) => notify(e.message))}
+        title={t('링크와 같은 내용을 .labelloom.zip 파일로 받습니다. 그림과 글꼴이 원본 파일로 들어갑니다')}>{t('ZIP 파일로 받기')}</button>
+      <button className={long ? '' : 'primary'} onClick={async () => { await navigator.clipboard.writeText(url); notify(t('링크를 복사했습니다.')); }}>{t('링크 복사')}</button></>}>
       <p className="muted">{t('디자인 설정 전체를 압축해 링크의 # 뒤에 넣습니다. 서버에 아무것도 저장되지 않으며, 링크를 연 사람의 브라우저에서 그대로 복원됩니다.')}</p>
       <Seg value={kind} onChange={setKind} options={[
         { value: 'p', label: t('편집용 링크'), title: t('편집기에서 디자인을 엽니다') },
@@ -109,10 +133,17 @@ export function ShareDialog() {
       <Check label={t('이미지 포함')} checked={o.includeImages} onChange={(v) => setO({ ...o, includeImages: v })} />
       <Check label={t('내장 글꼴 포함 (링크가 매우 길어짐)')} checked={o.includeFonts} onChange={(v) => setO({ ...o, includeFonts: v })} />
       <textarea className="share-url" readOnly value={url} rows={4} onFocus={(e) => e.target.select()} />
-      <p className={Number(kb) > 32 ? 'warn' : 'muted small'}>
-        {t('길이 {n}자 ({kb} KB)', { n: url.length.toLocaleString(locale()), kb })}
-        {Number(kb) > 32 && t(' — 메신저나 일부 브라우저에서 잘릴 수 있습니다. 이미지를 빼거나 JSON 파일로 저장해 공유하세요.')}
-      </p>
+      <p className="muted small">{t('길이 {n}자 ({kb} KB)', { n: url.length.toLocaleString(locale()), kb: kbOf(size) })}</p>
+      {long && <div className="warn">
+        <div>{t('링크가 길어 메신저나 일부 브라우저에서 잘릴 수 있습니다. 파일로 받아서 보내세요.')}</div>
+        {main && parts && <>
+          <div><strong>{t('주요 원인: {cause}', { cause: mainCause(parts, project, size) })}</strong></div>
+          <div>{!option ? t('링크에서 뺄 수 있는 부분이 아니므로 파일로 보내야 합니다.')
+            : smaller > LINK_LIMIT ? t("'{option}'을(를) 꺼도 {kb} KB라 여전히 깁니다.", { option: t(option), kb: kbOf(smaller) })
+              : t("'{option}'을(를) 끄면 {kb} KB로 줄지만, 받는 쪽에는 그만큼 빠진 채로 열립니다.", { option: t(option), kb: kbOf(smaller) })}</div>
+          {parts.length > 1 && <div className="small">{t('구성: {list}', { list: parts.filter((x) => x.bytes).map((x) => `${partLabel(x, project)} ${kbOf(x.bytes)} KB`).join(' · ') })}</div>}
+        </>}
+      </div>}
       {qr ? <div className="share-qr" dangerouslySetInnerHTML={{ __html: qr }} /> : url && <p className="muted small">{t('링크가 길어 QR 코드로 만들 수 없습니다.')}</p>}
     </Modal>
   );
@@ -261,7 +292,7 @@ export function StartDialog({ onLoad }: { onLoad: (p: Project, name?: string) =>
   return (
     <Modal title={`LabelLoom — ${t('새로 만들기')}`} onClose={close} wide="xl">
       <div className="start-actions">
-        <button onClick={async () => { try { const r = await openProjectFile(); if (r) { onLoad(r.project, r.name); close(); } } catch (e) { notify((e as Error).message); } }}>📂 {t('프로젝트 열기 (.json)')}</button>
+        <button onClick={async () => { try { const r = await openProjectFile(); if (r) { onLoad(r.project, r.name); close(); } } catch (e) { notify((e as Error).message); } }}>📂 {t('프로젝트 열기 (.json · .zip)')}</button>
         <button onClick={close}>{t('현재 작업 계속')}</button>
       </div>
       <div className="tabs start-tabs">
