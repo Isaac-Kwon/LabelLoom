@@ -1,143 +1,75 @@
-import { useState } from 'react';
-import {
-  cellKey, cellSpans, deleteCol, deleteRow, insertCol, insertRow, mergeCells, pasteGrid, tableSize, unmergeAt,
-} from '../model/table';
+import { cellKey, tableSize } from '../model/table';
 import type { LabelObject, TableCellStyle, TableObj } from '../model/types';
 import { act, useStore } from '../store';
 import { Check, Color, Num, Row, Section, Seg } from './controls';
-
-type Pos = { r: number; c: number };
+import { editTable, selRange, styleSel, tableCommands } from './TableCanvas';
 
 const quoteFamily = (f: string) => (/^[\w-]+$/.test(f) ? f : `"${f}"`);
 const primaryFamily = (css: string) => css.split(',')[0].trim().replace(/^["']|["']$/g, '');
 
 export function TableSection({ o }: { o: TableObj }) {
   const columns = useStore((s) => s.project.data.columns);
+  const cellSel = useStore((s) => s.cellSel);
   const up = (p: Partial<TableObj>) => act.update([o.id], p as Partial<LabelObject>);
   const { rows, cols } = tableSize(o);
-  const [active, setActive] = useState<Pos>({ r: 0, c: 0 });
-  const [anchor, setAnchor] = useState<Pos | null>(null);
-  const a = { r: Math.min(active.r, rows - 1), c: Math.min(active.c, cols - 1) };
-  const range = anchor ? {
-    r0: Math.min(anchor.r, a.r), r1: Math.max(anchor.r, a.r), c0: Math.min(anchor.c, a.c), c1: Math.max(anchor.c, a.c),
-  } : { r0: a.r, r1: a.r, c0: a.c, c1: a.c };
-  const multi = range.r0 !== range.r1 || range.c0 !== range.c1;
-  const spans = cellSpans(o);
-  const merged = !!spans.get(cellKey(a.r, a.c));
-
-  const setCell = (r: number, c: number, v: string) =>
-    up({ cells: o.cells.map((row, i) => (i === r ? row.map((x, j) => (j === c ? v : x)) : row)) });
-
-  /** Apply a style patch to every cell in the selected range. */
-  const styleRange = (patch: Partial<TableCellStyle>) => {
-    const styles = { ...o.styles };
-    for (let r = range.r0; r <= range.r1; r++) for (let c = range.c0; c <= range.c1; c++) {
-      const k = cellKey(r, c);
-      const next: TableCellStyle = { ...styles[k], ...patch };
-      (Object.keys(next) as (keyof TableCellStyle)[]).forEach((key) => { if (next[key] === undefined || next[key] === '') delete next[key]; });
-      if (Object.keys(next).length) styles[k] = next; else delete styles[k];
-    }
-    up({ styles });
-  };
+  const sel = cellSel?.id === o.id ? cellSel : null;
+  const { a, g } = selRange(o, sel);
+  const count = (g.r1 - g.r0 + 1) * (g.c1 - g.c0 + 1);
   const st = o.styles[cellKey(a.r, a.c)] ?? {};
-
-  const pick = (p: Pos, shift: boolean) => {
-    if (shift) setAnchor((x) => x ?? a); else setAnchor(null);
-    setActive(p);
-  };
-
-  const apply = (patch: Partial<TableObj> | null, next?: Pos) => {
-    if (!patch) return;
-    up(patch);
-    if (next) { setActive(next); setAnchor(null); }
-  };
+  const styleRange = (patch: Partial<TableCellStyle>) => styleSel(o, sel, patch);
+  const setCell = (v: string) => up({ cells: o.cells.map((row, i) => (i === a.r ? row.map((x, j) => (j === a.c ? v : x)) : row)) });
 
   return (
     <>
       <Section title={`표 · ${rows}행 × ${cols}열`}>
-        <div className="table-grid-wrap">
-          <table className="table-grid">
-            <tbody>
-              {o.cells.map((row, r) => (
-                <tr key={r}>
-                  {row.map((v, c) => {
-                    const span = spans.get(cellKey(r, c));
-                    if (span === null) return null;
-                    const sel = r >= range.r0 && r <= range.r1 && c >= range.c0 && c <= range.c1;
-                    const cs = o.styles[cellKey(r, c)];
-                    const head = (o.headerRow && r === 0) || (o.headerCol && c === 0);
-                    const bg = cs?.fill || (head ? o.headerFill : o.fill);
-                    return (
-                      <td key={c} rowSpan={span?.rs} colSpan={span?.cs} className={sel ? (r === a.r && c === a.c ? 'active' : 'sel') : ''}>
-                        <textarea
-                          value={v} rows={Math.max(1, v.split('\n').length)} spellCheck={false}
-                          style={{ background: bg || undefined, color: bg ? '#111' : undefined, fontWeight: cs?.bold ?? head ? 700 : 400 }}
-                          onMouseDown={(e) => pick({ r, c }, e.shiftKey)}
-                          onFocus={() => { if (active.r !== r || active.c !== c) pick({ r, c }, false); }}
-                          onChange={(e) => setCell(r, c, e.target.value)}
-                          onPaste={(e) => {
-                            const t = e.clipboardData.getData('text/plain');
-                            if (!/[\t\n]/.test(t.replace(/\r?\n$/, ''))) return;
-                            e.preventDefault();
-                            up(pasteGrid(o, t, r, c));
-                          }}
-                        />
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <p className="muted small">Shift+클릭으로 여러 칸 선택 · 엑셀에서 복사한 표를 칸에 붙여넣으면 한꺼번에 채워집니다 · 칸 안에서 Enter는 줄바꿈</p>
+        {sel ? (
+          <p className="note">칸을 클릭하고 바로 입력하세요. 끌거나 Shift+클릭으로 여러 칸, 오른쪽 클릭으로 행·열 메뉴, 칸 사이 선을 끌면 크기 조절 · Esc로 끝내기</p>
+        ) : (
+          <button className="primary" disabled={o.locked} onClick={() => editTable(o)}>칸 편집하기</button>
+        )}
+        <p className="muted small">캔버스에서 표를 더블클릭해도 칸 편집이 시작됩니다. 엑셀에서 복사한 표는 칸을 고르고 Ctrl+V로 붙여넣습니다.</p>
         <div className="btn-row">
-          <button onClick={() => apply(insertRow(o, a.r), { r: a.r, c: a.c })} title="선택 칸 위에 행 추가">행 ↑+</button>
-          <button onClick={() => apply(insertRow(o, a.r + 1), { r: a.r + 1, c: a.c })} title="선택 칸 아래에 행 추가">행 ↓+</button>
-          <button onClick={() => apply(deleteRow(o, a.r), { r: Math.max(0, a.r - 1), c: a.c })} disabled={rows <= 1}>행 삭제</button>
-        </div>
-        <div className="btn-row">
-          <button onClick={() => apply(insertCol(o, a.c), { r: a.r, c: a.c })} title="선택 칸 왼쪽에 열 추가">열 ←+</button>
-          <button onClick={() => apply(insertCol(o, a.c + 1), { r: a.r, c: a.c + 1 })} title="선택 칸 오른쪽에 열 추가">열 →+</button>
-          <button onClick={() => apply(deleteCol(o, a.c), { r: a.r, c: Math.max(0, a.c - 1) })} disabled={cols <= 1}>열 삭제</button>
-        </div>
-        <div className="btn-row">
-          <button disabled={!multi} onClick={() => apply(mergeCells(o, { r: range.r0, c: range.c0 }, { r: range.r1, c: range.c1 }), { r: range.r0, c: range.c0 })}
-            title="Shift+클릭으로 고른 칸들을 하나로 합칩니다 (예: 2시간 연속 수업)">칸 병합</button>
-          <button disabled={!merged} onClick={() => apply(unmergeAt(o, a.r, a.c))}>병합 해제</button>
-          <select value="" title="선택 칸에 데이터 열 넣기" onChange={(e) => e.target.value && setCell(a.r, a.c, (o.cells[a.r][a.c] ?? '') + `{{${e.target.value}}}`)}>
-            <option value="">+ 데이터 열</option>
-            {columns.map((c) => <option key={c} value={c}>{c}</option>)}
-          </select>
-        </div>
-      </Section>
-
-      <Section title={multi ? `선택한 칸 서식 (${(range.r1 - range.r0 + 1) * (range.c1 - range.c0 + 1)}칸)` : `칸 서식 (${a.r + 1}행 ${a.c + 1}열)`}>
-        <Row label="칸 배경">
-          <Color value={st.fill ?? ''} allowNone onChange={(c) => styleRange({ fill: c || undefined })} />
-          {st.fill && <button className="icon small" title="기본값으로" onClick={() => styleRange({ fill: undefined })}>✕</button>}
-        </Row>
-        <Row label="글자색">
-          <Color value={st.color ?? ''} allowNone onChange={(c) => styleRange({ color: c || undefined })} />
-          {st.color && <button className="icon small" title="기본값으로" onClick={() => styleRange({ color: undefined })}>✕</button>}
-        </Row>
-        <Row>
-          <Seg value={st.bold === undefined ? 'auto' : st.bold ? 'b' : 'n'} onChange={(v) => styleRange({ bold: v === 'auto' ? undefined : v === 'b' })}
-            options={[{ value: 'auto', label: '기본', title: '머리글만 굵게' }, { value: 'b', label: <b>굵게</b> }, { value: 'n', label: '보통' }]} />
-          <Seg value={st.align ?? 'auto'} onChange={(v) => styleRange({ align: v === 'auto' ? undefined : v })}
-            options={[{ value: 'auto', label: '기본' }, { value: 'left', label: '⇤' }, { value: 'center', label: '↔' }, { value: 'right', label: '⇥' }]} />
-        </Row>
-        <div className="grid2">
-          <Num label="열 너비" title={`${a.c + 1}열의 상대 너비 (다른 열과의 비율)`} value={o.colWidths[a.c] ?? 1} step={0.1} min={0.05}
-            onChange={(v) => up({ colWidths: Array.from({ length: cols }, (_, i) => (i === a.c ? v : o.colWidths[i] ?? 1)) })} />
-          <Num label="행 높이" title={`${a.r + 1}행의 상대 높이 (다른 행과의 비율)`} value={o.rowHeights[a.r] ?? 1} step={0.1} min={0.05}
-            onChange={(v) => up({ rowHeights: Array.from({ length: rows }, (_, i) => (i === a.r ? v : o.rowHeights[i] ?? 1)) })} />
-        </div>
-        <div className="btn-row">
+          <button onClick={() => useStore.getState().open('table', { id: o.id })} title="요일×교시, 학술대회 시간표, 빈 표 중에서 다시 고릅니다">표 형식 바꾸기…</button>
           <button onClick={() => up({ colWidths: Array(cols).fill(1) })}>열 너비 같게</button>
           <button onClick={() => up({ rowHeights: Array(rows).fill(1) })}>행 높이 같게</button>
         </div>
       </Section>
+
+      {sel && (
+        <Section title={count > 1 ? `선택한 칸 (${count}칸)` : `선택한 칸 (${a.r + 1}행 ${a.c + 1}열)`}>
+          <div className="cmd-grid">
+            {tableCommands(o, sel).map((c) => (
+              <button key={c.key} disabled={c.disabled} title={c.title} onClick={c.run}>{c.label}</button>
+            ))}
+          </div>
+          <Row label="칸 배경">
+            <Color value={st.fill ?? ''} allowNone onChange={(c) => styleRange({ fill: c || undefined })} />
+            {st.fill && <button className="icon small" title="기본값으로" onClick={() => styleRange({ fill: undefined })}>✕</button>}
+          </Row>
+          <Row label="글자색">
+            <Color value={st.color ?? ''} allowNone onChange={(c) => styleRange({ color: c || undefined })} />
+            {st.color && <button className="icon small" title="기본값으로" onClick={() => styleRange({ color: undefined })}>✕</button>}
+          </Row>
+          <Row>
+            <Seg value={st.bold === undefined ? 'auto' : st.bold ? 'b' : 'n'} onChange={(v) => styleRange({ bold: v === 'auto' ? undefined : v === 'b' })}
+              options={[{ value: 'auto', label: '기본', title: '머리글만 굵게' }, { value: 'b', label: <b>굵게</b> }, { value: 'n', label: '보통' }]} />
+            <Seg value={st.align ?? 'auto'} onChange={(v) => styleRange({ align: v === 'auto' ? undefined : v })}
+              options={[{ value: 'auto', label: '기본' }, { value: 'left', label: '⇤' }, { value: 'center', label: '↔' }, { value: 'right', label: '⇥' }]} />
+          </Row>
+          <div className="grid2">
+            <Num label="열 너비" title={`${a.c + 1}열의 상대 너비 (다른 열과의 비율). 캔버스에서 칸 사이 선을 끌어도 됩니다`} value={o.colWidths[a.c] ?? 1} step={0.1} min={0.05}
+              onChange={(v) => up({ colWidths: Array.from({ length: cols }, (_, i) => (i === a.c ? v : o.colWidths[i] ?? 1)) })} />
+            <Num label="행 높이" title={`${a.r + 1}행의 상대 높이 (다른 행과의 비율)`} value={o.rowHeights[a.r] ?? 1} step={0.1} min={0.05}
+              onChange={(v) => up({ rowHeights: Array.from({ length: rows }, (_, i) => (i === a.r ? v : o.rowHeights[i] ?? 1)) })} />
+          </div>
+          {columns.length > 0 && (
+            <select value="" title="선택한 칸에 데이터 열 넣기" onChange={(e) => e.target.value && setCell((o.cells[a.r][a.c] ?? '') + `{{${e.target.value}}}`)}>
+              <option value="">+ 데이터 열 넣기</option>
+              {columns.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+          )}
+        </Section>
+      )}
 
       <Section title="표 서식">
         <Row label="글꼴">

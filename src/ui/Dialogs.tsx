@@ -420,6 +420,11 @@ const KEYS: [string, string][] = [
   ['Ctrl/Alt+클릭', '그룹 안의 개체 하나만 선택'],
   ['PageUp / PageDown', '이전 / 다음 데이터 행 미리보기'],
   ['Esc', '선택 해제 / 선택 도구'],
+  ['표 더블클릭, Enter', '표 칸 편집 시작 (바로 입력하면 칸이 채워짐)'],
+  ['표: Enter / Tab / 방향키', '아래 칸 / 다음 칸 / 칸 이동 (Shift로 여러 칸)'],
+  ['표: Alt+Enter, F2', '칸 안 줄바꿈 / 칸 내용 고치기'],
+  ['표: Ctrl+C / V, Delete', '칸 복사 / 엑셀 표 붙여넣기, 내용 지우기'],
+  ['표: Esc', '칸 입력 취소 → 표 편집 끝내기'],
 ];
 
 export function ShortcutsDialog() {

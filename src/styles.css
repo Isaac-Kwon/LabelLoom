@@ -378,3 +378,52 @@ div.card { border: 1px solid var(--border-strong); background: var(--panel); cur
 .inline-editor .ie-field { display: grid; gap: 2px; }
 .inline-editor .ie-field > span { color: var(--muted); font-size: 11px; }
 .inline-editor input, .inline-editor textarea { width: 100%; box-sizing: border-box; font: inherit; resize: vertical; }
+
+/* ---------- table editing on the canvas ---------- */
+.tbl-overlay { position: absolute; z-index: 3; transform-origin: center; cursor: cell; outline: 2px solid var(--accent); outline-offset: 1px; }
+.tbl-range { position: absolute; background: rgba(37, 99, 235, 0.12); border: 2px solid #2563eb; box-sizing: border-box; pointer-events: none; }
+.tbl-grip { position: absolute; z-index: 3; }
+.tbl-grip.col { top: 0; width: 8px; cursor: col-resize; }
+.tbl-grip.row { left: 0; height: 8px; cursor: row-resize; }
+.tbl-grip:hover { background: rgba(37, 99, 235, 0.35); }
+.tbl-input { position: absolute; z-index: 2; box-sizing: border-box; margin: 0; padding: 2px 4px; border: 0; border-radius: 0; resize: none; overflow: hidden;
+  opacity: 0; cursor: cell; font-family: inherit; line-height: 1.25; color: #111; background: transparent; }
+.tbl-input.on { z-index: 4; opacity: 1; cursor: text; min-width: 90px; min-height: 26px; overflow: auto; border: 2px solid #2563eb; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2); }
+.tbl-input:focus { outline: none; }
+.tbl-add { position: absolute; width: 22px; height: 22px; padding: 0; border-radius: 50%; font-size: 14px; line-height: 1; color: var(--accent); border-color: var(--accent); }
+.tbl-bar { position: absolute; z-index: 6; display: flex; align-items: center; gap: 2px; padding: 3px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16); font-size: 12px; white-space: nowrap; max-width: calc(100% - 8px); overflow-x: auto; }
+.tbl-bar button { padding: 3px 7px; border-color: transparent; background: transparent; }
+.tbl-bar button:hover:not(:disabled) { background: var(--panel-2); border-color: var(--border-strong); }
+.tbl-bar button.on { background: var(--accent-soft); border-color: var(--accent); }
+.tbl-bar button.swatch { width: 20px; height: 20px; padding: 0; border: 1px solid var(--border-strong); font-size: 11px; color: var(--muted); }
+.tbl-bar button.swatch.on { outline: 2px solid var(--accent); }
+.tbl-bar > i { width: 1px; align-self: stretch; margin: 2px 3px; background: var(--border); }
+.tbl-bar-pos { color: var(--muted); padding: 0 6px; font-variant-numeric: tabular-nums; }
+.ctx-back { position: fixed; inset: 0; z-index: 60; }
+.ctx-menu { position: fixed; z-index: 61; min-width: 170px; padding: 4px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px; box-shadow: var(--shadow); }
+.ctx-menu button { display: block; width: 100%; text-align: left; border: none; background: transparent; padding: 5px 10px; }
+.ctx-menu button:hover:not(:disabled) { background: var(--accent-soft); }
+
+/* ---------- table wizard ---------- */
+.tw-kinds { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+.tw-kinds .card { border: 1px solid var(--border-strong); background: var(--panel); }
+.tw-kinds .card.on { border-color: var(--accent); background: var(--accent-soft); }
+.tw-body { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 14px; align-items: start; }
+.tw-form { display: grid; gap: 8px; }
+.tw-field { display: grid; gap: 3px; font-size: 12px; }
+.tw-field > span { color: var(--muted); }
+.tw-blocks { border-collapse: collapse; width: 100%; font-size: 12px; }
+.tw-blocks th { color: var(--muted); font-weight: 500; text-align: left; padding: 0 2px 2px; }
+.tw-blocks td { padding: 1px 2px; }
+.tw-blocks td:nth-child(1) input, .tw-blocks td:nth-child(2) input { width: 58px; font-variant-numeric: tabular-nums; }
+.tw-blocks td:nth-child(4) input { width: 100%; box-sizing: border-box; }
+.tw-blocks tr.bad input { border-color: #dc2626; }
+.tw-preview { display: grid; gap: 4px; justify-items: center; }
+.tw-preview .thumb { height: 300px; }
+.tw-preview .thumb svg { width: 94%; height: 94%; max-width: none; max-height: none; box-shadow: none; background: transparent; }
+@media (max-width: 720px) {
+  .tw-kinds, .tw-body { grid-template-columns: 1fr; }
+}
+.cmd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.cmd-grid button { font-size: 12px; padding: 4px 6px; }

@@ -15,6 +15,7 @@ import { ExportDialog } from './ui/ExportDialog';
 import { ImportDialog } from './ui/ImportDialog';
 import { PreprintWizard } from './ui/PreprintWizard';
 import { QuickDialog } from './ui/QuickPrint';
+import { TableWizard } from './ui/TableWizard';
 import { Inspector } from './ui/Inspector';
 import { LeftPanel } from './ui/LeftPanel';
 import { loadMediaInto } from './ui/media';
@@ -192,6 +193,7 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
       {dialog === 'shortcuts' && <ShortcutsDialog />}
       {dialog === 'about' && <AboutDialog />}
       {dialog === 'preprint' && <PreprintWizard />}
+      {dialog === 'table' && <TableWizard />}
       {dropping && <DropOverlay title="여기에 놓으세요" kinds={['.json 프로젝트', 'xlsx · csv 데이터', '이미지 · SVG']} />}
       {toast && <div className="toast">{toast}</div>}
       <div className="build-tag" title={BUILD_DETAIL}>{BUILD_LABEL}</div>

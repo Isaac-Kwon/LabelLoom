@@ -1,4 +1,4 @@
-import type { TableMerge, TableObj } from './types';
+import type { TableCellStyle, TableMerge, TableObj } from './types';
 
 /** Pure helpers for table objects: geometry, merges and structural edits. */
 
@@ -140,18 +140,124 @@ export function unmergeAt(o: TableObj, r: number, c: number): Patch {
   return { merges: o.merges.filter((m) => !(r >= m.r && r < m.r + m.rs && c >= m.c && c < m.c + m.cs)) };
 }
 
+/** Split tab/newline separated text; a cell in double quotes may hold tabs, line breaks and "" for a quote. */
+export function parseTsv(text: string): string[][] {
+  const t = text.replace(/\r\n?/g, '\n').replace(/\n$/, '');
+  const rows: string[][] = [[]];
+  const cellEnd = (from: number) => { const k = t.slice(from).search(/[\t\n]/); return k < 0 ? t.length : from + k; };
+  let i = 0;
+  for (;;) {
+    let v = '';
+    if (t[i] === '"') {
+      let j = i + 1;
+      for (;;) {
+        const q = t.indexOf('"', j);
+        if (q < 0) { v = t.slice(i); j = t.length; break; }
+        if (t[q + 1] === '"') { v += t.slice(j, q) + '"'; j = q + 2; continue; }
+        v += t.slice(j, q); j = q + 1; break;
+      }
+      const k = cellEnd(j);
+      v += t.slice(j, k); i = k;
+    } else {
+      const k = cellEnd(i);
+      v = t.slice(i, k); i = k;
+    }
+    rows[rows.length - 1].push(v);
+    if (i >= t.length) break;
+    if (t[i] === '\n') rows.push([]);
+    i++;
+  }
+  return rows;
+}
+
 /** Paste tab/newline separated text (e.g. copied from Excel) starting at a cell, growing the table as needed. */
 export function pasteGrid(o: TableObj, text: string, r0: number, c0: number): Patch {
-  const lines = text.replace(/\r\n?/g, '\n').replace(/\n$/, '').split('\n').map((l) => l.split('\t'));
+  const lines = parseTsv(text);
   const rows = Math.max(o.cells.length, r0 + lines.length);
   const cols = Math.max(tableSize(o).cols, c0 + Math.max(...lines.map((l) => l.length)));
   const cells = Array.from({ length: rows }, (_, r) => Array.from({ length: cols }, (_, c) => {
     const v = lines[r - r0]?.[c - c0];
-    return v !== undefined ? v.replace(/^"([\s\S]*)"$/, '$1').replace(/""/g, '"') : o.cells[r]?.[c] ?? '';
+    return v !== undefined ? v : o.cells[r]?.[c] ?? '';
   }));
   return {
     cells,
     rowHeights: Array.from({ length: rows }, (_, i) => o.rowHeights[i] ?? 1),
     colWidths: Array.from({ length: cols }, (_, i) => o.colWidths[i] ?? 1),
   };
+}
+
+/* ---------- ranges (on-canvas editing) ---------- */
+
+export interface CellRange { r0: number; r1: number; c0: number; c1: number }
+
+/** The merge covering a cell, if any. */
+export function mergeAt(o: TableObj, r: number, c: number): TableMerge | undefined {
+  return validMerges(o).find((m) => r >= m.r && r < m.r + m.rs && c >= m.c && c < m.c + m.cs);
+}
+
+/** The rectangle spanned by two cells, grown to take in every merge it cuts through. */
+export function cellRange(o: TableObj, a: { r: number; c: number }, b: { r: number; c: number }): CellRange {
+  let r0 = Math.min(a.r, b.r), r1 = Math.max(a.r, b.r), c0 = Math.min(a.c, b.c), c1 = Math.max(a.c, b.c);
+  const merges = validMerges(o);
+  for (let changed = true; changed;) {
+    changed = false;
+    for (const m of merges) {
+      if (m.r > r1 || m.r + m.rs - 1 < r0 || m.c > c1 || m.c + m.cs - 1 < c0) continue;
+      const n = { r0: Math.min(r0, m.r), r1: Math.max(r1, m.r + m.rs - 1), c0: Math.min(c0, m.c), c1: Math.max(c1, m.c + m.cs - 1) };
+      if (n.r0 !== r0 || n.r1 !== r1 || n.c0 !== c0 || n.c1 !== c1) { ({ r0, r1, c0, c1 } = n); changed = true; }
+    }
+  }
+  return { r0, r1, c0, c1 };
+}
+
+/** Delete rows r0..r1 (at least one row stays). */
+export function deleteRows(o: TableObj, r0: number, r1: number): Patch | null {
+  if (r1 - r0 + 1 >= o.cells.length) return null;
+  let t = o;
+  for (let r = r1; r >= r0; r--) t = { ...t, ...deleteRow(t, r)! };
+  return { cells: t.cells, rowHeights: t.rowHeights, styles: t.styles, merges: t.merges };
+}
+
+export function deleteCols(o: TableObj, c0: number, c1: number): Patch | null {
+  if (c1 - c0 + 1 >= tableSize(o).cols) return null;
+  let t = o;
+  for (let c = c1; c >= c0; c--) t = { ...t, ...deleteCol(t, c)! };
+  return { cells: t.cells, colWidths: t.colWidths, styles: t.styles, merges: t.merges };
+}
+
+export function clearRange(o: TableObj, g: CellRange): Patch {
+  return { cells: o.cells.map((row, r) => row.map((v, c) => (r >= g.r0 && r <= g.r1 && c >= g.c0 && c <= g.c1 ? '' : v))) };
+}
+
+/** Tab/newline separated text for the clipboard; cells with line breaks are quoted like Excel does. */
+export function rangeText(o: TableObj, g: CellRange): string {
+  const q = (v: string) => (/[\t\n"]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
+  return o.cells.slice(g.r0, g.r1 + 1).map((row) => row.slice(g.c0, g.c1 + 1).map(q).join('\t')).join('\n');
+}
+
+/** Move the line between track i-1 and i (in mm from the start) and return new weights averaging 1. */
+export function moveLine(sizes: number[], i: number, at: number, min: number): number[] {
+  const start = sizes.slice(0, i - 1).reduce((a, b) => a + b, 0);
+  const pair = sizes[i - 1] + sizes[i];
+  const a = Math.min(pair - min, Math.max(min, at - start));
+  const next = [...sizes];
+  next[i - 1] = a; next[i] = pair - a;
+  const mean = next.reduce((x, y) => x + y, 0) / next.length;
+  return next.map((v) => Math.round((v / mean) * 1000) / 1000);
+}
+
+/** Apply a style patch to every cell of a range; empty values fall back to the table's own style. */
+export function styleCells(o: TableObj, g: CellRange, patch: Partial<TableCellStyle>): Patch {
+  const styles = { ...o.styles };
+  for (let r = g.r0; r <= g.r1; r++) for (let c = g.c0; c <= g.c1; c++) {
+    const k = cellKey(r, c);
+    const next: TableCellStyle = { ...styles[k], ...patch };
+    (Object.keys(next) as (keyof TableCellStyle)[]).forEach((key) => { if (next[key] === undefined || next[key] === '') delete next[key]; });
+    if (Object.keys(next).length) styles[k] = next; else delete styles[k];
+  }
+  return { styles };
+}
+
+export function unmergeRange(o: TableObj, g: CellRange): Patch {
+  return { merges: o.merges.filter((m) => m.r > g.r1 || m.r + m.rs - 1 < g.r0 || m.c > g.c1 || m.c + m.cs - 1 < g.c0) };
 }

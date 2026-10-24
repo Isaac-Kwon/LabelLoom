@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { newRow } from '../model/defaults';
-import type { BarcodeObj, LabelObject, QrObj, TextObj } from '../model/types';
+import type { BarcodeObj, LabelObject, QrObj, TableObj, TextObj } from '../model/types';
 import { preprintArea, preprintMarkup } from '../render/preprint';
 import { previewCtx, templateColumns } from '../render/resolve';
 import { labelMarkup, objTransform } from '../render/svg';
 import { act, currentObjects, expandGroups, useStore } from '../store';
 import { pickImageInto } from './media';
+import { editTable, tableCellAt, TableOverlay } from './TableCanvas';
 
 type Handle = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
 type Drag =
-  | { kind: 'move'; sx: number; sy: number; orig: Map<string, { x: number; y: number }>; started: boolean }
+  | { kind: 'move'; sx: number; sy: number; orig: Map<string, { x: number; y: number }>; started: boolean; table?: TableObj }
   | { kind: 'resize'; handle: Handle; sx: number; sy: number; orig: LabelObject; started: boolean }
   | { kind: 'rotate'; orig: LabelObject; started: boolean }
   | { kind: 'marquee'; sx: number; sy: number; x: number; y: number; additive: boolean }
@@ -36,6 +37,7 @@ export function Canvas() {
   const tool = useStore((s) => s.tool);
   const zoom = useStore((s) => s.zoom);
   const currentRow = useStore((s) => s.currentRow);
+  const cellSel = useStore((s) => s.cellSel);
   const objects = currentObjects({ project, designId, side });
   const paper = project.paper;
   const LW = paper.labelWidth, LH = paper.labelHeight;
@@ -62,6 +64,7 @@ export function Canvas() {
       const s = useStore.getState();
       const o = currentObjects(s).find((x) => s.selection.length === 1 && x.id === s.selection[0]);
       if (o && 'content' in o && !o.locked) { e.preventDefault(); setEditing(o.id); }
+      if (o?.type === 'table' && !o.locked && !s.cellSel) { e.preventDefault(); editTable(o); }
     };
     window.addEventListener('keydown', h);
     return () => window.removeEventListener('keydown', h);
@@ -186,6 +189,8 @@ export function Canvas() {
     if (e.button !== 0) return;
     if (tool !== 'select') { onBackgroundDown(e); return; }
     const s = useStore.getState();
+    // a click on a table that is already selected goes into its cells
+    const table = o.type === 'table' && !o.locked && !e.shiftKey && s.selection.length === 1 && s.selection[0] === o.id ? o : undefined;
     const direct = e.ctrlKey || e.metaKey || e.altKey;
     const ids = direct ? [o.id] : expandGroups(objects, [o.id]);
     let next = s.selection;
@@ -196,7 +201,7 @@ export function Canvas() {
     const m = toMm(e);
     const orig = new Map<string, { x: number; y: number }>();
     objects.filter((x) => next.includes(x.id) && !x.locked).forEach((x) => orig.set(x.id, { x: x.x, y: x.y }));
-    if (orig.size) setDrag({ kind: 'move', sx: m.x, sy: m.y, orig, started: false });
+    if (orig.size) setDrag({ kind: 'move', sx: m.x, sy: m.y, orig, started: false, table });
   };
 
   const onHandleDown = (e: React.PointerEvent, o: LabelObject, h: Handle | 'rot') => {
@@ -315,7 +320,14 @@ export function Canvas() {
       const ids = expandGroups(objects, hit);
       s.select(d.additive ? [...new Set([...s.selection, ...ids])] : ids);
     }
-    if (d.kind === 'create' && tool !== 'select') {
+    if (d.kind === 'move' && !d.started && d.table) editTable(d.table, tableCellAt(d.table, { x: d.sx, y: d.sy }));
+    if (d.kind === 'create' && tool === 'table') {
+      // the layout is picked first; the table fills what was drawn
+      const x = Math.min(d.sx, d.x), y = Math.min(d.sy, d.y), w = Math.abs(d.x - d.sx), h = Math.abs(d.y - d.sy);
+      const small = w * zoom < 6 && h * zoom < 6;
+      s.setTool('select');
+      s.open('table', small ? { x: round(x), y: round(y) } : { x: round(x), y: round(y), w: round(Math.max(5, w)), h: round(Math.max(5, h)) });
+    } else if (d.kind === 'create' && tool !== 'select') {
       const x = Math.min(d.sx, d.x), y = Math.min(d.sy, d.y), w = Math.abs(d.x - d.sx), h = Math.abs(d.y - d.sy);
       const small = w * zoom < 6 && h * zoom < 6;
       const o = act.add(tool, round(x), round(y), small ? undefined : round(Math.max(1, w)), small ? undefined : round(Math.max(tool === 'line' ? 0.5 : 1, h)));
@@ -324,8 +336,9 @@ export function Canvas() {
     }
   };
 
-  const onDouble = (o: LabelObject) => {
-    if (o.type === 'image' || o.type === 'svg') pickImageInto(o.id, o.type);
+  const onDouble = (e: React.MouseEvent, o: LabelObject) => {
+    if (o.type === 'table' && !o.locked) editTable(o, tableCellAt(o, toMm(e)));
+    else if (o.type === 'image' || o.type === 'svg') pickImageInto(o.id, o.type);
     else if ('content' in o && !o.locked) { useStore.getState().select([o.id]); setEditing(o.id); }
   };
 
@@ -333,6 +346,7 @@ export function Canvas() {
   const px = 1 / zoom;
   const selected = objects.filter((o) => selection.includes(o.id));
   const single = selected.length === 1 && !selected[0].locked ? selected[0] : null;
+  const cellTable = single?.type === 'table' && !single.hidden && cellSel?.id === single.id ? single : null;
   const cursor = drag?.kind === 'pan' || space ? 'grabbing' : tool !== 'select' ? 'crosshair' : 'default';
 
   return (
@@ -362,7 +376,7 @@ export function Canvas() {
             <rect key={o.id} transform={objTransform(o)} y={o.h * zoom < 8 ? (o.h - 8 * px) / 2 : 0}
               width={Math.max(o.w, 8 * px)} height={Math.max(o.h, 8 * px)} fill="transparent"
               className={`hit ${o.locked ? 'locked' : ''}`}
-              onPointerDown={(e) => onObjectDown(e, o)} onDoubleClick={() => onDouble(o)} />
+              onPointerDown={(e) => onObjectDown(e, o)} onDoubleClick={(e) => onDouble(e, o)} />
           ))}
           {/* non-printing guides */}
           {objects.map((o) => o.noPrint && !o.hidden && (
@@ -374,7 +388,7 @@ export function Canvas() {
             <rect key={'s' + o.id} transform={objTransform(o)} width={o.w} height={o.h} fill="none"
               stroke={o.locked ? '#f59e0b' : '#2563eb'} strokeWidth={1.5 * px} pointerEvents="none" />
           ))}
-          {single && (
+          {single && !cellTable && (
             <g transform={objTransform(single)}>
               <line x1={single.w / 2} y1={0} x2={single.w / 2} y2={-18 * px} stroke="#2563eb" strokeWidth={px} />
               <circle cx={single.w / 2} cy={-18 * px} r={4.5 * px} fill="#fff" stroke="#2563eb" strokeWidth={1.5 * px}
@@ -394,6 +408,7 @@ export function Canvas() {
           )}
         </g>
       </svg>
+      {cellTable && !(drag && drag.kind !== 'pan') && <TableOverlay key={cellTable.id} o={cellTable} pan={pan} zoom={zoom} size={size} toMm={toMm} />}
       <Rulers pan={pan} zoom={zoom} size={size} selected={single} />
       {editObj && !drag && (
         <InlineEditor key={editObj.id} o={editObj} onClose={() => setEditing(null)}

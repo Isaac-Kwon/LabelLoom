@@ -7,7 +7,10 @@ export type Tool = 'select' | ObjType;
 export type Side = 'front' | 'back';
 export type Dialog =
   | null | 'export' | 'import' | 'serial' | 'share' | 'start' | 'designRules' | 'reprint'
-  | 'calibration' | 'shortcuts' | 'components' | 'fonts' | 'presets' | 'quick' | 'about' | 'preprint';
+  | 'calibration' | 'shortcuts' | 'components' | 'fonts' | 'presets' | 'quick' | 'about' | 'preprint' | 'table';
+
+/** Cells picked inside a table being edited on the canvas: the active cell and the other corner of the range. */
+export interface CellSel { id: string; r: number; c: number; ar: number; ac: number }
 
 interface State {
   project: Project;
@@ -25,6 +28,8 @@ interface State {
   fileName: string;
   toast: string;
   clipboard: LabelObject[];
+  /** set while a table is edited cell by cell on the canvas */
+  cellSel: CellSel | null;
 }
 
 interface Actions {
@@ -48,6 +53,7 @@ interface Actions {
   notify(msg: string): void;
   setFileName(n: string): void;
   setClipboard(objs: LabelObject[]): void;
+  setCellSel(c: CellSel | null): void;
 }
 
 const HISTORY = 100;
@@ -71,6 +77,7 @@ export const useStore = create<State & Actions>((set, get) => {
     fileName: '',
     toast: '',
     clipboard: [],
+    cellSel: null,
 
     setProject(p, opts) {
       const s = get();
@@ -112,10 +119,13 @@ export const useStore = create<State & Actions>((set, get) => {
       set({ project: next, past: [...s.past, s.project], future: rest });
       fixView();
     },
-    select: (ids) => set({ selection: ids }),
+    select(ids) {
+      const c = get().cellSel;
+      set({ selection: ids, cellSel: c && ids.length === 1 && ids[0] === c.id ? c : null });
+    },
     setTool: (t) => set({ tool: t }),
     setZoom: (z) => set({ zoom: Math.min(60, Math.max(0.5, z)) }),
-    setDesign: (id, side) => set({ designId: id, side: side ?? 'front', selection: [] }),
+    setDesign: (id, side) => set({ designId: id, side: side ?? 'front', selection: [], cellSel: null }),
     setCurrentRow: (i) => set({ currentRow: i }),
     setFilter: (f) => set({ filter: { ...get().filter, ...f } }),
     open: (d, arg) => set({ dialog: d, dialogArg: arg }),
@@ -127,13 +137,15 @@ export const useStore = create<State & Actions>((set, get) => {
     },
     setFileName: (n) => set({ fileName: n }),
     setClipboard: (objs) => set({ clipboard: objs }),
+    setCellSel: (c) => set({ cellSel: c }),
   };
 
   function fixView() {
     const s = get();
     if (!s.project.designs.some((d) => d.id === s.designId)) set({ designId: s.project.designs[0].id, side: 'front' });
     const ids = new Set(currentObjects(get()).map((o) => o.id));
-    set({ selection: s.selection.filter((id) => ids.has(id)) });
+    const selection = s.selection.filter((id) => ids.has(id));
+    set({ selection, cellSel: s.cellSel && selection.includes(s.cellSel.id) ? s.cellSel : null });
   }
 });
 
