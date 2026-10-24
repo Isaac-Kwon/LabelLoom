@@ -6,6 +6,7 @@
   "info": [
     { "label": "제작자", "value": "Minjae Isaac Kwon", "url": "" },
     { "label": "소속", "value": "Dipartimento di Fisica, Università degli Studi di Torino", "url": "" },
+    { "label": "AI 활용", "value": "Anthropic Claude Opus 5.5", "url": "https://www.anthropic.com/claude" },
     { "label": "연락처", "value": "", "url": "" },
     { "label": "웹사이트", "value": "https://www.isaack.dev", "url": "https://www.isaack.dev" },
     { "label": "소스 코드", "value": "github.com/Isaac-Kwon/LabelLoom", "url": "https://github.com/Isaac-Kwon/LabelLoom" },
