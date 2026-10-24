@@ -103,12 +103,16 @@ export function copy(cut = false) {
   if (cut) act.removeSelected();
 }
 
-export function paste() {
+/** Paste the clipboard, offset a little — or with its top-left corner at `at` (mm). */
+export function paste(at?: { x: number; y: number }) {
   let objs = st().clipboard;
   if (!objs.length) {
     try { objs = JSON.parse(localStorage.getItem('labelloom.clipboard') || '[]'); } catch { objs = []; }
   }
-  if (objs.length) act.insert(objs, 2);
+  if (!objs.length) return;
+  if (!at) { act.insert(objs, 2); return; }
+  const b = bounds(objs);
+  act.insert(objs.map((o) => ({ ...o, x: o.x - b.x0 + at.x, y: o.y - b.y0 + at.y })));
 }
 
 export function duplicate() {

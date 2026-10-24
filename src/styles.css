@@ -404,6 +404,11 @@ div.card { border: 1px solid var(--border-strong); background: var(--panel); cur
 .ctx-menu { position: fixed; z-index: 61; min-width: 170px; padding: 4px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px; box-shadow: var(--shadow); }
 .ctx-menu button { display: block; width: 100%; text-align: left; border: none; background: transparent; padding: 5px 10px; }
 .ctx-menu button:hover:not(:disabled) { background: var(--accent-soft); }
+.canvas-menu { min-width: 220px; }
+.canvas-menu > button { display: flex; justify-content: space-between; gap: 18px; }
+.ctx-key { color: var(--muted); font-size: 11px; }
+.ctx-align { display: flex; gap: 2px; padding: 2px; }
+.ctx-menu .ctx-align button { flex: 1; text-align: center; padding: 4px 0; font-size: 15px; }
 
 /* ---------- table wizard ---------- */
 .tw-kinds { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }

@@ -5,6 +5,7 @@ import { preprintArea, preprintMarkup } from '../render/preprint';
 import { previewCtx, templateColumns } from '../render/resolve';
 import { labelMarkup, objTransform } from '../render/svg';
 import { act, currentObjects, expandGroups, useStore } from '../store';
+import { CanvasMenu } from './CanvasMenu';
 import { pickImageInto } from './media';
 import { editTable, tableCellAt, TableOverlay } from './TableCanvas';
 
@@ -50,6 +51,7 @@ export function Canvas() {
   const [guides, setGuides] = useState<{ x: number[]; y: number[] }>({ x: [], y: [] });
   const [space, setSpace] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
+  const [menu, setMenu] = useState<{ x: number; y: number; at: { x: number; y: number } } | null>(null);
   const dragRef = useRef<Drag | null>(null);
   dragRef.current = drag;
   const editObj = editing ? objects.find((o): o is ContentObj => o.id === editing && 'content' in o) : undefined;
@@ -336,6 +338,20 @@ export function Canvas() {
     }
   };
 
+  /** Right-click: an object joins the selection (as a click would) unless it is already in it. */
+  const onMenu = (e: React.MouseEvent, o?: LabelObject) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (dragRef.current) return;
+    const s = useStore.getState();
+    if (s.tool !== 'select') s.setTool('select');
+    if (!o) s.select([]);
+    else if (!s.selection.includes(o.id)) s.select(e.ctrlKey || e.metaKey || e.altKey ? [o.id] : expandGroups(objects, [o.id]));
+    const m = toMm(e);
+    setMenu({ x: e.clientX, y: e.clientY, at: { x: round(m.x), y: round(m.y) } });
+  };
+  const closeMenu = useCallback(() => setMenu(null), []);
+
   const onDouble = (e: React.MouseEvent, o: LabelObject) => {
     if (o.type === 'table' && !o.locked) editTable(o, tableCellAt(o, toMm(e)));
     else if (o.type === 'image' || o.type === 'svg') pickImageInto(o.id, o.type);
@@ -351,7 +367,7 @@ export function Canvas() {
 
   return (
     <div className="canvas-wrap" ref={wrap} onWheel={onWheel} style={{ cursor }}>
-      <svg className="canvas-svg" width={size.w} height={size.h} onPointerDown={onBackgroundDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}>
+      <svg className="canvas-svg" width={size.w} height={size.h} onPointerDown={onBackgroundDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onContextMenu={(e) => onMenu(e)}>
         <defs>
           <filter id="paper-shadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy={0.6 * px * 2} stdDeviation={3 * px} floodOpacity="0.18" /></filter>
           <pattern id="checker" width={4 * px} height={4 * px} patternUnits="userSpaceOnUse"><rect width={2 * px} height={2 * px} fill="#e5e7eb" /><rect x={2 * px} y={2 * px} width={2 * px} height={2 * px} fill="#e5e7eb" /></pattern>
@@ -376,7 +392,7 @@ export function Canvas() {
             <rect key={o.id} transform={objTransform(o)} y={o.h * zoom < 8 ? (o.h - 8 * px) / 2 : 0}
               width={Math.max(o.w, 8 * px)} height={Math.max(o.h, 8 * px)} fill="transparent"
               className={`hit ${o.locked ? 'locked' : ''}`}
-              onPointerDown={(e) => onObjectDown(e, o)} onDoubleClick={(e) => onDouble(e, o)} />
+              onPointerDown={(e) => onObjectDown(e, o)} onDoubleClick={(e) => onDouble(e, o)} onContextMenu={(e) => onMenu(e, o)} />
           ))}
           {/* non-printing guides */}
           {objects.map((o) => o.noPrint && !o.hidden && (
@@ -389,7 +405,7 @@ export function Canvas() {
               stroke={o.locked ? '#f59e0b' : '#2563eb'} strokeWidth={1.5 * px} pointerEvents="none" />
           ))}
           {single && !cellTable && (
-            <g transform={objTransform(single)}>
+            <g transform={objTransform(single)} onContextMenu={(e) => onMenu(e, single)}>
               <line x1={single.w / 2} y1={0} x2={single.w / 2} y2={-18 * px} stroke="#2563eb" strokeWidth={px} />
               <circle cx={single.w / 2} cy={-18 * px} r={4.5 * px} fill="#fff" stroke="#2563eb" strokeWidth={1.5 * px}
                 style={{ cursor: 'grab' }} onPointerDown={(e) => onHandleDown(e, single, 'rot')} />
@@ -414,6 +430,10 @@ export function Canvas() {
         <InlineEditor key={editObj.id} o={editObj} onClose={() => setEditing(null)}
           left={Math.min(Math.max(8, pan.x + editObj.x * zoom), Math.max(8, size.w - 288))}
           top={Math.min(pan.y + (editObj.y + editObj.h) * zoom + 10, Math.max(8, size.h - 200))} />
+      )}
+      {menu && (
+        <CanvasMenu x={menu.x} y={menu.y} at={menu.at} onClose={closeMenu}
+          onEdit={(o) => { useStore.getState().select([o.id]); setEditing(o.id); }} />
       )}
       {single && drag && drag.kind !== 'pan' && drag.kind !== 'marquee' && (
         <div className="measure">{single.x.toFixed(1)}, {single.y.toFixed(1)} · {single.w.toFixed(1)}×{single.h.toFixed(1)} mm{single.rotation ? ` · ${single.rotation}°` : ''}</div>
