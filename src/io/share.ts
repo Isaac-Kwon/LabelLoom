@@ -42,11 +42,14 @@ export async function decodeShare(code: string): Promise<Project> {
   return parseProject(new TextDecoder().decode(bytes));
 }
 
-export function shareUrl(code: string) {
-  return `${location.origin === 'null' ? 'file://' : location.origin}${location.pathname}#p=${code}`;
+/** p = open in the editor, q = open in quick print (fill in fields and print). */
+export type ShareKind = 'p' | 'q';
+
+export function shareUrl(code: string, kind: ShareKind = 'p') {
+  return `${location.origin === 'null' ? 'file://' : location.origin}${location.pathname}#${kind}=${code}`;
 }
 
-export function readShareHash(): string | null {
-  const m = location.hash.match(/^#p=([A-Za-z0-9_-]+)/);
-  return m ? m[1] : null;
+export function readShareHash(): { kind: ShareKind; code: string } | null {
+  const m = location.hash.match(/^#([pq])=([A-Za-z0-9_-]+)/);
+  return m ? { kind: m[1] as ShareKind, code: m[2] } : null;
 }

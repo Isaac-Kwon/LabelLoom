@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
 import { download, exportPdf, exportPngZip, exportSplitPdfZip, printPages, printTestPage, safeName } from '../io/export';
 import { barcodeSvg, code2dSvg } from '../render/barcode';
-import { buildItems, DEFAULT_DUPLEX, jobFold, paginate, selectRows, type JobOptions, type Scope } from '../render/jobs';
+import { buildItems, DEFAULT_DUPLEX, jobFold, paginate, projectDuplex, selectRows, type JobOptions, type Scope } from '../render/jobs';
 import { resolveObject } from '../render/resolve';
 import { sheetDocument, sheetLayout } from '../render/svg';
+import type { Project } from '../model/types';
 import { useStore } from '../store';
 import { Check, Modal, Num, Progress, Row, Select, Seg } from './controls';
 import { filterRows } from './DataPanel';
@@ -11,7 +12,13 @@ import { filterRows } from './DataPanel';
 type Format = 'print' | 'pdf' | 'png' | 'split';
 
 const SETTINGS_KEY = 'labelloom.exportSettings';
-const loadSettings = () => { try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}'); } catch { return {}; } };
+export const loadExportSettings = () => { try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}'); } catch { return {}; } };
+
+/** Initial duplex options: the project's saved layout (duplex on), else the browser's last settings. */
+function duplexJob(p: Project, saved: Record<string, unknown>, hasBack: boolean) {
+  const d = projectDuplex(p, saved);
+  return { ...DEFAULT_DUPLEX, duplex: hasBack && !!p.duplex, duplexMode: d.mode, mirror: d.mirror, foldDir: d.foldDir, foldRotate: d.foldRotate };
+}
 
 export function ExportDialog() {
   const project = useStore((s) => s.project);
@@ -19,7 +26,7 @@ export function ExportDialog() {
   const filter = useStore((s) => s.filter);
   const { close, commit, notify } = useStore.getState();
   const arg = useStore((s) => s.dialogArg) as Partial<JobOptions> | undefined;
-  const saved = useMemo(loadSettings, []);
+  const saved = useMemo(loadExportSettings, []);
   const hasRows = project.data.rows.length > 0;
   const hasBack = project.designs.some((d) => d.back?.length);
   const filtered = !!(filter.text || (filter.column && filter.value !== ''));
@@ -28,9 +35,7 @@ export function ExportDialog() {
   const [job, setJob] = useState<JobOptions>({
     scope: arg?.scope ?? (filtered ? 'filtered' : 'checked'), rangeFrom: 1, rangeTo: project.data.rows.length || 1,
     currentRow, copies: 1, blankCount: project.paper.cols * project.paper.rows, startCell: 1,
-    ...DEFAULT_DUPLEX,
-    duplexMode: saved.duplexMode ?? DEFAULT_DUPLEX.duplexMode, foldDir: saved.foldDir ?? DEFAULT_DUPLEX.foldDir,
-    foldRotate: saved.foldRotate ?? DEFAULT_DUPLEX.foldRotate, ...arg,
+    ...duplexJob(project, saved, hasBack), ...arg,
   });
   const [cropMarks, setCropMarks] = useState<boolean>(saved.cropMarks ?? false);
   const [outlines, setOutlines] = useState<boolean>(false);
@@ -102,6 +107,12 @@ export function ExportDialog() {
   const run = async () => {
     if (!items.length) { notify('출력할 라벨이 없습니다.'); return; }
     remember();
+    if (job.duplex && hasBack) {
+      // keep the duplex layout in the project so quick print and shared templates follow it
+      const d = { mode: job.duplexMode, mirror: job.mirror, foldDir: job.foldDir, foldRotate: job.foldRotate };
+      const o = project.duplex;
+      if (!o || o.mode !== d.mode || o.mirror !== d.mirror || o.foldDir !== d.foldDir || o.foldRotate !== d.foldRotate) commit((p) => ({ ...p, duplex: d }));
+    }
     const base = safeName(project.name);
     try {
       if (format === 'print') {

@@ -7,7 +7,7 @@ export type Tool = 'select' | ObjType;
 export type Side = 'front' | 'back';
 export type Dialog =
   | null | 'export' | 'import' | 'serial' | 'share' | 'start' | 'designRules' | 'reprint'
-  | 'calibration' | 'shortcuts' | 'components' | 'fonts' | 'presets';
+  | 'calibration' | 'shortcuts' | 'components' | 'fonts' | 'presets' | 'quick';
 
 interface State {
   project: Project;

@@ -198,6 +198,9 @@ export interface DataTable { columns: string[]; rows: Row[] }
 
 export interface EmbeddedFont { family: string; data: string /* base64 */; format: 'truetype' | 'opentype' | 'woff' | 'woff2' }
 
+/** Duplex layout last used for this project, so quick print and other machines follow it. */
+export interface DuplexSettings { mode: 'sheets' | 'fold'; mirror: 'cols' | 'rows'; foldDir: 'right' | 'below'; foldRotate: boolean }
+
 export interface Project {
   app: 'labelloom';
   version: number;
@@ -209,4 +212,5 @@ export interface Project {
   data: DataTable;
   calibration: Calibration;
   seqStart: number;
+  duplex?: DuplexSettings;
 }

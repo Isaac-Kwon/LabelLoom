@@ -3,11 +3,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { printPages } from '../io/export';
 import { fontFromFile, localFontsSupported, queryLocalFonts, registerFonts } from '../io/fonts';
 import { loadRecent, openProjectFile, pickFile, type RecentEntry } from '../io/project';
-import { encodeShare, shareUrl } from '../io/share';
+import { encodeShare, shareUrl, type ShareKind } from '../io/share';
 import { newRow } from '../model/defaults';
 import { TEMPLATES } from '../model/templates';
 import type { Project } from '../model/types';
-import { buildItems, DEFAULT_DUPLEX, paginate } from '../render/jobs';
+import { buildItems, DEFAULT_DUPLEX, labelSizeProject, paginate } from '../render/jobs';
 import { pickDesign, previewCtx } from '../render/resolve';
 import { labelDocument } from '../render/svg';
 import { useStore } from '../store';
@@ -80,12 +80,13 @@ export function ShareDialog() {
   const project = useStore((s) => s.project);
   const { close, notify } = useStore.getState();
   const [o, setO] = useState({ includeData: false, includeImages: true, includeFonts: false });
+  const [kind, setKind] = useState<ShareKind>('p');
   const [url, setUrl] = useState('');
   useEffect(() => {
     let live = true;
-    encodeShare(project, o).then((code) => live && setUrl(shareUrl(code))).catch((e) => setUrl('오류: ' + e.message));
+    encodeShare(project, o).then((code) => live && setUrl(shareUrl(code, kind))).catch((e) => setUrl('오류: ' + e.message));
     return () => { live = false; };
-  }, [project, o]);
+  }, [project, o, kind]);
   const kb = (new Blob([url]).size / 1024).toFixed(1);
   const qr = useMemo(() => {
     if (!url || url.length > 2200) return '';
@@ -94,6 +95,10 @@ export function ShareDialog() {
   return (
     <Modal title="링크로 공유" onClose={close} wide footer={<><span className="spacer" /><button onClick={close}>닫기</button><button className="primary" onClick={async () => { await navigator.clipboard.writeText(url); notify('링크를 복사했습니다.'); }}>링크 복사</button></>}>
       <p className="muted">디자인 설정 전체를 압축해 링크의 # 뒤에 넣습니다. 서버에 아무것도 저장되지 않으며, 링크를 연 사람의 브라우저에서 그대로 복원됩니다.</p>
+      <Seg value={kind} onChange={setKind} options={[
+        { value: 'p', label: '편집용 링크', title: '편집기에서 디자인을 엽니다' },
+        { value: 'q', label: '빠른 출력 링크', title: '편집기 없이 값만 입력해 바로 인쇄하는 화면을 엽니다' },
+      ]} />
       <Check label="데이터(명단) 포함 — 개인정보가 링크에 들어갑니다" checked={o.includeData} onChange={(v) => setO({ ...o, includeData: v })} />
       <Check label="이미지 포함" checked={o.includeImages} onChange={(v) => setO({ ...o, includeImages: v })} />
       <Check label="내장 글꼴 포함 (링크가 매우 길어짐)" checked={o.includeFonts} onChange={(v) => setO({ ...o, includeFonts: v })} />
@@ -174,9 +179,7 @@ export function ReprintDialog() {
 
   const printOne = (rowId: string, p: Project = project) => {
     const index = p.data.rows.findIndex((r) => r.id === rowId);
-    const proj: Project = labelPage
-      ? { ...p, paper: { ...p.paper, width: p.paper.labelWidth, height: p.paper.labelHeight, cols: 1, rows: 1, marginLeft: 0, marginTop: 0, gapX: 0, gapY: 0 } }
-      : p;
+    const proj: Project = labelPage ? labelSizeProject(p) : p;
     const items = buildItems(proj, { scope: 'current', currentRow: index, rangeFrom: 1, rangeTo: 1, copies: 1, blankCount: 1, startCell: 1, ...DEFAULT_DUPLEX });
     printPages(proj, paginate(proj, items, { startCell: labelPage ? 1 : cell, duplex: false }), { calibrate: !labelPage });
     const now = new Date().toISOString();

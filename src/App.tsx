@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { version } from '../package.json';
 import { registerFonts } from './io/fonts';
 import { forgetFileHandle, loadAutosave, openProjectFile, parseProject, pushRecent, saveAutosave, saveProjectFile } from './io/project';
@@ -12,6 +12,7 @@ import { DataPanel } from './ui/DataPanel';
 import { CalibrationDialog, FontsDialog, ReprintDialog, SerialDialog, ShareDialog, ShortcutsDialog, StartDialog } from './ui/Dialogs';
 import { ExportDialog } from './ui/ExportDialog';
 import { ImportDialog } from './ui/ImportDialog';
+import { QuickDialog } from './ui/QuickPrint';
 import { Inspector } from './ui/Inspector';
 import { LeftPanel } from './ui/LeftPanel';
 import { loadMediaInto } from './ui/media';
@@ -25,13 +26,14 @@ const TOOL_KEYS: Record<string, Parameters<ReturnType<typeof useStore.getState>[
   v: 'select', t: 'text', r: 'rect', o: 'ellipse', l: 'line', b: 'barcode', q: 'qr', i: 'image',
 };
 
-export default function App() {
+export default function App({ initial }: { initial?: Project }) {
   const dialog = useStore((s) => s.dialog);
   const toast = useStore((s) => s.toast);
   const project = useStore((s) => s.project);
   const [dataH, setDataH] = useState(() => Number(localStorage.getItem('labelloom.dataH')) || 220);
   const [ready, setReady] = useState(false);
   const [dropping, setDropping] = useState(false);
+  const started = useRef(false);
 
   const loadProject = useCallback((p: Project, name = '') => {
     const s = useStore.getState();
@@ -43,20 +45,27 @@ export default function App() {
     setTimeout(() => window.dispatchEvent(new Event('labelloom:fit')), 0);
   }, []);
 
-  /* ---------- startup: share link → autosave → start screen ---------- */
+  /* ---------- startup: template from quick print → share link → autosave → start screen ---------- */
   useEffect(() => {
+    if (started.current) return; // StrictMode runs effects twice in dev; ask only once
+    started.current = true;
+    /** Open p in place of the autosaved work, which is kept in the recent list (after asking). */
+    const adopt = async (p: Project, what: string, done: string) => {
+      const prev = await loadAutosave();
+      if (!prev || confirm(`${what} "${p.name}"을(를) 엽니다.\n지금 작업 중인 내용은 "최근 저장한 작업"에 보관됩니다.`)) {
+        if (prev) await pushRecent(migrateProject(prev));
+        loadProject(p);
+        useStore.getState().notify(done);
+      } else if (prev) loadProject(migrateProject(prev));
+    };
     (async () => {
-      const code = readShareHash();
+      const share = readShareHash();
       const s = useStore.getState();
-      if (code) {
+      if (initial) {
+        await adopt(initial, '빠른 출력 템플릿', '빠른 출력 템플릿을 편집기에서 열었습니다.');
+      } else if (share) {
         try {
-          const p = await decodeShare(code);
-          const prev = await loadAutosave();
-          if (!prev || confirm(`공유된 디자인 "${p.name}"을(를) 엽니다.\n지금 작업 중인 내용은 "최근 저장한 작업"에 보관됩니다.`)) {
-            if (prev) await pushRecent(migrateProject(prev));
-            loadProject(p);
-            s.notify('공유 링크에서 디자인을 불러왔습니다.');
-          } else if (prev) loadProject(migrateProject(prev));
+          await adopt(await decodeShare(share.code), '공유된 디자인', '공유 링크에서 디자인을 불러왔습니다.');
         } catch (e) {
           s.notify('공유 링크를 읽을 수 없습니다: ' + (e as Error).message);
         }
@@ -69,7 +78,7 @@ export default function App() {
       }
       setReady(true);
     })();
-  }, [loadProject]);
+  }, [loadProject, initial]);
 
   /* ---------- autosave ---------- */
   useEffect(() => {
@@ -169,6 +178,7 @@ export default function App() {
       {dialog === 'share' && <ShareDialog />}
       {dialog === 'start' && <StartDialog onLoad={loadProject} />}
       {dialog === 'reprint' && <ReprintDialog />}
+      {dialog === 'quick' && <QuickDialog />}
       {dialog === 'calibration' && <CalibrationDialog />}
       {dialog === 'fonts' && <FontsDialog />}
       {dialog === 'shortcuts' && <ShortcutsDialog />}

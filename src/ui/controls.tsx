@@ -103,7 +103,7 @@ export function Row({ children, label }: { children: ReactNode; label?: string }
   return <div className="row">{label && <span className="row-label">{label}</span>}{children}</div>;
 }
 
-export function Modal({ title, onClose, children, footer, wide }: { title: string; onClose: () => void; children: ReactNode; footer?: ReactNode; wide?: boolean | 'xl' }) {
+export function Modal({ title, onClose, children, footer, wide, actions }: { title: string; onClose: () => void; children: ReactNode; footer?: ReactNode; wide?: boolean | 'xl'; actions?: ReactNode }) {
   useEffect(() => {
     const k = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', k);
@@ -112,7 +112,7 @@ export function Modal({ title, onClose, children, footer, wide }: { title: strin
   return (
     <div className="modal-back" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className={`modal ${wide === 'xl' ? 'xl' : wide ? 'wide' : ''}`} role="dialog" aria-label={title}>
-        <header><h2>{title}</h2><button className="icon" onClick={onClose} aria-label="닫기">✕</button></header>
+        <header><h2>{title}</h2>{actions}<button className="icon" onClick={onClose} aria-label="닫기">✕</button></header>
         <div className="modal-body">{children}</div>
         {footer && <footer>{footer}</footer>}
       </div>

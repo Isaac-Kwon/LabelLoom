@@ -1,4 +1,4 @@
-import type { Design, Project, Row } from '../model/types';
+import type { Design, DuplexSettings, Project, Row } from '../model/types';
 import { pickDesign, type ResolveCtx } from './resolve';
 import { sheetLayout, type Fold, type SheetCell } from './svg';
 
@@ -31,6 +31,22 @@ export const DEFAULT_DUPLEX: Pick<JobOptions, 'duplex' | 'duplexMode' | 'mirror'
 /** Fold settings for the renderer, or null when not fold-printing. */
 export const jobFold = (o: Pick<JobOptions, 'duplex' | 'duplexMode' | 'foldDir' | 'foldRotate'>): Fold | null =>
   o.duplex && o.duplexMode === 'fold' ? { dir: o.foldDir, rotate: o.foldRotate } : null;
+
+/** Duplex options from the project, falling back to the browser's last export settings. */
+export function projectDuplex(p: Project, saved: Partial<Record<'duplexMode' | 'foldDir' | 'foldRotate', unknown>> = {}): DuplexSettings {
+  const d = p.duplex;
+  return {
+    mode: d?.mode ?? (saved.duplexMode as DuplexSettings['mode']) ?? DEFAULT_DUPLEX.duplexMode,
+    mirror: d?.mirror ?? DEFAULT_DUPLEX.mirror,
+    foldDir: d?.foldDir ?? (saved.foldDir as DuplexSettings['foldDir']) ?? DEFAULT_DUPLEX.foldDir,
+    foldRotate: d?.foldRotate ?? (saved.foldRotate as boolean) ?? DEFAULT_DUPLEX.foldRotate,
+  };
+}
+
+/** The same project on a page exactly one label in size (label printers, single reprints). */
+export const labelSizeProject = (p: Project): Project => ({
+  ...p, paper: { ...p.paper, width: p.paper.labelWidth, height: p.paper.labelHeight, cols: 1, rows: 1, marginLeft: 0, marginTop: 0, gapX: 0, gapY: 0 },
+});
 
 export interface JobItem {
   row?: Row;
