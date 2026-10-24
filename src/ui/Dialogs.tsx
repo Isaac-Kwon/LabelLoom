@@ -5,13 +5,14 @@ import { fontFromFile, localFontsSupported, queryLocalFonts, registerFonts } fro
 import { loadRecent, openProjectFile, pickFile, type RecentEntry } from '../io/project';
 import { encodeShare, shareUrl, type ShareKind } from '../io/share';
 import { newRow } from '../model/defaults';
-import { TEMPLATES } from '../model/templates';
-import type { Project } from '../model/types';
+import { labelSize, PAPER_KIND_LABEL, paperKind, type PaperKind } from '../model/presets';
+import { TEMPLATES, type Template } from '../model/templates';
+import type { Paper, Project } from '../model/types';
 import { buildItems, DEFAULT_DUPLEX, labelSizeProject, paginate } from '../render/jobs';
 import { pickDesign, previewCtx } from '../render/resolve';
 import { labelDocument } from '../render/svg';
 import { useStore } from '../store';
-import { Check, Modal, Num, Row, Seg } from './controls';
+import { Check, Modal, Num, Row, Seg, Select } from './controls';
 
 /* ---------- serial numbers ---------- */
 
@@ -122,11 +123,43 @@ export function Thumb({ p }: { p: Project }) {
   return <div className="thumb" dangerouslySetInnerHTML={{ __html: svg }} />;
 }
 
+const sizeArea = (k: string) => { const m = k.replace('Ø', '').split('×').map(Number); return m[0] * (m[1] ?? m[0]); };
+
+function TemplateCard({ t, papers, onPick }: { t: Template; papers: Paper[]; onPick: (p: Project) => void }) {
+  const [name, setName] = useState(papers[0].name);
+  const paper = papers.find((p) => p.name === name) ?? papers[0];
+  const preview = useMemo(() => t.make(paper), [t, paper]);
+  return (
+    <div className="card" role="button" tabIndex={0} onClick={() => onPick(t.make(paper))}
+      onKeyDown={(e) => { if (e.key === 'Enter') onPick(t.make(paper)); }}>
+      <Thumb p={preview} />
+      <strong>{t.name}</strong>
+      <span className="muted small">{t.desc}</span>
+      <span onClick={(e) => e.stopPropagation()} className="card-paper">
+        {papers.length > 1
+          ? <Select value={paper.name} onChange={setName} options={papers.map((p) => ({ value: p.name, label: p.name }))} title="용지·크기" />
+          : <span className="muted small">{paper.name}</span>}
+      </span>
+    </div>
+  );
+}
+
 export function StartDialog({ onLoad }: { onLoad: (p: Project, name?: string) => void }) {
   const { close, notify } = useStore.getState();
   const [recent, setRecent] = useState<RecentEntry[]>([]);
-  const templates = useMemo(() => TEMPLATES.map((t) => ({ t, p: t.make() })), []);
+  const [kind, setKind] = useState<PaperKind | 'all'>('all');
+  const [size, setSize] = useState('all');
   useEffect(() => { loadRecent().then(setRecent); }, []);
+  const byKind = (p: Paper) => kind === 'all' || paperKind(p) === kind;
+  const sizes = useMemo(() => {
+    const set = new Set(TEMPLATES.flatMap((t) => t.papers).filter(byKind).map(labelSize));
+    return [...set].sort((a, b) => sizeArea(a) - sizeArea(b));
+  }, [kind]);
+  const sizeOk = size === 'all' || sizes.includes(size) ? size : 'all';
+  const shown = TEMPLATES
+    .map((t) => ({ t, papers: t.papers.filter((p) => byKind(p) && (sizeOk === 'all' || labelSize(p) === sizeOk)) }))
+    .filter((x) => x.papers.length > 0);
+  const pick = (p: Project) => { onLoad(p); close(); };
   return (
     <Modal title="LabelLoom — 새로 만들기" onClose={close} wide="xl">
       <div className="start-actions">
@@ -134,13 +167,19 @@ export function StartDialog({ onLoad }: { onLoad: (p: Project, name?: string) =>
         <button onClick={close}>현재 작업 계속</button>
       </div>
       <h3>템플릿</h3>
+      <div className="tpl-filter">
+        <span className="muted small">용지</span>
+        <Seg value={kind} onChange={setKind} options={[
+          { value: 'all', label: '전체' },
+          ...(Object.keys(PAPER_KIND_LABEL) as PaperKind[]).map((k) => ({ value: k, label: PAPER_KIND_LABEL[k] })),
+        ]} />
+        <span className="muted small">라벨 크기</span>
+        <Select value={sizeOk} onChange={setSize} options={[{ value: 'all', label: '전체 크기' }, ...sizes.map((k) => ({ value: k, label: `${k} mm` }))]} />
+        <span className="muted small">{shown.length}개 템플릿</span>
+      </div>
       <div className="gallery">
-        {templates.map(({ t, p }) => (
-          <button key={t.id} className="card" onClick={() => { onLoad(t.make()); close(); }}>
-            <Thumb p={p} />
-            <strong>{t.name}</strong>
-            <span className="muted small">{t.desc}</span>
-          </button>
+        {shown.map(({ t, papers }) => (
+          <TemplateCard key={`${t.id}|${kind}|${sizeOk}`} t={t} papers={papers} onPick={pick} />
         ))}
       </div>
       {recent.length > 0 && (

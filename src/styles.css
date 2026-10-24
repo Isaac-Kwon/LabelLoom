@@ -267,6 +267,10 @@ input.copies { width: 42px; padding: 1px 3px; }
 .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
 .card { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; text-align: left; padding: 8px; border-radius: 10px; white-space: normal; }
 .card:hover { border-color: var(--accent); }
+div.card { border: 1px solid var(--border-strong); background: var(--panel); cursor: pointer; }
+.card-paper { width: 100%; margin-top: auto; }
+.card-paper select { width: 100%; }
+.tpl-filter { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin-bottom: 10px; }
 .thumb { width: 100%; height: 120px; display: flex; align-items: center; justify-content: center; background: var(--canvas); border-radius: 6px; overflow: hidden; }
 .thumb svg { max-width: 92%; max-height: 108px; width: auto; height: auto; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2); background: #fff; }
 .share-url { font-family: ui-monospace, Consolas, monospace; font-size: 11px; word-break: break-all; }
