@@ -18,7 +18,7 @@ import { pickDesign, previewCtx } from '../render/resolve';
 import { labelDocument } from '../render/svg';
 import { useStore } from '../store';
 import { LESSONS, lessonProject, type Lesson } from '../tutorial/lessons';
-import { Check, Modal, Num, Row, Seg, Select } from './controls';
+import { Check, Modal, Num, PrintSetupAlert, Row, Seg, Select } from './controls';
 import { startTour } from './Tour';
 
 /* ---------- serial numbers ---------- */
@@ -422,6 +422,7 @@ export function ReprintDialog() {
         <Seg value={labelPage ? 'label' : 'sheet'} onChange={(v) => setLabelPage(v === 'label')} options={[{ value: 'label', label: t('라벨 크기 1장 (라벨 프린터)') }, { value: 'sheet', label: t('현재 용지의 칸 지정') }]} />
         {!labelPage && <Num value={cell} step={1} min={1} max={project.paper.cols * project.paper.rows} onChange={setCell} unit={t('번째 칸')} width={130} />}
       </Row>
+      <PrintSetupAlert width={labelPage ? project.paper.labelWidth : project.paper.width} height={labelPage ? project.paper.labelHeight : project.paper.height} />
       <h3>{t('재발행 — 이름·소속·ID로 찾기')}</h3>
       <input type="search" autoFocus placeholder={t('검색어 입력…')} value={q} onChange={(e) => setQ(e.target.value)} className="wide-input" />
       <ul className="hits">
@@ -450,6 +451,7 @@ export function ReprintDialog() {
 
 export function CalibrationDialog() {
   const cal = useStore((s) => s.project.calibration);
+  const paper = useStore((s) => s.project.paper);
   const { close, commit } = useStore.getState();
   const up = (p: Partial<typeof cal>) => commit((x) => ({ ...x, calibration: { ...x.calibration, ...p } }));
   return (
@@ -459,6 +461,7 @@ export function CalibrationDialog() {
         <li>{t('라벨지 위에 겹쳐 보거나 자로 재어 테두리가 어긋난 만큼 아래에 입력합니다.')}</li>
         <li>{t('오른쪽/아래로 밀려 나오면 음수, 왼쪽/위로 치우치면 양수를 넣습니다. 50 mm 눈금이 실제와 다르면 배율을 고칩니다.')}</li>
       </ol>
+      <PrintSetupAlert width={paper.width} height={paper.height} />
       <div className="grid2">
         <Num label={t('X 이동')} value={cal.offsetX} step={0.1} unit="mm" onChange={(v) => up({ offsetX: v })} />
         <Num label={t('Y 이동')} value={cal.offsetY} step={0.1} unit="mm" onChange={(v) => up({ offsetY: v })} />

@@ -144,3 +144,18 @@ export function DropOverlay({ title, kinds }: { title: string; kinds: string[] }
     </div>
   );
 }
+
+/**
+ * Browsers don't let a page set the print scale, and the margin only through @page (which Chrome/Edge follow, others may not),
+ * so the print dialog itself has to be checked. Shown next to every print button.
+ */
+export function PrintSetupAlert({ width, height, pdf }: { width: number; height: number; pdf?: boolean }) {
+  const size = `${+width.toFixed(1)} × ${+height.toFixed(1)} mm`;
+  return (
+    <div className="print-alert" role="note">
+      <strong>⚠ {pdf ? t('PDF를 인쇄할 때 꼭 확인') : t('인쇄 창에서 꼭 확인')}</strong>
+      <span>{t('배율 100% (실제 크기) · 여백 없음 · 용지 {size}', { size })}</span>
+      <span className="print-alert-why">{t('"페이지에 맞춤"이나 기본 여백으로 인쇄하면 라벨 위치와 크기가 어긋날 수 있습니다.')}</span>
+    </div>
+  );
+}

@@ -8,7 +8,7 @@ import { buildItems, jobFold, labelSizeProject, paginate, projectDuplex, type Jo
 import { pickDesign, previewCtx, templateColumns, usedColumns } from '../render/resolve';
 import { labelDocument, sheetLayout } from '../render/svg';
 import { useStore } from '../store';
-import { Check, Modal, Num, Seg } from './controls';
+import { Check, Modal, Num, PrintSetupAlert, Seg } from './controls';
 import { loadExportSettings } from './ExportDialog';
 
 /** Fill in the template's {{fields}}, see the label live, print. Shared by the quick page and the editor dialog. */
@@ -70,6 +70,7 @@ export function QuickForm({ project, notify, onPrinted }: {
   const L = sheetLayout(project.paper, fold);
   const perSheet = L.cols * L.rows;
   const useLabelPage = labelPage || !multi;
+  const printL = useLabelPage ? sheetLayout(labelSizeProject(project).paper, fold) : L;
 
   const filled = Object.values(values).some((v) => v.trim());
   // empty form: show the template as designed, with its first sample row
@@ -146,6 +147,7 @@ export function QuickForm({ project, notify, onPrinted }: {
           <button className="primary big" onClick={printNow}>{t('인쇄')}</button>
           <button onClick={addToList}>{t('목록에 추가')}</button>
         </div>
+        <PrintSetupAlert width={printL.width} height={printL.height} />
 
         {list.length > 0 && (
           <div className="quick-list">

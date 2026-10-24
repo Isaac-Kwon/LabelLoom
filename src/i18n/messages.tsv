@@ -332,6 +332,10 @@ Enter 완료 · Shift+Enter 줄바꿈 · Esc 취소	Enter done · Shift+Enter ne
 세로 가운데	Center vertically	Centra verticalmente	Centrer verticalement
 아래쪽 맞춤	Align bottom	Allinea in basso	Aligner en bas
 # ui/controls.tsx
+PDF를 인쇄할 때 꼭 확인	When printing the PDF, check	Quando stampi il PDF, controlla	En imprimant le PDF, vérifiez
+인쇄 창에서 꼭 확인	Check in the print dialog	Controlla nella finestra di stampa	Vérifiez dans la fenêtre d'impression
+배율 100% (실제 크기) · 여백 없음 · 용지 {size}	Scale 100% (Actual size) · Margins: None · Paper {size}	Scala 100% (Dimensioni effettive) · Margini: nessuno · Carta {size}	Échelle 100 % (Taille réelle) · Marges : aucune · Papier {size}
+"페이지에 맞춤"이나 기본 여백으로 인쇄하면 라벨 위치와 크기가 어긋날 수 있습니다.	Printing with "Fit to page" or default margins can shift and resize the labels.	Stampando con "Adatta alla pagina" o i margini predefiniti, le etichette possono risultare spostate e ridimensionate.	Imprimer avec « Ajuster à la page » ou les marges par défaut peut décaler et redimensionner les étiquettes.
 없음	None	Nessuno	Aucun
 # ui/DataPanel.tsx
 새 열 이름	New column name	Nome della nuova colonna	Nom de la nouvelle colonne

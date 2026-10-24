@@ -8,7 +8,7 @@ import { resolveObject } from '../render/resolve';
 import { sheetDocument, sheetLayout, testPointsFit, type TestPoints } from '../render/svg';
 import type { Project } from '../model/types';
 import { useStore } from '../store';
-import { Check, Modal, Num, Progress, Row, Select, Seg } from './controls';
+import { Check, Modal, Num, PrintSetupAlert, Progress, Row, Select, Seg } from './controls';
 import { filterRows } from './DataPanel';
 
 type Format = 'print' | 'pdf' | 'png' | 'split';
@@ -160,7 +160,8 @@ export function ExportDialog() {
   return (
     <Modal title={t('인쇄 · 내보내기')} onClose={close} wide="xl" footer={
       <>
-        {busy && <Progress done={busy.done} total={busy.total} label={t('처리 중')} />}
+        {busy ? <Progress done={busy.done} total={busy.total} label={t('처리 중')} />
+          : format !== 'png' && <PrintSetupAlert width={layout.width} height={layout.height} pdf={format !== 'print'} />}
         <span className="spacer" />
         <button onClick={() => printTestPage(project, markOpts)} title={t('라벨 테두리·중심 십자선이 있는 정렬 확인용 페이지 (재단선·테스트 포인트 설정도 함께 인쇄)')}>{t('정렬 테스트 페이지')}</button>
         <button onClick={close}>{t('취소')}</button>
