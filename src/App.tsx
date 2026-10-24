@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { version } from '../package.json';
 import { registerFonts } from './io/fonts';
 import { forgetFileHandle, loadAutosave, openProjectFile, parseProject, pushRecent, saveAutosave, saveProjectFile } from './io/project';
 import { decodeShare, readShareHash } from './io/share';
@@ -16,6 +17,9 @@ import { LeftPanel } from './ui/LeftPanel';
 import { loadMediaInto } from './ui/media';
 import { copy, duplicate, group, nudge, paste, reorder, selectAll, ungroup } from './ui/ops';
 import { CanvasBar, Toolbar } from './ui/Toolbar';
+
+const COMMIT = import.meta.env.VITE_COMMIT_SHA?.slice(0, 7);
+const BUILD_LABEL = `v${version} · ${COMMIT ?? 'dev'}`;
 
 const TOOL_KEYS: Record<string, Parameters<ReturnType<typeof useStore.getState>['setTool']>[0]> = {
   v: 'select', t: 'text', r: 'rect', o: 'ellipse', l: 'line', b: 'barcode', q: 'qr', i: 'image',
@@ -170,6 +174,7 @@ export default function App() {
       {dialog === 'shortcuts' && <ShortcutsDialog />}
       {dropping && <div className="drop-overlay">파일을 놓으세요 — .json 프로젝트 · xlsx/csv 데이터 · 이미지/SVG</div>}
       {toast && <div className="toast">{toast}</div>}
+      <div className="build-tag" title={import.meta.env.VITE_COMMIT_SHA}>{BUILD_LABEL}</div>
     </div>
   );
 }

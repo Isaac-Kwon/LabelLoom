@@ -283,6 +283,7 @@ input.copies { width: 42px; padding: 1px 3px; }
 .keys td { padding: 4px 6px; border-bottom: 1px solid var(--border); vertical-align: top; }
 .keys td:first-child { white-space: nowrap; }
 
+.build-tag { position: fixed; right: 4px; bottom: 2px; font-size: 9px; color: var(--muted); opacity: 0.6; pointer-events: none; user-select: none; z-index: 1; }
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #111827; color: #fff; padding: 9px 16px; border-radius: 8px; box-shadow: var(--shadow); z-index: 200; font-size: 13px; }
 .drop-overlay { position: fixed; inset: 0; background: rgba(37, 99, 235, 0.15); border: 3px dashed var(--accent); z-index: 150; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; pointer-events: none; color: var(--text); }
 
