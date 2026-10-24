@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { t } from '../i18n';
 
 const round = (v: number, step: number) => {
   const d = Math.max(0, -Math.floor(Math.log10(step)));
@@ -51,7 +52,7 @@ export function Color({ value, onChange, title, allowNone }: { value: string; on
   return (
     <span className="color" title={title}>
       <input type="color" value={value && value.startsWith('#') && value.length === 7 ? value : '#ffffff'} onChange={(e) => onChange(e.target.value)} />
-      <input type="text" className="hex" value={value} placeholder={allowNone ? '없음' : ''} onChange={(e) => onChange(e.target.value)} />
+      <input type="text" className="hex" value={value} placeholder={allowNone ? t('없음') : ''} onChange={(e) => onChange(e.target.value)} />
     </span>
   );
 }
@@ -112,7 +113,7 @@ export function Modal({ title, onClose, children, footer, wide, actions }: { tit
   return (
     <div className="modal-back" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className={`modal ${wide === 'xl' ? 'xl' : wide ? 'wide' : ''}`} role="dialog" aria-label={title}>
-        <header><h2>{title}</h2>{actions}<button className="icon" onClick={onClose} aria-label="닫기">✕</button></header>
+        <header><h2>{title}</h2>{actions}<button className="icon" onClick={onClose} aria-label={t('닫기')}>✕</button></header>
         <div className="modal-body">{children}</div>
         {footer && <footer>{footer}</footer>}
       </div>

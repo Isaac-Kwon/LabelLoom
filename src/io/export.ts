@@ -1,6 +1,7 @@
 import { jsPDF } from 'jspdf';
 import 'svg2pdf.js';
 import JSZip from 'jszip';
+import { t } from '../i18n';
 import type { LabelObject, Project } from '../model/types';
 import { paginate, type JobItem, type Page } from '../render/jobs';
 import { resolveTemplate, type ResolveCtx } from '../render/resolve';
@@ -25,7 +26,7 @@ export async function svgToCanvas(svg: string, wPx: number, hPx: number, white =
   try {
     const img = new Image();
     img.decoding = 'async';
-    await new Promise<void>((res, rej) => { img.onload = () => res(); img.onerror = () => rej(new Error('SVG 렌더링 실패')); img.src = url; });
+    await new Promise<void>((res, rej) => { img.onload = () => res(); img.onerror = () => rej(new Error(t('SVG 렌더링 실패'))); img.src = url; });
     const c = document.createElement('canvas');
     c.width = Math.max(1, Math.round(wPx));
     c.height = Math.max(1, Math.round(hPx));
@@ -204,7 +205,7 @@ export async function exportSplitPdfZip(p: Project, items: JobItem[], column: st
   const fold = o.sheet.fold;
   const groups = new Map<string, JobItem[]>();
   for (const it of items) {
-    const key = it.row?.values[column]?.trim() || '(빈 값)';
+    const key = it.row?.values[column]?.trim() || t('(빈 값)');
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key)!.push(it);
   }

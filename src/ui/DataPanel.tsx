@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
+import { locale, getLang, t, tn } from '../i18n';
 import { exportTable, findDuplicates } from '../io/table';
 import { newRow } from '../model/defaults';
 import type { Project, Row } from '../model/types';
@@ -44,12 +45,12 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
   const setRow = (id: string, patch: Partial<Row>) => setTable((rs) => ({ rows: rs.map((r) => (r.id === id ? { ...r, ...patch } : r)) }));
 
   const addColumn = () => {
-    const name = prompt('새 열 이름');
+    const name = prompt(t('새 열 이름'));
     if (!name || columns.includes(name)) return;
     setTable(() => ({ columns: [...columns, name] }));
   };
   const renameColumn = (c: string) => {
-    const name = prompt('열 이름 변경 (디자인의 {{열 이름}}도 함께 바뀝니다)', c);
+    const name = prompt(t('열 이름 변경 (디자인의 {{열 이름}}도 함께 바뀝니다)'), c);
     if (!name || name === c || columns.includes(name)) return;
     commit((p) => {
       const re = new RegExp(`\\{\\{\\s*${c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*\\}\\}`, 'g');
@@ -69,11 +70,11 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
     });
   };
   const deleteColumn = (c: string) => {
-    if (!confirm(`"${c}" 열을 삭제할까요?`)) return;
+    if (!confirm(t('"{name}" 열을 삭제할까요?', { name: c }))) return;
     setTable((rs, cols) => ({ columns: cols.filter((x) => x !== c), rows: rs.map((r) => { const { [c]: _, ...rest } = r.values; void _; return { ...r, values: rest }; }) }));
   };
   const sortBy = (c: string, dir: 1 | -1) => {
-    const coll = new Intl.Collator('ko', { numeric: true, sensitivity: 'base' });
+    const coll = new Intl.Collator(getLang(), { numeric: true, sensitivity: 'base' });
     setTable((rs) => ({ rows: [...rs].sort((a, b) => coll.compare(a.values[c] ?? '', b.values[c] ?? '') * dir) }));
   };
   const addRow = () => {
@@ -82,7 +83,7 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
     setTimeout(() => body.current?.scrollTo({ top: 1e9 }), 0);
   };
   const deleteRows = () => {
-    if (!sel.size || !confirm(`선택한 ${sel.size}개 행을 삭제할까요?`)) return;
+    if (!sel.size || !confirm(t('선택한 {n}개 행을 삭제할까요?', { n: sel.size }))) return;
     setTable((rs) => ({ rows: rs.filter((r) => !sel.has(r.id)) }));
     setSel(new Set());
   };
@@ -91,7 +92,7 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
     setTable((rs) => ({ rows: rs.map((r) => (ids.has(r.id) ? { ...r, print: v } : r)) }));
   };
   const clearPrinted = () => {
-    if (!confirm('모든 행의 인쇄 기록을 지울까요?')) return;
+    if (!confirm(t('모든 행의 인쇄 기록을 지울까요?'))) return;
     setTable((rs) => ({ rows: rs.map((r) => ({ ...r, printed: undefined })) }));
   };
 
@@ -113,72 +114,72 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
     <section className="data-panel" style={{ height }}>
       <div className="resize-handle" onPointerDown={startDrag} />
       <div className="data-toolbar">
-        <strong>데이터</strong>
-        <span className="muted small">{rows.length}행 · 인쇄 {totalLabels}장 · 출력됨 {printedCount}</span>
-        <button onClick={() => open('import')}>가져오기 (xlsx·csv)</button>
+        <strong>{t('데이터')}</strong>
+        <span className="muted small">{t('{rows}행 · 인쇄 {labels}장 · 출력됨 {printed}', { rows: rows.length, labels: totalLabels, printed: printedCount })}</span>
+        <button onClick={() => open('import')}>{t('가져오기 (xlsx·csv)')}</button>
         <div className="dropdown">
-          <button>내보내기 ▾</button>
+          <button>{t('내보내기')} ▾</button>
           <div className="menu">
-            <button onClick={() => exportTable(project.data, 'xlsx', project.name)}>xlsx (인쇄 기록 포함)</button>
-            <button onClick={() => exportTable(project.data, 'csv', project.name)}>csv (인쇄 기록 포함)</button>
-            <button onClick={() => exportTable(project.data, 'xlsx', project.name, false)}>xlsx (데이터만)</button>
+            <button onClick={() => exportTable(project.data, 'xlsx', project.name)}>{t('xlsx (인쇄 기록 포함)')}</button>
+            <button onClick={() => exportTable(project.data, 'csv', project.name)}>{t('csv (인쇄 기록 포함)')}</button>
+            <button onClick={() => exportTable(project.data, 'xlsx', project.name, false)}>{t('xlsx (데이터만)')}</button>
           </div>
         </div>
-        <button onClick={() => open('serial')}>일련번호 생성</button>
-        <button onClick={addRow}>＋ 행</button>
-        <button onClick={addColumn}>＋ 열</button>
-        <button onClick={deleteRows} disabled={!sel.size}>행 삭제{sel.size ? ` (${sel.size})` : ''}</button>
+        <button onClick={() => open('serial')}>{t('일련번호 생성')}</button>
+        <button onClick={addRow}>＋ {t('행')}</button>
+        <button onClick={addColumn}>＋ {t('열')}</button>
+        <button onClick={deleteRows} disabled={!sel.size}>{t('행 삭제')}{sel.size ? ` (${sel.size})` : ''}</button>
         <span className="spacer" />
-        <input className="search" type="search" placeholder="검색…" value={filter.text} onChange={(e) => setFilter({ text: e.target.value })} />
-        <select value={filter.column} onChange={(e) => setFilter({ column: e.target.value, value: '' })} title="열 값으로 거르기">
-          <option value="">필터 열</option>
+        <input className="search" type="search" placeholder={t('검색…')} value={filter.text} onChange={(e) => setFilter({ text: e.target.value })} />
+        <select value={filter.column} onChange={(e) => setFilter({ column: e.target.value, value: '' })} title={t('열 값으로 거르기')}>
+          <option value="">{t('필터 열')}</option>
           {columns.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
         {filter.column && (
           <select value={filter.value} onChange={(e) => setFilter({ value: e.target.value })}>
-            <option value="">(전체)</option>
-            {[...new Set(rows.map((r) => (r.values[filter.column] ?? '').trim()))].sort().map((v) => <option key={v} value={v}>{v || '(빈 값)'}</option>)}
+            <option value="">{t('(전체)')}</option>
+            {[...new Set(rows.map((r) => (r.values[filter.column] ?? '').trim()))].sort().map((v) => <option key={v} value={v}>{v || t('(빈 값)')}</option>)}
           </select>
         )}
         <div className="dropdown">
-          <button>더보기 ▾</button>
+          <button>{t('더보기')} ▾</button>
           <div className="menu">
-            <button onClick={() => checkAll(true)}>{filtered ? '필터 결과' : '모든 행'} 인쇄 체크</button>
-            <button onClick={() => checkAll(false)}>{filtered ? '필터 결과' : '모든 행'} 인쇄 해제</button>
+            <button onClick={() => checkAll(true)}>{filtered ? t('필터 결과 인쇄 체크') : t('모든 행 인쇄 체크')}</button>
+            <button onClick={() => checkAll(false)}>{filtered ? t('필터 결과 인쇄 해제') : t('모든 행 인쇄 해제')}</button>
             <button onClick={() => {
-              const k = prompt('중복을 검사할 열 (쉼표로 구분)', columns.filter((c) => /이름|name|이메일|email/i.test(c)).join(', ') || columns[0]);
+              const k = prompt(t('중복을 검사할 열 (쉼표로 구분)'), columns.filter((c) => /이름|name|nome|nom|이메일|e-?mail|courriel/i.test(c)).join(', ') || columns[0]);
               if (k === null) return;
               const keys = k.split(',').map((x) => x.trim()).filter((x) => columns.includes(x));
               setDupKeys(keys.length ? keys : null);
-              if (keys.length) useStore.getState().notify(`중복 ${findDuplicates(rows, keys).size}행 표시`);
-            }}>중복 검사…</button>
-            {dupKeys && <button onClick={() => setDupKeys(null)}>중복 표시 끄기</button>}
-            <button onClick={clearPrinted}>인쇄 기록 지우기</button>
-            <button onClick={() => open('reprint')}>현장 재발행 / 현장 등록</button>
+              if (keys.length) useStore.getState().notify(t('중복 {n}행 표시', { n: findDuplicates(rows, keys).size }));
+            }}>{t('중복 검사…')}</button>
+            {dupKeys && <button onClick={() => setDupKeys(null)}>{t('중복 표시 끄기')}</button>}
+            <button onClick={clearPrinted}>{t('인쇄 기록 지우기')}</button>
+            <button onClick={() => open('reprint')}>{t('현장 재발행 / 현장 등록')}</button>
           </div>
         </div>
       </div>
       <div className="grid" ref={body} onScroll={(e) => setScroll((e.target as HTMLDivElement).scrollTop)}>
         {!columns.length && !rows.length ? (
           <div className="grid-empty">
-            <p>데이터가 없습니다. xlsx/csv 파일을 <b>가져오기</b> 하거나 <b>일련번호 생성</b>, <b>＋ 열</b>로 시작하세요.</p>
-            <p className="muted small">첫 행은 열 이름이어야 하며 병합된 셀은 사용할 수 없습니다. 데이터가 없으면 디자인 그대로 출력됩니다.</p>
+            <p>{tn('데이터가 없습니다. xlsx/csv 파일을 {import} 하거나 {serial}, {column}로 시작하세요.', { import: <b>{t('가져오기')}</b>, serial: <b>{t('일련번호 생성')}</b>, column: <b>＋ {t('열')}</b> })}</p>
+            <p className="muted small">{t('첫 행은 열 이름이어야 하며 병합된 셀은 사용할 수 없습니다. 데이터가 없으면 디자인 그대로 출력됩니다.')}</p>
           </div>
         ) : (
           <div className="grid-inner" style={{ minWidth: 300 + columns.length * 110 }}>
             <div className="grid-head" style={{ gridTemplateColumns: template }}>
               <span>#</span>
-              <span title="인쇄 여부"><input type="checkbox" checked={view.length > 0 && view.every((x) => x.r.print)} onChange={(e) => checkAll(e.target.checked)} /></span>
-              <span>매수</span>
-              {multiDesign && <span>디자인</span>}
-              <span>출력</span>
+              <span title={t('인쇄 여부')}><input type="checkbox" checked={view.length > 0 && view.every((x) => x.r.print)} onChange={(e) => checkAll(e.target.checked)} /></span>
+              <span>{t('매수')}</span>
+              {multiDesign && <span>{t('디자인')}</span>}
+              <span>{t('출력')}</span>
               {columns.map((c) => (
                 <span key={c} className="col-head">
-                  <span className="col-name" onDoubleClick={() => renameColumn(c)} title="더블클릭: 이름 변경">{c}</span>
+                  <span className="col-name" onDoubleClick={() => renameColumn(c)} title={t('더블클릭: 이름 변경')}>{c}</span>
                   <span className="col-tools">
-                    <button className="icon tiny" title="오름차순 정렬" onClick={() => sortBy(c, 1)}>↑</button>
-                    <button className="icon tiny" title="내림차순 정렬" onClick={() => sortBy(c, -1)}>↓</button>
-                    <button className="icon tiny" title="열 삭제" onClick={() => deleteColumn(c)}>✕</button>
+                    <button className="icon tiny" title={t('오름차순 정렬')} onClick={() => sortBy(c, 1)}>↑</button>
+                    <button className="icon tiny" title={t('내림차순 정렬')} onClick={() => sortBy(c, -1)}>↓</button>
+                    <button className="icon tiny" title={t('열 삭제')} onClick={() => deleteColumn(c)}>✕</button>
                   </span>
                 </span>
               ))}
@@ -193,12 +194,12 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
                     const n = new Set(e.shiftKey || e.ctrlKey || e.metaKey ? sel : []);
                     if (n.has(r.id)) n.delete(r.id); else n.add(r.id);
                     setSel(n);
-                  }} title="클릭: 행 선택">{i + 1}</span>
+                  }} title={t('클릭: 행 선택')}>{i + 1}</span>
                   <span><input type="checkbox" checked={r.print} onChange={(e) => setRow(r.id, { print: e.target.checked })} /></span>
                   <span><input className="copies" type="number" min={0} value={r.copies} onChange={(e) => setRow(r.id, { copies: Math.max(0, parseInt(e.target.value, 10) || 0) })} /></span>
                   {multiDesign && <span className="muted small ellipsis">{pickDesign(project, r).name}</span>}
-                  <span className={`status ${r.printed ? 'done' : ''}`} title={r.printed ? new Date(r.printed).toLocaleString() : '미출력'}
-                    onClick={() => setRow(r.id, { printed: r.printed ? undefined : new Date().toISOString() })}>{r.printed ? '✓ ' + new Date(r.printed).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}</span>
+                  <span className={`status ${r.printed ? 'done' : ''}`} title={r.printed ? new Date(r.printed).toLocaleString(locale()) : t('미출력')}
+                    onClick={() => setRow(r.id, { printed: r.printed ? undefined : new Date().toISOString() })}>{r.printed ? '✓ ' + new Date(r.printed).toLocaleTimeString(locale(), { hour: '2-digit', minute: '2-digit' }) : '—'}</span>
                   {columns.map((c) => (
                     <input key={c + (r.values[c] ?? '')} className="cell" defaultValue={r.values[c] ?? ''}
                       onBlur={(e) => { if (e.target.value !== (r.values[c] ?? '')) setCell(r.id, c, e.target.value); }}

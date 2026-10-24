@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { newObject, uid } from '../model/defaults';
 import type { LabelObject, ObjType } from '../model/types';
 import { act, currentObjects, useStore } from '../store';
@@ -37,7 +38,7 @@ export function bounds(objs: LabelObject[]) {
 
 export function distribute(axis: 'h' | 'v') {
   const objs = sel().filter((o) => !o.locked);
-  if (objs.length < 3) { st().notify('3개 이상 선택하세요.'); return; }
+  if (objs.length < 3) { st().notify(t('3개 이상 선택하세요.')); return; }
   const key = axis === 'h' ? 'x' : 'y', size = axis === 'h' ? 'w' : 'h';
   const sorted = [...objs].sort((a, b) => a[key] - b[key]);
   const first = sorted[0], last = sorted[sorted.length - 1];
@@ -140,9 +141,9 @@ export function convert(o: LabelObject, type: ObjType): LabelObject {
 export function extendToBleed() {
   const s = st();
   const { labelWidth: W, labelHeight: H, bleed } = s.project.paper;
-  if (bleed <= 0) { s.notify('먼저 용지 설정에서 재단 여백(블리드)을 정하세요.'); return; }
+  if (bleed <= 0) { s.notify(t('먼저 용지 설정에서 재단 여백(블리드)을 정하세요.')); return; }
   const objs = sel().filter((o) => !o.locked && !o.rotation);
-  if (!objs.length) { s.notify('회전하지 않은 개체를 선택하세요.'); return; }
+  if (!objs.length) { s.notify(t('회전하지 않은 개체를 선택하세요.')); return; }
   const near = 1;
   act.update(objs.map((o) => o.id), (o) => {
     let x0 = o.x, y0 = o.y, x1 = o.x + o.w, y1 = o.y + o.h;

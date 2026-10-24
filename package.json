@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "i18n": "node scripts/i18n.mjs"
   },
   "dependencies": {
     "bwip-js": "^4.5.1",

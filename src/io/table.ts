@@ -1,4 +1,5 @@
 import * as XLSX from 'xlsx';
+import { everyLang, m, t } from '../i18n';
 import { newRow } from '../model/defaults';
 import type { DataTable, Row } from '../model/types';
 import { download } from './export';
@@ -36,7 +37,7 @@ export interface ImportOptions {
 }
 
 export function gridToRows(grid: string[][], o: ImportOptions): { columns: string[]; rows: Row[] } {
-  const header = (grid[o.headerRow] ?? []).map((h, i) => h.trim() || `열${i + 1}`);
+  const header = (grid[o.headerRow] ?? []).map((h, i) => h.trim() || t('열{n}', { n: i + 1 }));
   const columns: string[] = [];
   header.forEach((h) => { const t = o.mapping[h] ?? h; if (t && t !== o.copiesColumn && !columns.includes(t)) columns.push(t); });
   const rows = grid.slice(o.headerRow + 1)
@@ -60,11 +61,20 @@ export function mergeTable(cur: DataTable, add: { columns: string[]; rows: Row[]
   return { columns: [...new Set([...cur.columns, ...add.columns])], rows: [...cur.rows, ...add.rows] };
 }
 
-export function exportTable(t: DataTable, format: 'xlsx' | 'csv', name: string, withMeta = true) {
-  const head = withMeta ? ['인쇄', '매수', '인쇄일시', ...t.columns] : t.columns;
-  const body = t.rows.map((r) => {
-    const vals = t.columns.map((c) => r.values[c] ?? '');
-    return withMeta ? [r.print ? 'Y' : 'N', r.copies, r.printed ? new Date(r.printed).toLocaleString() : '', ...vals] : vals;
+/** Columns exportTable adds in front of the data; read back in any UI language. */
+const META = { print: m('인쇄'), copies: m('매수'), printed: m('인쇄일시') };
+const metaKey = (v: Record<string, string>, k: keyof typeof META) => everyLang(META[k]).find((n) => n in v);
+export const isMetaColumn = (c: string) => Object.values(META).some((k) => everyLang(k).includes(c));
+
+const pad2 = (n: number) => String(n).padStart(2, '0');
+const localStamp = (d: Date) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
+
+export function exportTable(tbl: DataTable, format: 'xlsx' | 'csv', name: string, withMeta = true) {
+  const head = withMeta ? [t(META.print), t(META.copies), t(META.printed), ...tbl.columns] : tbl.columns;
+  const body = tbl.rows.map((r) => {
+    const vals = tbl.columns.map((c) => r.values[c] ?? '');
+    // ISO-like local time, so it reads back the same whatever the language
+    return withMeta ? [r.print ? 'Y' : 'N', r.copies, r.printed ? localStamp(new Date(r.printed)) : '', ...vals] : vals;
   });
   const ws = XLSX.utils.aoa_to_sheet([head, ...body]);
   if (format === 'csv') {
@@ -82,9 +92,10 @@ export function absorbMeta(rows: Row[]): Row[] {
   return rows.map((r) => {
     const v = { ...r.values };
     let { print, copies, printed } = r;
-    if ('인쇄' in v) { print = !/^(n|no|false|0|x)$/i.test(v['인쇄'].trim()); delete v['인쇄']; }
-    if ('매수' in v) { copies = Math.max(0, parseInt(v['매수'], 10) || 1); delete v['매수']; }
-    if ('인쇄일시' in v) { const d = Date.parse(v['인쇄일시']); printed = Number.isNaN(d) ? undefined : new Date(d).toISOString(); delete v['인쇄일시']; }
+    const p = metaKey(v, 'print'), c = metaKey(v, 'copies'), d = metaKey(v, 'printed');
+    if (p) { print = !/^(n|no|false|0|x)$/i.test(v[p].trim()); delete v[p]; }
+    if (c) { copies = Math.max(0, parseInt(v[c], 10) || 1); delete v[c]; }
+    if (d) { const ms = Date.parse(v[d]); printed = Number.isNaN(ms) ? undefined : new Date(ms).toISOString(); delete v[d]; }
     return { ...r, values: v, print, copies, printed };
   });
 }
@@ -92,16 +103,16 @@ export function absorbMeta(rows: Row[]): Row[] {
 /* ---------- attendee header synonyms ---------- */
 
 export const SYNONYMS: string[][] = [
-  ['이름', '성명', '성함', 'name', 'full name', 'fullname', '참가자', '참석자', '이름(한글)'],
+  ['이름', '성명', '성함', 'name', 'full name', 'fullname', '참가자', '참석자', '이름(한글)', 'nome', 'nome e cognome', 'nominativo', 'partecipante', 'nom', 'nom complet', 'prénom et nom', 'participant'],
   ['영문이름', '영문명', '영문 이름', 'english name', 'name (english)', 'name_en'],
-  ['소속', '기관', '소속기관', '회사', '학교', 'affiliation', 'organization', 'organisation', 'company', 'institution'],
-  ['직함', '직위', '직책', '직급', 'title', 'position', 'job title'],
-  ['부서', '학과', 'department', 'dept'],
-  ['참가구분', '구분', '등록구분', '참가유형', '유형', 'type', 'category', 'role', 'registration type'],
-  ['ID', '등록번호', '참가번호', '접수번호', '번호', 'id', 'registration no', 'reg no', 'reg. no', 'number', 'no'],
-  ['이메일', '메일', '전자우편', 'email', 'e-mail', 'mail'],
-  ['연락처', '전화', '휴대폰', '전화번호', 'phone', 'mobile', 'tel'],
-  ['국가', '나라', 'country', 'nation'],
+  ['소속', '기관', '소속기관', '회사', '학교', 'affiliation', 'organization', 'organisation', 'company', 'institution', 'affiliazione', 'ente', 'istituzione', 'azienda', 'università', 'établissement', 'entreprise', 'société', 'université'],
+  ['직함', '직위', '직책', '직급', 'title', 'position', 'job title', 'qualifica', 'titolo', 'posizione', 'fonction', 'titre', 'poste'],
+  ['부서', '학과', 'department', 'dept', 'dipartimento', 'reparto', 'ufficio', 'département', 'service'],
+  ['참가구분', '구분', '등록구분', '참가유형', '유형', 'type', 'category', 'role', 'registration type', 'ruolo', 'tipo', 'categoria', 'rôle', 'catégorie'],
+  ['ID', '등록번호', '참가번호', '접수번호', '번호', 'id', 'registration no', 'reg no', 'reg. no', 'number', 'no', 'numero', 'n.', 'numéro', 'n°'],
+  ['이메일', '메일', '전자우편', 'email', 'e-mail', 'mail', 'posta elettronica', 'courriel', 'adresse e-mail'],
+  ['연락처', '전화', '휴대폰', '전화번호', 'phone', 'mobile', 'tel', 'telefono', 'cellulare', 'téléphone', 'portable'],
+  ['국가', '나라', 'country', 'nation', 'paese', 'nazione', 'pays'],
 ];
 
 const norm = (s: string) => s.toLowerCase().replace(/[\s_\-.()]/g, '');

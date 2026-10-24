@@ -1,0 +1,965 @@
+ko	en	it	fr
+# App.tsx
+{what} "{name}"을(를) 엽니다.\n지금 작업 중인 내용은 "최근 저장한 작업"에 보관됩니다.	Opening {what} "{name}".\nYour current work will be kept in "Recently saved".	Apertura di {what} "{name}".\nIl lavoro attuale sarà conservato in "Salvati di recente".	Ouverture de {what} « {name} ».\nVotre travail actuel sera conservé dans « Enregistrés récemment ».
+빠른 출력 템플릿	the quick print template	il modello di stampa rapida	le modèle d'impression rapide
+빠른 출력 템플릿을 편집기에서 열었습니다.	Opened the quick print template in the editor.	Modello di stampa rapida aperto nell'editor.	Modèle d'impression rapide ouvert dans l'éditeur.
+공유된 디자인	the shared design	il design condiviso	le design partagé
+공유 링크에서 디자인을 불러왔습니다.	Loaded the design from the shared link.	Design caricato dal link condiviso.	Design chargé depuis le lien partagé.
+공유 링크를 읽을 수 없습니다: {error}	Cannot read the shared link: {error}	Impossibile leggere il link condiviso: {error}	Impossible de lire le lien partagé : {error}
+저장했습니다: {name}	Saved: {name}	Salvato: {name}	Enregistré : {name}
+여기에 놓으세요	Drop here	Rilascia qui	Déposez ici
+.json 프로젝트	.json project	Progetto .json	Projet .json
+xlsx · csv 데이터	xlsx · csv data	Dati xlsx · csv	Données xlsx · csv
+이미지 · SVG	Image · SVG	Immagine · SVG	Image · SVG
+# pwa.tsx
+Safari 아래(또는 위)의 공유 버튼 (□↑)을 누릅니다.	Tap the Share button (□↑) at the bottom (or top) of Safari.	Tocca il pulsante Condividi (□↑) in basso (o in alto) in Safari.	Touchez le bouton Partager (□↑) en bas (ou en haut) de Safari.
+목록에서 '홈 화면에 추가'를 고릅니다.	Choose 'Add to Home Screen' from the list.	Scegli 'Aggiungi alla schermata Home' dall'elenco.	Choisissez « Sur l'écran d'accueil » dans la liste.
+'추가'를 누르면 홈 화면에 LabelLoom 아이콘이 생깁니다.	Tap 'Add' and the LabelLoom icon appears on your Home Screen.	Tocca 'Aggiungi' e l'icona di LabelLoom comparirà nella schermata Home.	Touchez « Ajouter » : l'icône LabelLoom apparaît sur l'écran d'accueil.
+메뉴 막대에서 '파일' → 'Dock에 추가…'를 고릅니다. (macOS Sonoma · Safari 17 이상)	In the menu bar, choose 'File' → 'Add to Dock…'. (macOS Sonoma · Safari 17 or later)	Nella barra dei menu scegli 'File' → 'Aggiungi al Dock…'. (macOS Sonoma · Safari 17 o successivo)	Dans la barre des menus, choisissez « Fichier » → « Ajouter au Dock… ». (macOS Sonoma · Safari 17 ou ultérieur)
+'추가'를 누르면 Dock과 응용 프로그램 폴더에 LabelLoom이 생깁니다.	Click 'Add' and LabelLoom appears in the Dock and the Applications folder.	Fai clic su 'Aggiungi' e LabelLoom comparirà nel Dock e nella cartella Applicazioni.	Cliquez sur « Ajouter » : LabelLoom apparaît dans le Dock et le dossier Applications.
+주소 표시줄 오른쪽의 '앱 사용 가능' 아이콘을 누르거나,	Click the 'App available' icon at the right of the address bar, or	Fai clic sull'icona 'App disponibile' a destra della barra degli indirizzi, oppure	Cliquez sur l'icône « Application disponible » à droite de la barre d'adresse, ou
+오른쪽 위 ⋯ 메뉴 → '앱' → '이 사이트를 앱으로 설치'를 고릅니다.	choose ⋯ menu (top right) → 'Apps' → 'Install this site as an app'.	scegli il menu ⋯ (in alto a destra) → 'App' → 'Installa questo sito come app'.	choisissez le menu ⋯ (en haut à droite) → « Applications » → « Installer ce site en tant qu'application ».
+설치하면 시작 메뉴 · 바탕 화면 · 작업 표시줄에 고정할 수 있습니다.	Once installed, you can pin it to the Start menu, desktop or taskbar.	Una volta installata, puoi aggiungerla al menu Start, al desktop o alla barra delle applicazioni.	Une fois installée, vous pouvez l'épingler au menu Démarrer, au bureau ou à la barre des tâches.
+주소 표시줄 오른쪽의 설치 아이콘(⊕)을 누르거나,	Click the install icon (⊕) at the right of the address bar, or	Fai clic sull'icona di installazione (⊕) a destra della barra degli indirizzi, oppure	Cliquez sur l'icône d'installation (⊕) à droite de la barre d'adresse, ou
+오른쪽 위 ⋮ 메뉴 → '전송, 저장, 공유' → '페이지를 앱으로 설치…'를 고릅니다.	choose ⋮ menu (top right) → 'Cast, save and share' → 'Install page as app…'.	scegli il menu ⋮ (in alto a destra) → 'Trasmetti, salva e condividi' → 'Installa pagina come app…'.	choisissez le menu ⋮ (en haut à droite) → « Caster, enregistrer et partager » → « Installer la page en tant qu'application… ».
+브라우저 메뉴(⋮)에서 '앱 설치' 또는 '홈 화면에 추가'를 고릅니다.	In the browser menu (⋮), choose 'Install app' or 'Add to Home screen'.	Nel menu del browser (⋮) scegli 'Installa app' o 'Aggiungi a schermata Home'.	Dans le menu du navigateur (⋮), choisissez « Installer l'application » ou « Ajouter à l'écran d'accueil ».
+LabelLoom을 바탕 화면 · 홈 화면에 앱으로 추가해 독립 창으로 씁니다	Add LabelLoom to your desktop or home screen as an app with its own window	Aggiungi LabelLoom al desktop o alla schermata Home come app in una finestra propria	Ajoutez LabelLoom au bureau ou à l'écran d'accueil comme application dans sa propre fenêtre
+앱으로 설치	Install as app	Installa come app	Installer l'application
+확인	OK	OK	OK
+LabelLoom을 독립된 앱 창으로 쓸 수 있습니다. 설치한 앱은 지금 버전을 저장해 두어 인터넷 없이도 열리고, 새 버전이 나오면 위쪽에 알림이 뜹니다.	You can use LabelLoom in its own app window. The installed app keeps a copy of this version, so it opens without internet, and a notice appears at the top when a new version is out.	Puoi usare LabelLoom in una finestra app dedicata. L'app installata conserva una copia di questa versione, quindi si apre anche senza internet, e in alto compare un avviso quando esce una nuova versione.	Vous pouvez utiliser LabelLoom dans sa propre fenêtre. L'application installée garde une copie de cette version : elle s'ouvre sans internet, et un avis apparaît en haut quand une nouvelle version sort.
+메뉴에 설치 항목 대신 '앱에서 열기'가 보이면 이미 설치되어 있는 것입니다.	If the menu shows 'Open in app' instead of an install item, it is already installed.	Se nel menu compare 'Apri nell'app' invece della voce di installazione, l'app è già installata.	Si le menu affiche « Ouvrir dans l'application » au lieu d'une option d'installation, elle est déjà installée.
+새 버전이 있습니다	A new version is available	È disponibile una nuova versione	Une nouvelle version est disponible
+{next} 빌드 (지금 {now})	build {next} (current {now})	build {next} (attuale {now})	build du {next} (actuelle {now})
+새 버전을 받지 못했습니다. 인터넷 연결을 확인하세요.	Could not download the new version. Check your internet connection.	Impossibile scaricare la nuova versione. Controlla la connessione a internet.	Impossible de télécharger la nouvelle version. Vérifiez votre connexion internet.
+받는 중…	Downloading…	Download in corso…	Téléchargement…
+지금 업데이트	Update now	Aggiorna ora	Mettre à jour
+이 버전은 다시 알리지 않습니다. 그 다음 새 버전이 나오면 다시 알려 드립니다.	You won't be told about this version again. You will be when the next one comes out.	Questa versione non verrà più segnalata. Riceverai un avviso alla prossima.	Cette version ne sera plus signalée. Vous serez prévenu à la suivante.
+다음부터 표시 안 함	Don't show again	Non mostrare più	Ne plus afficher
+닫기 (다음에 열 때 다시 알림)	Close (remind me next time)	Chiudi (ricorda alla prossima apertura)	Fermer (rappeler à la prochaine ouverture)
+닫기	Close	Chiudi	Fermer
+# QuickApp.tsx
+링크를 읽을 수 없습니다: {error}	Cannot read the link: {error}	Impossibile leggere il link: {error}	Impossible de lire le lien : {error}
+템플릿을 불러왔습니다: {name}	Template loaded: {name}	Modello caricato: {name}	Modèle chargé : {name}
+빠른 출력	Quick print	Stampa rapida	Impression rapide
+입력한 내용을 명단에 기록	Record entries in the list	Registra i valori inseriti nell'elenco	Enregistrer les saisies dans la liste
+이 템플릿으로 바로 빠른 출력 화면을 여는 링크 (명단은 포함하지 않음)	A link that opens quick print with this template (the list is not included)	Link che apre la stampa rapida con questo modello (l'elenco non è incluso)	Lien qui ouvre l'impression rapide avec ce modèle (la liste n'est pas incluse)
+링크 복사	Copy link	Copia link	Copier le lien
+다른 템플릿	Other template	Altro modello	Autre modèle
+이 템플릿을 편집기에서 수정합니다	Edit this template in the editor	Modifica questo modello nell'editor	Modifier ce modèle dans l'éditeur
+ (Esc: 빠른 출력 창으로 돌아가기)	 (Esc: back to quick print)	 (Esc: torna alla stampa rapida)	 (Échap : retour à l'impression rapide)
+편집기를 엽니다	Open the editor	Apre l'editor	Ouvre l'éditeur
+편집기에서 수정	Edit in editor	Modifica nell'editor	Modifier dans l'éditeur
+편집기 열기	Open editor	Apri editor	Ouvrir l'éditeur
+템플릿 파일을 끌어다 놓거나 클릭해서 고르세요	Drop a template file here or click to choose one	Trascina qui un file modello o fai clic per sceglierlo	Déposez un fichier modèle ici ou cliquez pour en choisir un
+LabelLoom에서 저장한 .labelloom.json 파일 · 공유받은 빠른 출력 링크로도 열 수 있습니다	A .labelloom.json file saved from LabelLoom · a shared quick print link also works	Un file .labelloom.json salvato da LabelLoom · funziona anche un link di stampa rapida condiviso	Un fichier .labelloom.json enregistré depuis LabelLoom · un lien d'impression rapide partagé fonctionne aussi
+템플릿을 여기에 놓으세요	Drop the template here	Rilascia qui il modello	Déposez le modèle ici
+# store.ts
+{name} 복사본	{name} copy	{name} copia	{name} copie
+디자인 {n}	Design {n}	Design {n}	Design {n}
+텍스트	Text	Testo	Texte
+사각형	Rectangle	Rettangolo	Rectangle
+원	Ellipse	Ellisse	Ellipse
+삼각형	Triangle	Triangolo	Triangle
+선	Line	Linea	Ligne
+바코드	Barcode	Codice a barre	Code-barres
+QR	QR	QR	QR
+이미지	Image	Immagine	Image
+SVG	SVG	SVG	SVG
+표	Table	Tabella	Tableau
+# io/export.ts
+SVG 렌더링 실패	SVG rendering failed	Rendering SVG non riuscito	Échec du rendu SVG
+(빈 값)	(empty)	(vuoto)	(vide)
+# io/project.ts
+LabelLoom 프로젝트	LabelLoom project	Progetto LabelLoom	Projet LabelLoom
+JSON 형식이 올바르지 않습니다.	The JSON is not valid.	Il JSON non è valido.	Le JSON n'est pas valide.
+# io/share.ts
+복사하지 못했습니다. 주소창의 주소를 직접 복사하세요.	Could not copy. Copy the address from the address bar instead.	Copia non riuscita. Copia l'indirizzo dalla barra degli indirizzi.	Copie impossible. Copiez l'adresse depuis la barre d'adresse.
+링크를 복사했습니다 ({kb} KB — 길어서 메신저에서 잘릴 수 있습니다. 이미지를 줄이거나 템플릿 파일로 공유하세요)	Link copied ({kb} KB — long enough to be cut off in messengers. Use smaller images or share the template file)	Link copiato ({kb} KB — è lungo e potrebbe essere troncato nelle app di messaggistica. Riduci le immagini o condividi il file del modello)	Lien copié ({kb} Ko — assez long pour être tronqué dans les messageries. Réduisez les images ou partagez le fichier du modèle)
+빠른 출력 링크를 복사했습니다.	Quick print link copied.	Link di stampa rapida copiato.	Lien d'impression rapide copié.
+# io/table.ts
+열{n}	Column{n}	Colonna{n}	Colonne{n}
+인쇄	Print	Stampa	Imprimer
+매수	Copies	Copie	Copies
+인쇄일시	Printed at	Stampato il	Imprimé le
+# model/defaults.ts
+QR/2D 코드	QR/2D code	Codice QR/2D	Code QR/2D
+새 라벨	New label	Nuova etichetta	Nouvelle étiquette
+LabelLoom 프로젝트 파일이 아닙니다.	This is not a LabelLoom project file.	Non è un file di progetto LabelLoom.	Ce n'est pas un fichier de projet LabelLoom.
+# model/presets.ts
+A4 라벨지	A4 label sheets	Fogli etichette A4	Planches d'étiquettes A4
+A4 원형 4×6 (Ø40)	A4 round 4×6 (Ø40)	A4 tonde 4×6 (Ø40)	A4 rondes 4×6 (Ø40)
+A4 원형 3×4 (Ø60)	A4 round 3×4 (Ø60)	A4 tonde 3×4 (Ø60)	A4 rondes 3×4 (Ø60)
+A4 1칸 (전체)	A4 single (full page)	A4 singola (pagina intera)	A4 unique (page entière)
+명찰·행사	Badges · events	Badge · eventi	Badges · événements
+A4 명찰 2×5 (90×55)	A4 badges 2×5 (90×55)	A4 badge 2×5 (90×55)	A4 badges 2×5 (90×55)
+A4 명찰 2×4 (90×60)	A4 badges 2×4 (90×60)	A4 badge 2×4 (90×60)	A4 badges 2×4 (90×60)
+A4 명찰 2×3 (100×70)	A4 badges 2×3 (100×70)	A4 badge 2×3 (100×70)	A4 badges 2×3 (100×70)
+명찰 단면 90×55	Badge single 90×55	Badge singolo 90×55	Badge simple 90×55
+명찰 100×70	Badge 100×70	Badge 100×70	Badge 100×70
+목걸이 명찰 A6 (105×148)	Lanyard badge A6 (105×148)	Badge da collo A6 (105×148)	Badge tour de cou A6 (105×148)
+테이블 네임텐트 (A4 가로)	Table tent (A4 landscape)	Segnaposto da tavolo (A4 orizzontale)	Chevalet de table (A4 paysage)
+테이블 네임텐트 (Letter 가로)	Table tent (Letter landscape)	Segnaposto da tavolo (Letter orizzontale)	Chevalet de table (Letter paysage)
+롤 라벨 (라벨 프린터)	Roll labels (label printer)	Etichette in rotolo (stampante per etichette)	Étiquettes en rouleau (imprimante d'étiquettes)
+택배 100×150	Shipping 100×150	Spedizione 100×150	Expédition 100×150
+정사각 40×40	Square 40×40	Quadrata 40×40	Carrée 40×40
+원형 Ø40	Round Ø40	Tonda Ø40	Ronde Ø40
+A4 시트	A4 sheet	Foglio A4	Feuille A4
+Letter 시트	Letter sheet	Foglio Letter	Feuille Letter
+롤·낱장	Roll · single	Rotolo · singola	Rouleau · unité
+# model/tableLayouts.ts
+월	Mon	Lun	Lun
+화	Tue	Mar	Mar
+수	Wed	Mer	Mer
+목	Thu	Gio	Jeu
+금	Fri	Ven	Ven
+토	Sat	Sab	Sam
+일	Sun	Dom	Dim
+{n}교시	Period {n}	{n}ª ora	Heure {n}
+점심	Lunch	Pranzo	Déjeuner
+점심시간	Lunch break	Pausa pranzo	Pause déjeuner
+시간	Time	Orario	Horaire
+# model/templates.ts
+연사	Speaker	Relatore	Intervenant
+좌장	Chair	Moderatore	Modérateur
+학생	Student	Studente	Étudiant
+스태프	Staff	Staff	Équipe
+참가구분	Role	Ruolo	Rôle
+일반	Attendee	Partecipante	Participant
+이름	Name	Nome	Nom
+소속	Affiliation	Affiliazione	Affiliation
+직함	Title	Qualifica	Fonction
+이메일	Email	Email	E-mail
+상단 띠	Top band	Fascia superiore	Bandeau supérieur
+2026 추계 학술대회	Autumn Conference 2026	Convegno d'autunno 2026	Congrès d'automne 2026
+행사명	Event	Evento	Événement
+하단 띠	Bottom band	Fascia inferiore	Bandeau inférieur
+일반 명찰	Standard badge	Badge standard	Badge standard
+학술대회 명찰	Conference badge	Badge per convegno	Badge de congrès
+2026. 11. 6.(금) – 7.(토) · 대전컨벤션센터	Nov 6–7, 2026 · Convention Center	6–7 novembre 2026 · Centro Congressi	6–7 novembre 2026 · Centre des congrès
+일시·장소	Date · venue	Data · luogo	Date · lieu
+공통 명찰	Common badge	Badge unico	Badge unique
+학술대회 명찰 (공통)	Conference badge (common)	Badge per convegno (unico)	Badge de congrès (unique)
+포인트 띠	Accent band	Fascia d'accento	Bande d'accent
+구분선	Divider	Separatore	Séparateur
+심플 명찰	Simple badge	Badge semplice	Badge simple
+접는 선	Fold line	Linea di piegatura	Ligne de pliage
+이름(뒤)	Name (back)	Nome (retro)	Nom (verso)
+소속(뒤)	Affiliation (back)	Affiliazione (retro)	Affiliation (verso)
+네임텐트	Name tent	Segnaposto	Chevalet
+테이블 네임텐트	Table name tent	Segnaposto da tavolo	Chevalet de table
+좌석 번호	Seat number	Numero di posto	Numéro de place
+좌석	Seat	Posto	Place
+좌석·포스터 번호	Seat · poster number	Numero posto · poster	Numéro de place · poster
+일시	Date	Data	Date
+장소	Venue	Luogo	Lieu
+일련번호	Serial number	Numero di serie	Numéro de série
+절취선	Tear line	Linea di strappo	Ligne de découpe
+좌석(절취)	Seat (stub)	Posto (tagliando)	Place (talon)
+입장권	Ticket	Biglietto	Billet
+입장권·티켓	Admission ticket	Biglietto d'ingresso	Billet d'entrée
+우편번호	Postcode	CAP	Code postal
+주소	Address	Indirizzo	Adresse
+{name} 님	{name}	{name}	{name}
+주소 라벨	Address label	Etichetta indirizzo	Étiquette d'adresse
+받는 분	To	Destinatario	Destinataire
+받는분	Recipient	Destinatario	Destinataire
+받는분연락처	Recipient phone	Telefono destinatario	Téléphone destinataire
+받는주소	Recipient address	Indirizzo destinatario	Adresse destinataire
+보내는 분: {name}  {phone}	From: {name}  {phone}	Mittente: {name}  {phone}	Expéditeur : {name}  {phone}
+보내는분	Sender	Mittente	Expéditeur
+보내는분연락처	Sender phone	Telefono mittente	Téléphone expéditeur
+보내는주소	Sender address	Indirizzo mittente	Adresse expéditeur
+품목: {item}	Contents: {item}	Contenuto: {item}	Contenu : {item}
+품목	Contents	Contenuto	Contenu
+운송장번호	Tracking no.	N. spedizione	N° de suivi
+택배	Shipping	Spedizione	Expédition
+택배 송장	Shipping label	Etichetta di spedizione	Étiquette d'expédition
+자산관리 라벨	Asset tag	Etichetta inventario	Étiquette d'inventaire
+품명	Item	Articolo	Article
+자산번호	Asset no.	N. inventario	N° d'inventaire
+부서	Department	Reparto	Service
+자산	Asset	Inventario	Inventaire
+색 띠	Color band	Fascia colorata	Bande de couleur
+분류	Category	Categoria	Catégorie
+회계	Accounting	Contabilità	Comptabilité
+인사	HR	Personale	Personnel
+연도	Year	Anno	Année
+제목	Title	Titolo	Titre
+{dept} · 보존 {period}	{dept} · keep {period}	{dept} · conservare {period}	{dept} · conserver {period}
+보존기간	Retention	Conservazione	Conservation
+파일	File	File	Fichier
+파일·바인더 라벨	File · binder label	Etichetta per faldoni	Étiquette de classeur
+제조일  {date}	Made  {date}	Prodotto il  {date}	Fabriqué le  {date}
+제조일	Production date	Data di produzione	Date de fabrication
+소비기한  {date}	Use by  {date}	Da consumarsi entro  {date}	À consommer avant  {date}
+소비기한	Use by	Scadenza	DLC
+보관  {how}	Storage  {how}	Conservazione  {how}	Conservation  {how}
+보관방법	Storage	Modalità di conservazione	Conservation
+원재료	Ingredients	Ingredienti	Ingrédients
+식품	Food	Alimenti	Alimentaire
+식품·보관 라벨	Food · storage label	Etichetta alimenti · conservazione	Étiquette alimentaire · conservation
+데이터매트릭스	Data Matrix	Data Matrix	Data Matrix
+시료ID	Sample ID	ID campione	ID échantillon
+시료명	Sample	Campione	Échantillon
+날짜	Date	Data	Date
+담당자	Owner	Responsabile	Responsable
+시료	Sample	Campione	Échantillon
+시료·튜브 라벨	Sample · tube label	Etichetta campioni · provette	Étiquette d'échantillon · tube
+상품명	Product	Prodotto	Produit
+{price}원	${price}	€ {price}	{price} €
+가격	Price	Prezzo	Prix
+가격표	Price tag	Cartellino prezzo	Étiquette de prix
+설명	Description	Descrizione	Description
+QR 스티커	QR sticker	Adesivo QR	Autocollant QR
+프로그램 안내	Programme	Programma	Programme
+만족도 조사	Feedback survey	Questionario di gradimento	Enquête de satisfaction
+테두리	Border	Bordo	Bordure
+위	Top	Sopra	Haut
+윗줄	Top line	Riga superiore	Ligne du haut
+문구	Message	Testo	Message
+아래	Bottom	Sotto	Bas
+아랫줄	Bottom line	Riga inferiore	Ligne du bas
+원형	Round	Tondo	Rond
+원형 스티커	Round sticker	Adesivo tondo	Autocollant rond
+감사합니다	Thank you	Grazie	Merci
+선물용	Gift	Regalo	Cadeau
+번호	No.	N.	N°
+반	Class	Classe	Classe
+3학년 2반	Class 3B	Classe 3B	Classe 3B
+이름 스티커	Name sticker	Adesivo nome	Autocollant prénom
+빈 라벨	Blank label	Etichetta vuota	Étiquette vierge
+모든 용지 · 처음부터 디자인	Any paper · design from scratch	Qualsiasi carta · design da zero	Tout papier · design à partir de zéro
+참가구분별 색 띠 · QR	Colour band per role · QR	Fascia colorata per ruolo · QR	Bandeau de couleur par rôle · QR
+역할 구분 없음 · 일시·장소 · QR	No roles · date & venue · QR	Senza ruoli · data e luogo · QR	Sans rôles · date et lieu · QR
+소속 · 이름 · 직함	Affiliation · name · title	Affiliazione · nome · qualifica	Affiliation · nom · fonction
+반 접기 (위쪽 180° 회전)	Folds in half (top half turned 180°)	Si piega a metà (metà superiore ruotata di 180°)	Se plie en deux (moitié haute tournée de 180°)
+일련번호 · 절취선 · QR	Serial number · tear line · QR	Numero di serie · linea di strappo · QR	Numéro de série · ligne de découpe · QR
+우편번호 · 주소 · 받는 분	Postcode · address · recipient	CAP · indirizzo · destinatario	Code postal · adresse · destinataire
+Code128 + QR	Code128 + QR	Code128 + QR	Code128 + QR
+분류별 색 띠 · 보존기간	Colour band per category · retention	Fascia colorata per categoria · conservazione	Bande de couleur par catégorie · conservation
+바코드 + QR	Barcode + QR	Codice a barre + QR	Code-barres + QR
+DataMatrix · 날짜 · 담당자	DataMatrix · date · owner	DataMatrix · data · responsabile	DataMatrix · date · responsable
+제조일(오늘) · 소비기한 · 원재료	Production date (today) · use by · ingredients	Data di produzione (oggi) · scadenza · ingredienti	Date de fabrication (aujourd'hui) · DLC · ingrédients
+EAN-13 바코드	EAN-13 barcode	Codice a barre EAN-13	Code-barres EAN-13
+QR + 설명	QR + description	QR + descrizione	QR + description
+포장·감사 스티커	Packaging · thank-you sticker	Adesivo confezione · ringraziamento	Autocollant d'emballage · remerciement
+학용품 · 반 · 번호	School supplies · class · number	Materiale scolastico · classe · numero	Fournitures scolaires · classe · numéro
+# render/barcode.ts
+EAN-5 (애드온)	EAN-5 (add-on)	EAN-5 (add-on)	EAN-5 (add-on)
+EAN-2 (애드온)	EAN-2 (add-on)	EAN-2 (add-on)	EAN-2 (add-on)
+QR 코드	QR code	Codice QR	Code QR
+내용 없음	No content	Nessun contenuto	Aucun contenu
+# render/resolve.ts
+= 같음	= equals	= uguale a	= égal à
+≠ 다름	≠ not equal	≠ diverso da	≠ différent de
+포함	contains	contiene	contient
+비어 있음	is empty	è vuoto	est vide
+값 있음	is not empty	non è vuoto	n'est pas vide
+한글 포함	contains Hangul	contiene Hangul	contient du hangeul
+영문(한글 없음)	Latin only (no Hangul)	solo latino (senza Hangul)	latin uniquement (sans hangeul)
+글자 수 >	length >	lunghezza >	longueur >
+# render/svg.ts
+SVG 오류	SVG error	Errore SVG	Erreur SVG
+# ui/Canvas.tsx
+데이터	Data	Dati	Données
+{n}행	row {n}	riga {n}	ligne {n}
+새 행	new row	nuova riga	nouvelle ligne
+아래 표에 바로 반영	Updates the table below	Aggiorna subito la tabella sotto	Met à jour le tableau ci-dessous
+디자인 문구 (모든 라벨)	Design text (all labels)	Testo del design (tutte le etichette)	Texte du design (toutes les étiquettes)
+내용	Content	Contenuto	Contenu
+Enter 완료 · Shift+Enter 줄바꿈 · Esc 취소	Enter done · Shift+Enter new line · Esc cancel	Invio fine · Maiusc+Invio a capo · Esc annulla	Entrée valider · Maj+Entrée nouvelle ligne · Échap annuler
+# ui/CanvasMenu.tsx
+여기에 붙여넣기	Paste here	Incolla qui	Coller ici
+모두 선택	Select all	Seleziona tutto	Tout sélectionner
+화면에 맞추기	Fit to screen	Adatta allo schermo	Ajuster à l'écran
+내용 편집	Edit content	Modifica contenuto	Modifier le contenu
+표 칸 편집	Edit table cells	Modifica celle	Modifier les cellules
+파일 바꾸기…	Replace file…	Sostituisci file…	Remplacer le fichier…
+잘라내기	Cut	Taglia	Couper
+복사	Copy	Copia	Copier
+붙여넣기	Paste	Incolla	Coller
+복제	Duplicate	Duplica	Dupliquer
+삭제	Delete	Elimina	Supprimer
+잠긴 개체는 지울 수 없습니다	Locked objects cannot be deleted	Gli oggetti bloccati non possono essere eliminati	Les objets verrouillés ne peuvent pas être supprimés
+맨 앞으로	Bring to front	Porta in primo piano	Mettre au premier plan
+앞으로	Bring forward	Porta avanti	Avancer
+뒤로	Send backward	Porta indietro	Reculer
+맨 뒤로	Send to back	Porta in fondo	Mettre à l'arrière-plan
+그룹	Group	Raggruppa	Grouper
+그룹 해제	Ungroup	Separa	Dissocier
+잠금 해제	Unlock	Sblocca	Déverrouiller
+잠금	Lock	Blocca	Verrouiller
+숨기기	Hide	Nascondi	Masquer
+레이어 목록의 눈 아이콘으로 다시 보이게 할 수 있습니다	Show it again with the eye icon in the layer list	Puoi mostrarlo di nuovo con l'icona a occhio nell'elenco dei livelli	Vous pouvez le réafficher avec l'icône œil de la liste des calques
+인쇄하기	Print it	Stampa	Imprimer
+인쇄 안 함 (안내용)	Don't print (guide only)	Non stampare (solo guida)	Ne pas imprimer (repère uniquement)
+재단 여백까지 늘리기	Extend to bleed	Estendi al margine di abbondanza	Étendre au fond perdu
+라벨 기준 정렬	Align to label	Allinea all'etichetta	Aligner sur l'étiquette
+선택 영역 기준 정렬	Align to selection	Allinea alla selezione	Aligner sur la sélection
+왼쪽 맞춤	Align left	Allinea a sinistra	Aligner à gauche
+가로 가운데	Center horizontally	Centra orizzontalmente	Centrer horizontalement
+오른쪽 맞춤	Align right	Allinea a destra	Aligner à droite
+위쪽 맞춤	Align top	Allinea in alto	Aligner en haut
+세로 가운데	Center vertically	Centra verticalmente	Centrer verticalement
+아래쪽 맞춤	Align bottom	Allinea in basso	Aligner en bas
+# ui/controls.tsx
+없음	None	Nessuno	Aucun
+# ui/DataPanel.tsx
+새 열 이름	New column name	Nome della nuova colonna	Nom de la nouvelle colonne
+열 이름 변경 (디자인의 {{열 이름}}도 함께 바뀝니다)	Rename column ({{column name}} in the design changes too)	Rinomina colonna (anche {{nome colonna}} nel design cambia)	Renommer la colonne ({{nom de colonne}} dans le design change aussi)
+"{name}" 열을 삭제할까요?	Delete column "{name}"?	Eliminare la colonna "{name}"?	Supprimer la colonne « {name} » ?
+선택한 {n}개 행을 삭제할까요?	Delete the {n} selected rows?	Eliminare le {n} righe selezionate?	Supprimer les {n} lignes sélectionnées ?
+모든 행의 인쇄 기록을 지울까요?	Clear the print record of every row?	Cancellare la registrazione di stampa di tutte le righe?	Effacer l'historique d'impression de toutes les lignes ?
+{rows}행 · 인쇄 {labels}장 · 출력됨 {printed}	{rows} rows · {labels} to print · {printed} printed	{rows} righe · {labels} da stampare · {printed} stampate	{rows} lignes · {labels} à imprimer · {printed} imprimées
+가져오기 (xlsx·csv)	Import (xlsx·csv)	Importa (xlsx·csv)	Importer (xlsx·csv)
+내보내기	Export	Esporta	Exporter
+xlsx (인쇄 기록 포함)	xlsx (with print record)	xlsx (con registro di stampa)	xlsx (avec historique d'impression)
+csv (인쇄 기록 포함)	csv (with print record)	csv (con registro di stampa)	csv (avec historique d'impression)
+xlsx (데이터만)	xlsx (data only)	xlsx (solo dati)	xlsx (données seules)
+일련번호 생성	Serial numbers	Numeri di serie	Numéros de série
+행	Row	Riga	Ligne
+열	Column	Colonna	Colonne
+행 삭제	Delete rows	Elimina righe	Supprimer les lignes
+검색…	Search…	Cerca…	Rechercher…
+열 값으로 거르기	Filter by column value	Filtra per valore di colonna	Filtrer par valeur de colonne
+필터 열	Filter column	Colonna filtro	Colonne à filtrer
+(전체)	(all)	(tutti)	(tous)
+더보기	More	Altro	Plus
+필터 결과 인쇄 체크	Check filtered rows for printing	Seleziona per la stampa le righe filtrate	Cocher pour l'impression les lignes filtrées
+모든 행 인쇄 체크	Check all rows for printing	Seleziona per la stampa tutte le righe	Cocher toutes les lignes pour l'impression
+필터 결과 인쇄 해제	Uncheck filtered rows	Deseleziona le righe filtrate	Décocher les lignes filtrées
+모든 행 인쇄 해제	Uncheck all rows	Deseleziona tutte le righe	Décocher toutes les lignes
+중복을 검사할 열 (쉼표로 구분)	Columns to check for duplicates (comma-separated)	Colonne in cui cercare duplicati (separate da virgole)	Colonnes où chercher les doublons (séparées par des virgules)
+중복 {n}행 표시	{n} duplicate rows marked	{n} righe duplicate evidenziate	{n} lignes en double signalées
+중복 검사…	Find duplicates…	Trova duplicati…	Rechercher les doublons…
+중복 표시 끄기	Hide duplicate marks	Nascondi evidenziazione duplicati	Masquer les doublons
+인쇄 기록 지우기	Clear print record	Cancella registro di stampa	Effacer l'historique d'impression
+현장 재발행 / 현장 등록	On-site reprint / registration	Ristampa / registrazione in loco	Réimpression / inscription sur place
+데이터가 없습니다. xlsx/csv 파일을 {import} 하거나 {serial}, {column}로 시작하세요.	No data yet. {import} an xlsx/csv file, or start with {serial} or {column}.	Nessun dato. {import} un file xlsx/csv oppure inizia con {serial} o {column}.	Aucune donnée. {import} un fichier xlsx/csv, ou commencez par {serial} ou {column}.
+가져오기	Import	Importa	Importer
+첫 행은 열 이름이어야 하며 병합된 셀은 사용할 수 없습니다. 데이터가 없으면 디자인 그대로 출력됩니다.	The first row must hold the column names, and merged cells cannot be used. Without data, the design prints as it is.	La prima riga deve contenere i nomi delle colonne e non si possono usare celle unite. Senza dati il design viene stampato così com'è.	La première ligne doit contenir les noms de colonnes, et les cellules fusionnées ne sont pas prises en charge. Sans données, le design s'imprime tel quel.
+인쇄 여부	Print?	Stampare?	Imprimer ?
+디자인	Design	Design	Design
+출력	Printed	Stampata	Imprimée
+더블클릭: 이름 변경	Double-click: rename	Doppio clic: rinomina	Double-clic : renommer
+오름차순 정렬	Sort ascending	Ordine crescente	Tri croissant
+내림차순 정렬	Sort descending	Ordine decrescente	Tri décroissant
+열 삭제	Delete column	Elimina colonna	Supprimer la colonne
+클릭: 행 선택	Click: select row	Clic: seleziona riga	Clic : sélectionner la ligne
+미출력	Not printed	Non stampata	Non imprimée
+# ui/Dialogs.tsx
+일련번호 {n}개 생성	{n} serial numbers created	{n} numeri di serie creati	{n} numéros de série créés
+취소	Cancel	Annulla	Annuler
+적용	Apply	Applica	Appliquer
+열 이름	Column name	Nome colonna	Nom de colonne
+시작	Start	Inizio	Début
+증감	Step	Passo	Pas
+음수면 감소	Negative counts down	Se negativo, decresce	Négatif : décompte
+자릿수	Digits	Cifre	Chiffres
+0으로 채울 자릿수 (0 = 채우지 않음)	Digits to pad with zeros (0 = no padding)	Cifre da completare con zeri (0 = nessuno)	Chiffres complétés par des zéros (0 = aucun)
+개수	Count	Quantità	Nombre
+접두	Prefix	Prefisso	Préfixe
+예: LOT-	e.g. LOT-	es. LOT-	ex. LOT-
+접미	Suffix	Suffisso	Suffixe
+기존 {n}행에 채우기	Fill the existing {n} rows	Riempi le {n} righe esistenti	Remplir les {n} lignes existantes
+새 행 추가	Add new rows	Aggiungi nuove righe	Ajouter des lignes
+데이터 바꾸기	Replace data	Sostituisci dati	Remplacer les données
+데이터 없이 출력 순서대로 번호만 필요하면 내용에 {code}을 넣어도 됩니다.	If you only need numbers in print order, without data, put {code} in the content instead.	Se servono solo numeri in ordine di stampa, senza dati, puoi inserire {code} nel contenuto.	Si vous voulez seulement des numéros dans l'ordre d'impression, sans données, mettez {code} dans le contenu.
+오류: {error}	Error: {error}	Errore: {error}	Erreur : {error}
+링크로 공유	Share as link	Condividi con un link	Partager par lien
+링크를 복사했습니다.	Link copied.	Link copiato.	Lien copié.
+디자인 설정 전체를 압축해 링크의 # 뒤에 넣습니다. 서버에 아무것도 저장되지 않으며, 링크를 연 사람의 브라우저에서 그대로 복원됩니다.	The whole design is compressed into the part of the link after #. Nothing is stored on a server; it is restored in the browser of whoever opens the link.	L'intero design viene compresso nella parte del link dopo #. Nulla viene salvato su un server: viene ricostruito nel browser di chi apre il link.	Le design complet est compressé dans la partie du lien après #. Rien n'est stocké sur un serveur : il est restauré dans le navigateur de la personne qui ouvre le lien.
+편집용 링크	Editor link	Link per l'editor	Lien d'édition
+편집기에서 디자인을 엽니다	Opens the design in the editor	Apre il design nell'editor	Ouvre le design dans l'éditeur
+빠른 출력 링크	Quick print link	Link di stampa rapida	Lien d'impression rapide
+편집기 없이 값만 입력해 바로 인쇄하는 화면을 엽니다	Opens a page to enter values and print, without the editor	Apre una pagina per inserire i valori e stampare, senza editor	Ouvre une page pour saisir les valeurs et imprimer, sans l'éditeur
+데이터(명단) 포함 — 개인정보가 링크에 들어갑니다	Include data (list) — personal data goes into the link	Includi i dati (elenco) — i dati personali finiscono nel link	Inclure les données (liste) — les données personnelles seront dans le lien
+이미지 포함	Include images	Includi immagini	Inclure les images
+내장 글꼴 포함 (링크가 매우 길어짐)	Include embedded fonts (makes the link very long)	Includi i font incorporati (il link diventa molto lungo)	Inclure les polices intégrées (lien très long)
+길이 {n}자 ({kb} KB)	Length {n} characters ({kb} KB)	Lunghezza {n} caratteri ({kb} KB)	Longueur {n} caractères ({kb} Ko)
+ — 메신저나 일부 브라우저에서 잘릴 수 있습니다. 이미지를 빼거나 JSON 파일로 저장해 공유하세요.	 — may be cut off in messengers or some browsers. Leave out images, or save as a JSON file and share that.	 — potrebbe essere troncato nelle app di messaggistica o in alcuni browser. Escludi le immagini o salva un file JSON e condividi quello.	 — risque d'être tronqué dans les messageries ou certains navigateurs. Retirez les images ou enregistrez un fichier JSON à partager.
+링크가 길어 QR 코드로 만들 수 없습니다.	The link is too long for a QR code.	Il link è troppo lungo per un codice QR.	Le lien est trop long pour un code QR.
+용지·크기	Paper · size	Carta · formato	Papier · format
+새로 만들기	New	Nuovo	Nouveau
+프로젝트 열기 (.json)	Open project (.json)	Apri progetto (.json)	Ouvrir un projet (.json)
+현재 작업 계속	Continue current work	Continua il lavoro attuale	Continuer le travail en cours
+템플릿	Templates	Modelli	Modèles
+용지	Paper	Carta	Papier
+전체	All	Tutti	Tous
+라벨 크기	Label size	Formato etichetta	Format d'étiquette
+전체 크기	All sizes	Tutti i formati	Tous les formats
+현재 용지 · {name} ({size})	Current paper · {name} ({size})	Carta attuale · {name} ({size})	Papier actuel · {name} ({size})
+내 용지 · {name} ({size})	My paper · {name} ({size})	Mia carta · {name} ({size})	Mon papier · {name} ({size})
+크기 직접 입력…	Custom size…	Formato personalizzato…	Format personnalisé…
+{n}개 템플릿	{n} templates	{n} modelli	{n} modèles
+폭	Width	Larghezza	Largeur
+높이	Height	Altezza	Hauteur
+낱장·롤	Single · roll	Singola · rotolo	Unité · rouleau
+라벨 한 장 크기의 용지	Paper the size of one label	Carta delle dimensioni di un'etichetta	Papier de la taille d'une étiquette
+A4에 채우기	Fill an A4 sheet	Riempi un foglio A4	Remplir une feuille A4
+Letter에 채우기	Fill a Letter sheet	Riempi un foglio Letter	Remplir une feuille Letter
+간격	Gap	Spaziatura	Espacement
+{n}칸	{n} labels	{n} etichette	{n} étiquettes
+모든 템플릿을 이 크기에 맞춰 늘이거나 줄여 만듭니다 (견출지는 입력 영역 안에 배치). 비율이 많이 다르면 배치를 다듬어 주세요.	Every template is scaled to this size (on pre-printed labels, inside the writable area). If the proportions differ a lot, tidy up the layout.	Ogni modello viene adattato a questo formato (sulle etichette prestampate, dentro l'area scrivibile). Se le proporzioni sono molto diverse, sistema il layout.	Chaque modèle est adapté à ce format (sur les étiquettes pré-imprimées, dans la zone inscriptible). Si les proportions diffèrent beaucoup, retouchez la mise en page.
+모든 템플릿을 이 크기에 맞춰 늘이거나 줄여 만듭니다. 비율이 많이 다르면 배치를 다듬어 주세요.	Every template is scaled to this size. If the proportions differ a lot, tidy up the layout.	Ogni modello viene adattato a questo formato. Se le proporzioni sono molto diverse, sistema il layout.	Chaque modèle est adapté à ce format. Si les proportions diffèrent beaucoup, retouchez la mise en page.
+최근 저장한 작업	Recently saved	Salvati di recente	Enregistrés récemment
+현장 등록 완료	Registered on site	Registrazione in loco completata	Inscription sur place effectuée
+현장 재발행 · 현장 등록	On-site reprint · registration	Ristampa · registrazione in loco	Réimpression · inscription sur place
+출력#mode	Print as	Stampa su	Imprimer sur
+라벨 크기 1장 (라벨 프린터)	One label-size page (label printer)	Una pagina formato etichetta (stampante per etichette)	Une page au format étiquette (imprimante d'étiquettes)
+현재 용지의 칸 지정	A chosen label on the current sheet	Un'etichetta scelta sul foglio attuale	Une étiquette choisie sur la feuille actuelle
+번째 칸	(label position)	(posizione etichetta)	(position de l'étiquette)
+재발행 — 이름·소속·ID로 찾기	Reprint — find by name, affiliation or ID	Ristampa — cerca per nome, affiliazione o ID	Réimpression — rechercher par nom, affiliation ou ID
+검색어 입력…	Search…	Cerca…	Rechercher…
+출력 {time}	Printed {time}	Stampata {time}	Imprimée {time}
+찾는 사람이 없습니다. 아래에서 현장 등록하세요.	Nobody found. Register them on site below.	Nessun risultato. Registra la persona in loco qui sotto.	Personne trouvée. Inscrivez-la sur place ci-dessous.
+현장 등록 — 새 참가자 추가 후 바로 인쇄	On-site registration — add a new attendee and print	Registrazione in loco — aggiungi un nuovo partecipante e stampa	Inscription sur place — ajouter un participant et imprimer
+데이터 열이 없습니다. 먼저 명단을 가져오거나 열을 추가하세요.	There are no data columns. Import a list or add columns first.	Non ci sono colonne di dati. Importa prima un elenco o aggiungi delle colonne.	Aucune colonne de données. Importez d'abord une liste ou ajoutez des colonnes.
+등록하고 인쇄	Register and print	Registra e stampa	Inscrire et imprimer
+프린터 정렬 보정	Printer alignment	Allineamento stampante	Calibrage de l'imprimante
+초기화	Reset	Ripristina	Réinitialiser
+완료	Done	Fatto	Terminé
+인쇄 · 내보내기 창의 {page}를 일반 용지에 인쇄합니다 (배율 100%, "실제 크기").	Print the {page} from the Print · Export window on plain paper (scale 100%, "Actual size").	Stampa la {page} dalla finestra Stampa · Esporta su carta normale (scala 100%, "Dimensioni effettive").	Imprimez la {page} depuis la fenêtre Imprimer · Exporter sur du papier ordinaire (échelle 100 %, « Taille réelle »).
+정렬 테스트 페이지	Alignment test page	Pagina di prova allineamento	Page de test d'alignement
+라벨지 위에 겹쳐 보거나 자로 재어 테두리가 어긋난 만큼 아래에 입력합니다.	Lay it over a label sheet or measure with a ruler, and enter below how far the outlines are off.	Sovrapponila a un foglio di etichette o misura con un righello e inserisci qui sotto di quanto sono spostati i bordi.	Superposez-la à une planche d'étiquettes ou mesurez à la règle, et saisissez ci-dessous le décalage des contours.
+오른쪽/아래로 밀려 나오면 음수, 왼쪽/위로 치우치면 양수를 넣습니다. 50 mm 눈금이 실제와 다르면 배율을 고칩니다.	Shifted right/down: enter a negative value; shifted left/up: a positive one. If the 50 mm scale doesn't measure 50 mm, fix the scale.	Spostato a destra/in basso: valore negativo; a sinistra/in alto: positivo. Se la scala da 50 mm non misura 50 mm, correggi la scala.	Décalé à droite/en bas : valeur négative ; à gauche/en haut : positive. Si la règle de 50 mm ne mesure pas 50 mm, corrigez l'échelle.
+X 이동	X offset	Spostamento X	Décalage X
+Y 이동	Y offset	Spostamento Y	Décalage Y
+X 배율	X scale	Scala X	Échelle X
+Y 배율	Y scale	Scala Y	Échelle Y
+보정값은 프로젝트에 저장되며 인쇄·PDF 출력에 적용됩니다 (내보내기 창에서 끌 수 있음).	The correction is saved in the project and applied to printing and PDF (you can turn it off in the export window).	La correzione viene salvata nel progetto e applicata a stampa e PDF (puoi disattivarla nella finestra di esportazione).	La correction est enregistrée dans le projet et appliquée à l'impression et au PDF (désactivable dans la fenêtre d'export).
+"{name}" 글꼴을 내장했습니다.	Embedded the font "{name}".	Font "{name}" incorporato.	Police « {name} » intégrée.
+글꼴 이름 (디자인에서 쓸 이름)	Font name (as used in the design)	Nome del font (come usato nel design)	Nom de la police (tel qu'utilisé dans le design)
+글꼴 목록을 가져오지 못했습니다 (권한 거부 또는 미지원).	Could not get the font list (permission denied or not supported).	Impossibile ottenere l'elenco dei font (permesso negato o non supportato).	Impossible d'obtenir la liste des polices (autorisation refusée ou non prise en charge).
+글꼴 관리	Fonts	Font	Polices
+글꼴 파일을 프로젝트에 내장하면 다른 컴퓨터에서 열어도 같은 글꼴로 보이고, {ttf} 글꼴은 PDF에 벡터 텍스트로 들어갑니다.	Fonts embedded in the project look the same on any computer, and {ttf} fonts go into PDFs as vector text.	I font incorporati nel progetto appaiono uguali su qualsiasi computer, e i font {ttf} entrano nei PDF come testo vettoriale.	Les polices intégrées au projet s'affichent pareil sur tout ordinateur, et les polices {ttf} passent dans les PDF en texte vectoriel.
+내장된 글꼴 ({n})	Embedded fonts ({n})	Font incorporati ({n})	Polices intégrées ({n})
+가나다 ABC 123	Aa Bb ABC 123	Aa Bb ABC 123	Aa Bb ABC 123
+PDF 벡터	PDF vector	PDF vettoriale	PDF vectoriel
+PDF 이미지	PDF image	PDF immagine	PDF image
+글꼴 파일 추가 (TTF·OTF·WOFF)…	Add font file (TTF·OTF·WOFF)…	Aggiungi file di font (TTF·OTF·WOFF)…	Ajouter un fichier de police (TTF·OTF·WOFF)…
+이 컴퓨터의 글꼴	Fonts on this computer	Font di questo computer	Polices de cet ordinateur
+글꼴 목록 불러오기	Load font list	Carica elenco font	Charger la liste des polices
+{n}개 — 글꼴 입력란 자동완성에 추가됨	{n} — added to font field suggestions	{n} — aggiunti ai suggerimenti del campo font	{n} — ajoutées aux suggestions du champ police
+글꼴 선택…	Choose a font…	Scegli un font…	Choisir une police…
+프로젝트에 내장	Embed in project	Incorpora nel progetto	Intégrer au projet
+이 브라우저는 로컬 글꼴 목록을 지원하지 않습니다 (Chrome/Edge에서 지원). 글꼴 이름을 직접 입력해도 설치된 글꼴이면 사용됩니다.	This browser cannot list local fonts (Chrome and Edge can). Typing the name of an installed font also works.	Questo browser non può elencare i font locali (Chrome ed Edge sì). Puoi anche digitare il nome di un font installato.	Ce navigateur ne peut pas lister les polices locales (Chrome et Edge le peuvent). Saisir le nom d'une police installée fonctionne aussi.
+선택 / 텍스트 / 사각형 / 원 / 선 / 바코드 / QR / 이미지 도구	Select / text / rectangle / ellipse / line / barcode / QR / image tool	Strumento selezione / testo / rettangolo / ellisse / linea / codice a barre / QR / immagine	Outil sélection / texte / rectangle / ellipse / ligne / code-barres / QR / image
+실행 취소 / 다시 실행	Undo / redo	Annulla / ripeti	Annuler / rétablir
+복사 / 잘라내기 / 붙여넣기 / 복제	Copy / cut / paste / duplicate	Copia / taglia / incolla / duplica	Copier / couper / coller / dupliquer
+방향키 (Shift)	Arrow keys (Shift)	Frecce (Maiusc)	Flèches (Maj)
+0.5 mm (5 mm) 이동	Move 0.5 mm (5 mm)	Sposta di 0,5 mm (5 mm)	Déplacer de 0,5 mm (5 mm)
+그룹 / 그룹 해제	Group / ungroup	Raggruppa / separa	Grouper / dissocier
+앞으로 / 뒤로 (맨 앞 / 맨 뒤)	Forward / backward (front / back)	Avanti / indietro (primo piano / fondo)	Avancer / reculer (premier plan / arrière-plan)
+저장 / 다른 이름으로 저장	Save / save as	Salva / salva con nome	Enregistrer / enregistrer sous
+열기	Open	Apri	Ouvrir
+인쇄 · 내보내기	Print · Export	Stampa · Esporta	Imprimer · Exporter
+Ctrl+휠, Ctrl+= / Ctrl+-	Ctrl+wheel, Ctrl+= / Ctrl+-	Ctrl+rotellina, Ctrl+= / Ctrl+-	Ctrl+molette, Ctrl+= / Ctrl+-
+확대 / 축소	Zoom in / out	Ingrandisci / riduci	Zoom avant / arrière
+Space+드래그, 휠	Space+drag, wheel	Spazio+trascina, rotellina	Espace+glisser, molette
+화면 이동	Pan	Sposta la vista	Déplacer la vue
+Shift+드래그	Shift+drag	Maiusc+trascina	Maj+glisser
+수평/수직 이동, 비율 유지 크기 조절, 15° 회전	Move straight, resize keeping proportions, rotate in 15° steps	Sposta in orizzontale/verticale, ridimensiona in proporzione, ruota a passi di 15°	Déplacer droit, redimensionner en proportion, pivoter par pas de 15°
+Alt+드래그	Alt+drag	Alt+trascina	Alt+glisser
+스냅 끄기	Snapping off	Disattiva aggancio	Sans magnétisme
+Ctrl/Alt+클릭	Ctrl/Alt+click	Ctrl/Alt+clic	Ctrl/Alt+clic
+그룹 안의 개체 하나만 선택	Select one object inside a group	Seleziona un solo oggetto del gruppo	Sélectionner un seul objet du groupe
+오른쪽 클릭	Right-click	Clic destro	Clic droit
+개체 메뉴 (순서, 정렬, 잠금 등) · 빈 곳에서는 그 자리에 붙여넣기	Object menu (order, alignment, lock…) · on empty space, paste there	Menu oggetto (ordine, allineamento, blocco…) · su uno spazio vuoto, incolla lì	Menu de l'objet (ordre, alignement, verrouillage…) · sur un espace vide, coller à cet endroit
+이전 / 다음 데이터 행 미리보기	Preview previous / next data row	Anteprima riga di dati precedente / successiva	Aperçu de la ligne de données précédente / suivante
+선택 해제 / 선택 도구	Deselect / select tool	Deseleziona / strumento selezione	Désélectionner / outil sélection
+표 더블클릭, Enter	Double-click table, Enter	Doppio clic sulla tabella, Invio	Double-clic sur le tableau, Entrée
+표 칸 편집 시작 (바로 입력하면 칸이 채워짐)	Start editing cells (just type to fill a cell)	Inizia a modificare le celle (digita per riempire una cella)	Modifier les cellules (tapez pour remplir une cellule)
+표: Enter / Tab / 방향키	Table: Enter / Tab / arrows	Tabella: Invio / Tab / frecce	Tableau : Entrée / Tab / flèches
+아래 칸 / 다음 칸 / 칸 이동 (Shift로 여러 칸)	Cell below / next cell / move (Shift for a range)	Cella sotto / cella successiva / sposta (Maiusc per un intervallo)	Cellule dessous / suivante / déplacer (Maj pour une plage)
+표: Alt+Enter, F2	Table: Alt+Enter, F2	Tabella: Alt+Invio, F2	Tableau : Alt+Entrée, F2
+칸 안 줄바꿈 / 칸 내용 고치기	New line in a cell / edit cell content	A capo nella cella / modifica il contenuto	Nouvelle ligne dans la cellule / modifier le contenu
+표: Ctrl+C / V, Delete	Table: Ctrl+C / V, Delete	Tabella: Ctrl+C / V, Canc	Tableau : Ctrl+C / V, Suppr
+칸 복사 / 엑셀 표 붙여넣기, 내용 지우기	Copy cells / paste from Excel, clear content	Copia celle / incolla da Excel, cancella contenuto	Copier des cellules / coller depuis Excel, effacer le contenu
+표: Esc	Table: Esc	Tabella: Esc	Tableau : Échap
+칸 입력 취소 → 표 편집 끝내기	Cancel cell input → finish table editing	Annulla l'inserimento → termina la modifica	Annuler la saisie → terminer la modification
+단축키	Keyboard shortcuts	Scorciatoie da tastiera	Raccourcis clavier
+버전	Version	Versione	Version
+빌드	Build	Build	Build
+프로그램 정보	About	Informazioni	À propos
+사용한 오픈소스	Open-source software used	Software open source utilizzato	Logiciels open source utilisés
+LabelLoom 라이선스 전문	LabelLoom license (full text)	Licenza di LabelLoom (testo completo)	Licence de LabelLoom (texte intégral)
+오픈소스 라이선스 전문	Open-source licenses (full text)	Licenze open source (testo completo)	Licences open source (texte intégral)
+# ui/ExportDialog.tsx
+{row}행 {name}: {error}	Row {row} {name}: {error}	Riga {row} {name}: {error}	Ligne {row} {name} : {error}
+출력할 라벨이 없습니다.	There are no labels to print.	Non ci sono etichette da stampare.	Aucune étiquette à imprimer.
+분할할 열을 고르세요.	Choose a column to split by.	Scegli la colonna per la suddivisione.	Choisissez la colonne de découpage.
+{n}장 내보내기 완료	Exported {n} labels	{n} etichette esportate	{n} étiquettes exportées
+내보내기 실패: {error}	Export failed: {error}	Esportazione non riuscita: {error}	Échec de l'export : {error}
+처리 중	Processing	Elaborazione	Traitement
+라벨 테두리·중심 십자선이 있는 정렬 확인용 페이지 (재단선·테스트 포인트 설정도 함께 인쇄)	A page with label outlines and centre crosshairs for checking alignment (crop marks and test points are printed too)	Pagina con i bordi delle etichette e i mirini centrali per verificare l'allineamento (stampa anche segni di taglio e punti di prova)	Page avec contours d'étiquettes et croix centrales pour vérifier l'alignement (traits de coupe et points de test inclus)
+{n}장	{n} labels	{n} etichette	{n} étiquettes
+{n}쪽	{n} pages	{n} pagine	{n} pages
+형식	Format	Formato	Format
+브라우저 인쇄 (벡터, 설치된 글꼴 사용 · "PDF로 저장"도 가능)	Browser printing (vector, uses installed fonts · "Save as PDF" works too)	Stampa del browser (vettoriale, usa i font installati · funziona anche "Salva come PDF")	Impression du navigateur (vectoriel, polices installées · « Enregistrer au format PDF » fonctionne aussi)
+분할 PDF	Split PDF	PDF suddiviso	PDF découpé
+열 값별로 PDF를 나눠 ZIP으로	One PDF per column value, in a ZIP	Un PDF per valore di colonna, in uno ZIP	Un PDF par valeur de colonne, dans un ZIP
+대상	Rows	Righe	Lignes
+인쇄 체크된 행	Rows checked for printing	Righe selezionate per la stampa	Lignes cochées pour l'impression
+아직 출력 안 한 행	Rows not printed yet	Righe non ancora stampate	Lignes pas encore imprimées
+현재 필터 결과	Current filter result	Risultato del filtro attuale	Résultat du filtre actuel
+행 범위	Row range	Intervallo di righe	Plage de lignes
+현재 행만 ({n}행)	Current row only (row {n})	Solo la riga attuale (riga {n})	Ligne actuelle seulement (ligne {n})
+모든 행	All rows	Tutte le righe	Toutes les lignes
+범위	Range	Intervallo	Plage
+부수	Copies	Copie	Copies
+× 행별 매수	× copies per row	× copie per riga	× copies par ligne
+장 수	Labels	Etichette	Étiquettes
+장 (데이터 없음)	labels (no data)	etichette (senza dati)	étiquettes (sans données)
+시작 칸	Start at label	Inizia dall'etichetta	Commencer à l'étiquette
+양면	Double-sided	Fronte-retro	Recto verso
+방식	Mode	Modalità	Mode
+앞뒤 따로 인쇄	Print backs separately	Stampa i retri a parte	Imprimer les versos à part
+각 장 뒤에 뒷면 장을 추가 (프린터 양면 정렬이 맞아야 함)	Adds a back sheet after each sheet (the printer's duplex alignment must be accurate)	Aggiunge un foglio retro dopo ogni foglio (l'allineamento fronte-retro della stampante deve essere preciso)	Ajoute une feuille verso après chaque feuille (l'alignement recto verso de l'imprimante doit être précis)
+펼쳐서 접기	Print and fold	Stampa e piega	Imprimer et plier
+앞면과 뒷면을 같은 면에 나란히 인쇄 → 잘라서 반으로 접기 (정렬 걱정 없음)	Prints front and back side by side on one side → cut and fold in half (no alignment worries)	Stampa fronte e retro affiancati sullo stesso lato → taglia e piega a metà (nessun problema di allineamento)	Imprime recto et verso côte à côte sur une face → découper et plier en deux (aucun souci d'alignement)
+뒤집기	Flip	Capovolgi	Retourner
+긴 쪽 (좌우 반전)	Long edge (mirrored left–right)	Lato lungo (specchiato orizzontalmente)	Bord long (miroir gauche–droite)
+짧은 쪽 (상하 반전)	Short edge (mirrored top–bottom)	Lato corto (specchiato verticalmente)	Bord court (miroir haut–bas)
+뒷면 위치	Back position	Posizione del retro	Position du verso
+옆에 붙이기	Beside	Accanto	À côté
+앞면 오른쪽에 뒷면 · 세로선을 따라 접기	Back to the right of the front · fold along the vertical line	Retro a destra del fronte · piega lungo la linea verticale	Verso à droite du recto · plier le long de la ligne verticale
+아래에 붙이기	Below	Sotto	En dessous
+앞면 아래에 뒷면 · 가로선을 따라 접기	Back below the front · fold along the horizontal line	Retro sotto il fronte · piega lungo la linea orizzontale	Verso sous le recto · plier le long de la ligne horizontale
+뒷면 180° 뒤집어 배치	Turn the back 180°	Ruota il retro di 180°	Tourner le verso de 180°
+가로선으로 접을 때(아래에 붙이기) 켜야 접은 뒤 뒷면이 바로 보입니다. 텐트형 명패도 이 설정을 씁니다.	Turn on when folding along a horizontal line (Below) so the back reads upright after folding. Table tents use this too.	Attivalo quando pieghi lungo una linea orizzontale (Sotto), così il retro risulta dritto dopo la piegatura. Lo usano anche i segnaposto.	À activer pour un pli horizontal (En dessous) afin que le verso soit à l'endroit une fois plié. Les chevalets l'utilisent aussi.
+한 칸에 {pair}을 붙여 {cols}×{rows}개씩 배치합니다.	Each cell holds {pair}, {cols}×{rows} per sheet.	Ogni cella contiene {pair}, {cols}×{rows} per foglio.	Chaque case contient {pair}, {cols}×{rows} par feuille.
+앞면	Front	Fronte	Recto
+뒷면	Back	Retro	Verso
+재단선을 켜면 접는 선은 점선으로 표시됩니다.	With crop marks on, fold lines are shown dashed.	Con i segni di taglio attivi, le linee di piegatura sono tratteggiate.	Avec les traits de coupe, les lignes de pliage sont en pointillés.
+용지에 한 칸도 들어가지 않아 용지 크기를 {w}×{h} mm로 늘렸습니다.	Not even one cell fits on the paper, so the paper was enlarged to {w}×{h} mm.	Nemmeno una cella entra nel foglio, quindi il foglio è stato ingrandito a {w}×{h} mm.	Aucune case ne tient sur le papier : le papier a été agrandi à {w}×{h} mm.
+재단선 표시 (재단선 + 재단 여백 {n} mm 기준선)	Crop marks (trim + {n} mm bleed guides)	Segni di taglio (rifilo + guide di abbondanza {n} mm)	Traits de coupe (coupe + repères de fond perdu {n} mm)
+재단선 표시	Crop marks	Segni di taglio	Traits de coupe
+기준선 이름 표시 (TRIM 재단선 · BLEED 재단 여백 · FOLD 접는 선)	Label the marks (TRIM trim line · BLEED bleed · FOLD fold line)	Etichetta i segni (TRIM rifilo · BLEED abbondanza · FOLD piegatura)	Nommer les repères (TRIM coupe · BLEED fond perdu · FOLD pliage)
+칸 간격이 재단 여백×2({n} mm)보다 좁아 라벨 사이에서는 재단 여백이 간격의 절반으로 줄어듭니다.	The gap is narrower than twice the bleed ({n} mm), so between labels the bleed shrinks to half the gap.	La spaziatura è inferiore al doppio dell'abbondanza ({n} mm), quindi tra le etichette l'abbondanza si riduce a metà spaziatura.	L'espacement est inférieur à deux fois le fond perdu ({n} mm) : entre les étiquettes, le fond perdu est réduit à la moitié de l'espacement.
+테스트 포인트	Test points	Punti di prova	Points de test
+색상 패치 (C M Y K R G B)	Colour patches (C M Y K R G B)	Campioni di colore (C M Y K R G B)	Pastilles de couleur (C M J N R V B)
+회색 단계 (100~5%)	Grey steps (100–5%)	Scala di grigi (100–5%)	Gamme de gris (100–5 %)
+디자인에 쓰인 색	Colours used in the design	Colori usati nel design	Couleurs du design
+선 굵기 (0.1 · 0.2 · 0.3 mm)	Line widths (0.1 · 0.2 · 0.3 mm)	Spessori di linea (0,1 · 0,2 · 0,3 mm)	Épaisseurs de trait (0,1 · 0,2 · 0,3 mm)
+맞춤 표시 (레지스트레이션)	Registration marks	Crocini di registro	Repères de repérage
+라벨 바깥 여백이 좁아 테스트 포인트를 넣을 자리가 없습니다. 항목을 줄이거나 용지 여백을 늘리세요.	The margin outside the labels is too narrow for test points. Choose fewer items or widen the paper margins.	Il margine fuori dalle etichette è troppo stretto per i punti di prova. Scegli meno elementi o allarga i margini.	La marge autour des étiquettes est trop étroite pour les points de test. Choisissez moins d'éléments ou élargissez les marges.
+라벨 테두리 인쇄	Print label outlines	Stampa i bordi delle etichette	Imprimer les contours des étiquettes
+프린터 보정 적용 (X {x}, Y {y} mm)	Apply printer correction (X {x}, Y {y} mm)	Applica la correzione stampante (X {x}, Y {y} mm)	Appliquer la correction d'imprimante (X {x}, Y {y} mm)
+PDF 방식	PDF mode	Modalità PDF	Mode PDF
+벡터	Vector	Vettoriale	Vectoriel
+도형·바코드·QR·SVG는 벡터로 저장됩니다. 텍스트는 내장한 TTF 글꼴이면 벡터, 아니면 고해상도 이미지로 들어갑니다 (글꼴 관리에서 TTF 내장).	Shapes, barcodes, QR codes and SVG are saved as vectors. Text is vector with an embedded TTF font, otherwise a high-resolution image (embed TTF fonts under Fonts).	Forme, codici a barre, QR e SVG sono salvati come vettori. Il testo è vettoriale con un font TTF incorporato, altrimenti un'immagine ad alta risoluzione (incorpora i TTF in Font).	Formes, codes-barres, QR et SVG sont enregistrés en vectoriel. Le texte est vectoriel avec une police TTF intégrée, sinon une image haute résolution (intégrez les TTF dans Polices).
+페이지 전체를 지정 해상도의 이미지로 저장합니다. 화면과 가장 똑같습니다.	Saves each whole page as an image at the chosen resolution. Closest to the screen.	Salva ogni pagina intera come immagine alla risoluzione scelta. È il più fedele allo schermo.	Enregistre chaque page entière en image à la résolution choisie. Le plus fidèle à l'écran.
+해상도	Resolution	Risoluzione	Résolution
+파일 이름	File name	Nome file	Nom de fichier
+흰 배경 (끄면 투명)	White background (off = transparent)	Sfondo bianco (disattivato = trasparente)	Fond blanc (désactivé = transparent)
+분할 열	Split by	Suddividi per	Découper par
+출력 후 '출력됨'으로 기록	Mark as printed afterwards	Segna come stampate dopo la stampa	Marquer comme imprimées ensuite
+코드 오류 {n}건 — 해당 코드는 빈칸으로 출력됩니다.	{n} code errors — those codes print blank.	{n} errori nei codici — quei codici saranno stampati vuoti.	{n} erreurs de code — ces codes seront imprimés vides.
+견출지 테두리 겹쳐 보기 (인쇄 안 됨)	Show pre-printed frames (not printed)	Mostra le cornici prestampate (non stampate)	Afficher les cadres pré-imprimés (non imprimés)
+출력할 라벨이 없습니다. 대상이나 인쇄 체크를 확인하세요.	No labels to print. Check the rows setting or the print checkboxes.	Nessuna etichetta da stampare. Controlla le righe scelte o le caselle di stampa.	Aucune étiquette à imprimer. Vérifiez les lignes choisies ou les cases d'impression.
+이미 사용한 칸은 건너뛰고 클릭한 칸부터 인쇄합니다	Skips labels already used and starts printing at the one you click	Salta le etichette già usate e inizia a stampare da quella cliccata	Saute les étiquettes déjà utilisées et commence à celle sur laquelle vous cliquez
+# ui/ImportDialog.tsx
+파일을 읽을 수 없습니다: {error}	Cannot read the file: {error}	Impossibile leggere il file: {error}	Impossible de lire le fichier : {error}
+{n}행을 가져왔습니다.	Imported {n} rows.	{n} righe importate.	{n} lignes importées.
+데이터 가져오기 (xlsx · xls · csv)	Import data (xlsx · xls · csv)	Importa dati (xlsx · xls · csv)	Importer des données (xlsx · xls · csv)
+{rows}행 · {cols}열	{rows} rows · {cols} columns	{rows} righe · {cols} colonne	{rows} lignes · {cols} colonnes
+바꾸기	Replace	Sostituisci	Remplacer
+추가	Add	Aggiungi	Ajouter
+파일 선택…	Choose file…	Scegli file…	Choisir un fichier…
+또는 파일을 여기로 끌어오세요. 첫 행은 열 이름이어야 합니다.	or drop a file here. The first row must hold the column names.	oppure trascina qui un file. La prima riga deve contenere i nomi delle colonne.	ou déposez un fichier ici. La première ligne doit contenir les noms de colonnes.
+시트	Sheet	Foglio	Feuille
+열 이름 행	Header row	Riga di intestazione	Ligne d'en-tête
+기존 데이터 바꾸기	Replace existing data	Sostituisci i dati esistenti	Remplacer les données existantes
+뒤에 추가	Append	Aggiungi in fondo	Ajouter à la suite
+앞뒤 공백·중복 공백 정리	Trim leading/trailing and repeated spaces	Rimuovi spazi iniziali, finali e ripetuti	Supprimer les espaces en début, en fin et en double
+병합된 셀 {n}개가 있습니다. 병합 셀은 첫 칸에만 값이 들어갑니다. 원본에서 병합을 풀고 다시 시도하는 것이 좋습니다.	There are {n} merged cells. Only the first cell of a merge gets the value. Unmerge them in the original and try again.	Ci sono {n} celle unite. Solo la prima cella dell'unione riceve il valore. È meglio separarle nell'originale e riprovare.	Il y a {n} cellules fusionnées. Seule la première cellule reçoit la valeur. Mieux vaut annuler la fusion dans l'original et réessayer.
+열 매핑	Column mapping	Mappatura colonne	Correspondance des colonnes
+디자인에서 쓰는 열 이름으로 자동 연결했습니다 (이름·성명·Name, 소속·Affiliation 등). 필요하면 바꾸세요.	Columns were matched to the names the design uses (Name · Nome · Nom, Affiliation…). Change them if needed.	Le colonne sono state abbinate ai nomi usati nel design (Name · Nome · Nom, Affiliazione…). Cambiale se serve.	Les colonnes ont été associées aux noms utilisés par le design (Name · Nome · Nom, Affiliation…). Modifiez-les si besoin.
+(그대로)	(as is)	(invariata)	(telle quelle)
+[매수 열로 사용]	[Use as copies column]	[Usa come colonna copie]	[Utiliser comme colonne de copies]
+[가져오지 않음]	[Don't import]	[Non importare]	[Ne pas importer]
+디자인 연결	Linked to design	Collegata al design	Liée au design
+디자인에서 쓰는 열이 데이터에 없습니다: {cols}	Columns used in the design are missing from the data: {cols}	Colonne usate nel design assenti nei dati: {cols}	Colonnes du design absentes des données : {cols}
+빈 값: {list}	Empty values: {list}	Valori vuoti: {list}	Valeurs vides : {list}
+중복 의심 {n}행 ({keys} 기준) — 가져온 뒤 데이터 패널 "더보기 › 중복 검사"로 표시할 수 있습니다.	{n} possible duplicate rows (by {keys}) — after importing, mark them with "More › Find duplicates" in the data panel.	{n} possibili righe duplicate (per {keys}) — dopo l'importazione puoi evidenziarle con "Altro › Trova duplicati" nel pannello dati.	{n} doublons possibles (selon {keys}) — après l'import, signalez-les avec « Plus › Rechercher les doublons » dans le panneau de données.
+미리보기	Preview	Anteprima	Aperçu
+# ui/Inspector.tsx
+{n}개 선택 · 정렬	{n} selected · align	{n} selezionati · allinea	{n} sélectionnés · aligner
+{type} · 정렬	{type} · align	{type} · allinea	{type} · aligner
+개체를 선택하면 속성이 표시됩니다.	Select an object to see its properties.	Seleziona un oggetto per vederne le proprietà.	Sélectionnez un objet pour voir ses propriétés.
+라벨 {lw}×{lh} mm · 용지 {pw}×{ph} mm · {cols}×{rows}칸	Label {lw}×{lh} mm · paper {pw}×{ph} mm · {cols}×{rows} labels	Etichetta {lw}×{lh} mm · carta {pw}×{ph} mm · {cols}×{rows} etichette	Étiquette {lw}×{lh} mm · papier {pw}×{ph} mm · {cols}×{rows} étiquettes
+상단 도구로 개체를 그린 뒤 끌어서 배치합니다.	Draw objects with the tools at the top, then drag them into place.	Disegna gli oggetti con gli strumenti in alto, poi trascinali in posizione.	Dessinez des objets avec les outils du haut, puis faites-les glisser en place.
+내용에 {code}을 넣으면 데이터 행 값으로 바뀝니다.	Put {code} in the content and it is replaced by the data row's value.	Inserisci {code} nel contenuto e verrà sostituito dal valore della riga di dati.	Mettez {code} dans le contenu : il est remplacé par la valeur de la ligne de données.
+{shift} 드래그: 수평/수직 이동 · {alt}: 스냅 끄기	{shift} drag: move straight · {alt}: snapping off	{shift} trascina: sposta in orizzontale/verticale · {alt}: senza aggancio	{shift} glisser : déplacer droit · {alt} : sans magnétisme
+{space}+드래그 또는 휠: 화면 이동 · {ctrl}+휠: 확대	{space}+drag or wheel: pan · {ctrl}+wheel: zoom	{space}+trascina o rotellina: sposta la vista · {ctrl}+rotellina: zoom	{space}+glisser ou molette : déplacer la vue · {ctrl}+molette : zoom
+{key} 단축키 목록	{key} keyboard shortcuts	{key} scorciatoie da tastiera	{key} raccourcis clavier
+가로 간격 같게	Equal horizontal spacing	Spaziatura orizzontale uguale	Espacement horizontal égal
+가로 분배	Distribute horizontally	Distribuisci in orizzontale	Répartir horizontalement
+세로 간격 같게	Equal vertical spacing	Spaziatura verticale uguale	Espacement vertical égal
+세로 분배	Distribute vertically	Distribuisci in verticale	Répartir verticalement
+첫 개체 폭에 맞춤	Match the first object's width	Adatta alla larghezza del primo oggetto	Aligner sur la largeur du premier objet
+폭 맞춤	Same width	Stessa larghezza	Même largeur
+첫 개체 높이에 맞춤	Match the first object's height	Adatta all'altezza del primo oggetto	Aligner sur la hauteur du premier objet
+높이 맞춤	Same height	Stessa altezza	Même hauteur
+맨 앞	Front	In primo piano	Premier plan
+맨 뒤	Back	In fondo	Arrière-plan
+공통	Common	Comuni	Communs
+불투명도	Opacity	Opacità	Opacité
+라벨 가장자리에 닿은 변을 재단선 밖 {n} mm까지 늘립니다. 가장자리에 닿지 않으면 라벨 전체 + 재단 여백을 채웁니다.	Extends edges touching the label edge to {n} mm beyond the trim line. If none touch, fills the whole label plus bleed.	Estende i lati che toccano il bordo dell'etichetta fino a {n} mm oltre la linea di rifilo. Se nessuno lo tocca, riempie l'intera etichetta più l'abbondanza.	Étend les bords qui touchent le bord de l'étiquette jusqu'à {n} mm au-delà du trait de coupe. Si aucun ne le touche, remplit toute l'étiquette plus le fond perdu.
+용지 설정에서 재단 여백(블리드)을 먼저 정하세요.	Set a bleed in the paper settings first.	Imposta prima l'abbondanza nelle impostazioni della carta.	Définissez d'abord un fond perdu dans les réglages du papier.
+라벨지에 이미 인쇄된 그림의 자리를 표시할 때 씁니다. 화면에는 보라색 점선과 함께 보이고 인쇄·PDF·PNG에서는 빠집니다.	Use it to mark artwork already printed on the label stock. It shows on screen with a purple dashed outline and is left out of printing, PDF and PNG.	Serve a indicare la grafica già stampata sul foglio di etichette. Si vede a schermo con un contorno viola tratteggiato ed è esclusa da stampa, PDF e PNG.	Sert à repérer un motif déjà imprimé sur les étiquettes. Il s'affiche à l'écran avec un contour violet en pointillés et est exclu de l'impression, du PDF et du PNG.
+개체	Object	Oggetto	Objet
+종류	Type	Tipo	Type
+개체 종류 변환	Convert object type	Converti tipo di oggetto	Convertir le type d'objet
+숨김	Hidden	Nascosto	Masqué
+위치·크기 (mm)	Position · size (mm)	Posizione · dimensioni (mm)	Position · taille (mm)
+회전	Rotation	Rotazione	Rotation
+불투명	Opacity	Opacità	Opacité
+맞춤	Fit	Adattamento	Ajustement
+비율 유지 (맞춤)	Keep ratio (fit)	Mantieni proporzioni (adatta)	Conserver les proportions (ajuster)
+비율 유지 (채움)	Keep ratio (fill)	Mantieni proporzioni (riempi)	Conserver les proportions (remplir)
+늘이기	Stretch	Allunga	Étirer
+비율 유지	Keep ratio	Mantieni proporzioni	Conserver les proportions
+일련번호 (인쇄 순서)	Serial number (print order)	Numero di serie (ordine di stampa)	Numéro de série (ordre d'impression)
+일련번호 4자리 (0001)	Serial number, 4 digits (0001)	Numero di serie, 4 cifre (0001)	Numéro de série, 4 chiffres (0001)
+행 번호	Row number	Numero di riga	Numéro de ligne
+매수 번호	Copy number	Numero di copia	Numéro de copie
+페이지 번호	Page number	Numero di pagina	Numéro de page
+날짜+시간	Date+time	Data+ora	Date+heure
+줄바꿈	Line break	A capo	Saut de ligne
+GS 제어문자 (GS1)	GS control character (GS1)	Carattere di controllo GS (GS1)	Caractère de contrôle GS (GS1)
+TAB	TAB	TAB	TAB
+GS1 (01) GTIN	GS1 (01) GTIN	GS1 (01) GTIN	GS1 (01) GTIN
+GS1 (10) LOT	GS1 (10) LOT	GS1 (10) LOTTO	GS1 (10) LOT
+GS1 (17) 유통기한	GS1 (17) expiry date	GS1 (17) data di scadenza	GS1 (17) date d'expiration
+GS1 (21) 일련번호	GS1 (21) serial number	GS1 (21) numero di serie	GS1 (21) numéro de série
+내용 · 데이터 연결	Content · data binding	Contenuto · collegamento dati	Contenu · liaison des données
+데이터 열 삽입	Insert data column	Inserisci colonna di dati	Insérer une colonne de données
+데이터 열	Data column	Colonna di dati	Colonne de données
+서식 요소 삽입	Insert field	Inserisci campo	Insérer un champ
+서식 요소	Field	Campo	Champ
+현재 행으로 계산된 값	Value computed for the current row	Valore calcolato per la riga attuale	Valeur calculée pour la ligne actuelle
+값이 비면 숨김	Hide when empty	Nascondi se vuoto	Masquer si vide
+글꼴	Font	Font	Police
+크기	Size	Dimensione	Taille
+최소	Min	Min	Min
+자동 축소 최소 크기	Smallest size when shrinking to fit	Dimensione minima nella riduzione automatica	Taille minimale de la réduction automatique
+자간	Letter spacing	Spaziatura caratteri	Espacement des lettres
+행간	Line height	Interlinea	Interligne
+굵게	Bold	Grassetto	Gras
+기울임	Italic	Corsivo	Italique
+밑줄	Underline	Sottolineato	Souligné
+왼쪽	Left	Sinistra	Gauche
+가운데	Center	Centro	Centre
+오른쪽	Right	Destra	Droite
+줄	Lines	Righe	Lignes
+한 줄	Single line	Riga singola	Une ligne
+여러 줄	Multiple lines	Più righe	Plusieurs lignes
+자동 축소 (상자에 맞춤)	Shrink to fit (box)	Riduci per adattare (riquadro)	Réduire pour ajuster (cadre)
+장평 조절 (한 줄 폭 맞춤)	Condense (fit line width)	Condensa (adatta alla larghezza)	Condenser (ajuster à la largeur)
+고정 크기	Fixed size	Dimensione fissa	Taille fixe
+넘치면 말줄임(…)	Ellipsis (…) when it overflows	Puntini (…) se trabocca	Points de suspension (…) en cas de débordement
+글자색	Text colour	Colore testo	Couleur du texte
+단색	Solid	Pieno	Uni
+선형	Linear	Lineare	Linéaire
+원형#radial	Radial	Radiale	Radial
+각도	Angle	Angolo	Angle
+도형	Shape	Forma	Forme
+채우기	Fill	Riempimento	Remplissage
+선 색	Line colour	Colore linea	Couleur du trait
+선 두께	Line width	Spessore linea	Épaisseur du trait
+모서리	Corner radius	Raggio angoli	Rayon des coins
+점선	Dashed	Tratteggiata	Pointillés
+모듈 {mod} mm — 인식이 어려울 수 있습니다. 크기를 키우세요 (권장 ≥ {min} mm).	Module {mod} mm — may be hard to scan. Make it larger (recommended ≥ {min} mm).	Modulo {mod} mm — potrebbe essere difficile da leggere. Ingrandiscilo (consigliato ≥ {min} mm).	Module {mod} mm — risque d'être difficile à lire. Agrandissez-le (recommandé ≥ {min} mm).
+모듈 크기 {mod} mm	Module size {mod} mm	Dimensione modulo {mod} mm	Taille du module {mod} mm
+예시 값 넣기: {value}	Insert sample value: {value}	Inserisci valore di esempio: {value}	Insérer une valeur d'exemple : {value}
+문자 표시	Show text	Mostra testo	Afficher le texte
+문자 크기	Text size	Dimensione testo	Taille du texte
+막대 색	Bar colour	Colore barre	Couleur des barres
+배경	Background	Sfondo	Fond
+참가자 ID	Attendee ID	ID partecipante	ID participant
+네트워크이름	NetworkName	NomeRete	NomDuRéseau
+비밀번호	Password	Password	MotDePasse
+QR / 2D 코드	QR / 2D code	Codice QR / 2D	Code QR / 2D
+오류 정정	Error correction	Correzione errori	Correction d'erreur
+여백	Quiet zone	Margine	Marge
+모듈	modules	moduli	modules
+색	Colour	Colore	Couleur
+로고	Logo	Logo	Logo
+변경	Change	Cambia	Modifier
+제거	Remove	Rimuovi	Retirer
+효과	Effects	Effetti	Effets
+그림자	Shadow	Ombra	Ombre
+흐림	Blur	Sfocatura	Flou
+농도	Strength	Intensità	Intensité
+외곽선	Outline	Contorno	Contour
+두께	Width	Spessore	Épaisseur
+이중 외곽선	Double outline	Doppio contorno	Double contour
+두께2	Width 2	Spessore 2	Épaisseur 2
+조건부 스타일	Conditional style	Stile condizionale	Style conditionnel
+규칙 추가	Add rule	Aggiungi regola	Ajouter une règle
+예: 참가구분 = 연사 → 빨간색 / 영문 이름 → 글자 크기 20pt	e.g. Role = Speaker → red / Latin name → font size 20 pt	es. Ruolo = Relatore → rosso / nome latino → dimensione 20 pt	ex. Rôle = Intervenant → rouge / nom latin → taille 20 pt
+만약	If	Se	Si
+(이 개체 내용)	(this object's content)	(contenuto di questo oggetto)	(contenu de cet objet)
+값	value	valore	valeur
+내용 바꾸기 (선택)	Replace content (optional)	Sostituisci contenuto (facoltativo)	Remplacer le contenu (facultatif)
+# ui/LeftPanel.tsx
+레이어	Layers	Livelli	Calques
+개체가 없습니다. 위 도구 막대에서 추가하세요.	No objects yet. Add some from the toolbar above.	Nessun oggetto. Aggiungine dalla barra degli strumenti in alto.	Aucun objet. Ajoutez-en depuis la barre d'outils du haut.
+보이기	Show	Mostra	Afficher
+저장 공간이 부족합니다.	Not enough storage space.	Spazio di archiviazione insufficiente.	Espace de stockage insuffisant.
+컴포넌트 이름	Component name	Nome del componente	Nom du composant
+컴포넌트 {n}	Component {n}	Componente {n}	Composant {n}
+"{name}" 컴포넌트를 저장했습니다.	Saved the component "{name}".	Componente "{name}" salvato.	Composant « {name} » enregistré.
+컴포넌트 파일이 올바르지 않습니다.	The component file is not valid.	Il file dei componenti non è valido.	Le fichier de composants n'est pas valide.
+내 컴포넌트	My components	I miei componenti	Mes composants
+선택 개체를 컴포넌트로 저장	Save the selection as a component	Salva la selezione come componente	Enregistrer la sélection comme composant
+자주 쓰는 개체 묶음을 선택하고 ＋를 눌러 저장하면 다른 라벨에도 넣을 수 있습니다.	Select a set of objects you use often and press ＋ to save it, then insert it in other labels.	Seleziona un gruppo di oggetti che usi spesso e premi ＋ per salvarlo, poi inseriscilo in altre etichette.	Sélectionnez des objets que vous utilisez souvent et appuyez sur ＋ pour les enregistrer, puis insérez-les dans d'autres étiquettes.
+현재 디자인에 넣기	Insert into the current design	Inserisci nel design attuale	Insérer dans le design actuel
+{n}개	{n}	{n}	{n}
+"{name}" 삭제?	Delete "{name}"?	Eliminare "{name}"?	Supprimer « {name} » ?
+내 프리셋	My presets	I miei preset	Mes préréglages
+프리셋 이름	Preset name	Nome del preset	Nom du préréglage
+"{name}" 프리셋 삭제?	Delete preset "{name}"?	Eliminare il preset "{name}"?	Supprimer le préréglage « {name} » ?
+프리셋 파일이 올바르지 않습니다.	The preset file is not valid.	Il file dei preset non è valido.	Le fichier de préréglages n'est pas valide.
+프리셋	Presets	Preset	Préréglages
+사용자 정의	Custom	Personalizzato	Personnalisé
+내 프리셋으로 저장	Save as my preset	Salva come mio preset	Enregistrer comme préréglage
+프리셋 가져오기	Import presets	Importa preset	Importer des préréglages
+가로/세로 바꾸기	Swap width and height	Scambia larghezza e altezza	Inverser largeur et hauteur
+방향 바꾸기	Rotate paper	Ruota foglio	Pivoter le papier
+롤 라벨 프린터용	For roll label printers	Per stampanti di etichette in rotolo	Pour imprimantes d'étiquettes en rouleau
+용지 = 라벨	Paper = label	Carta = etichetta	Papier = étiquette
+라벨 (디자인 영역)	Label (design area)	Etichetta (area di design)	Étiquette (zone de design)
+셀 분할 (한 장에 여러 라벨)	Grid (several labels per sheet)	Griglia (più etichette per foglio)	Grille (plusieurs étiquettes par feuille)
+가로 칸	Columns	Colonne	Colonnes
+세로 칸	Rows	Righe	Lignes
+왼쪽 여백	Left margin	Margine sinistro	Marge gauche
+위쪽 여백	Top margin	Margine superiore	Marge haute
+가로 간격	Horizontal gap	Spaziatura orizzontale	Espacement horizontal
+세로 간격	Vertical gap	Spaziatura verticale	Espacement vertical
+가로 피치	Horizontal pitch	Passo orizzontale	Pas horizontal
+라벨 왼쪽 끝 ~ 다음 라벨 왼쪽 끝 (라벨지 실측값)	Left edge of a label to the left edge of the next (measured on the sheet)	Dal bordo sinistro di un'etichetta a quello della successiva (misurato sul foglio)	Du bord gauche d'une étiquette à celui de la suivante (mesuré sur la planche)
+세로 피치	Vertical pitch	Passo verticale	Pas vertical
+라벨 위쪽 끝 ~ 다음 라벨 위쪽 끝 (라벨지 실측값)	Top edge of a label to the top edge of the next (measured on the sheet)	Dal bordo superiore di un'etichetta a quello della successiva (misurato sul foglio)	Du bord haut d'une étiquette à celui de la suivante (mesuré sur la planche)
+가운데 배치	Center on page	Centra nella pagina	Centrer sur la page
+현재 여백·간격으로 들어가는 최대 칸 수	As many labels as fit with the current margins and gaps	Quante più etichette possibile con margini e spaziature attuali	Autant d'étiquettes que possible avec les marges et espacements actuels
+최대 칸 수	Max labels	Numero massimo	Nombre maximal
+라벨이 용지 밖으로 나갑니다 (최대 {cols}×{rows}칸).	Labels go off the paper (at most {cols}×{rows}).	Le etichette escono dal foglio (al massimo {cols}×{rows}).	Les étiquettes dépassent du papier (au plus {cols}×{rows}).
+안내선·출력	Guides · output	Guide · output	Repères · sortie
+안전 여백	Safe margin	Margine di sicurezza	Marge de sécurité
+인쇄되지 않을 수 있는 가장자리 안내선	Guide for the edge area that may not print	Guida per il bordo che potrebbe non essere stampato	Repère de la zone de bord qui risque de ne pas s'imprimer
+재단 여백	Bleed	Abbondanza	Fond perdu
+블리드(bleed) — 재단선 밖으로 더 인쇄되는 영역. 가장자리에 닿는 도형·배경을 이만큼 크게 그리면 재단이 조금 어긋나도 흰 틈이 생기지 않습니다.	Bleed — the area printed beyond the trim line. Draw shapes and backgrounds that touch the edge this much larger, so a slightly off cut leaves no white gap.	Abbondanza (bleed) — l'area stampata oltre la linea di rifilo. Disegna forme e sfondi che toccano il bordo più grandi di questa misura, così un taglio impreciso non lascia bordi bianchi.	Fond perdu (bleed) — la zone imprimée au-delà du trait de coupe. Agrandissez d'autant les formes et fonds qui touchent le bord : une coupe un peu décalée ne laisse pas de liseré blanc.
+주황 점선까지 그린 부분이 인쇄됩니다. 인쇄할 때 "재단선 표시"를 켜면 라벨 가장자리(재단선)에 긴 표시가, 재단 여백 가장자리(주황 점선)에 짧은 표시가 찍힙니다.	Everything up to the orange dashed line is printed. With "Crop marks" on when printing, long marks show the label edge (trim) and short marks the bleed edge (orange dashed line).	Viene stampato tutto fino alla linea arancione tratteggiata. Con "Segni di taglio" attivo, segni lunghi indicano il bordo dell'etichetta (rifilo) e segni corti il bordo dell'abbondanza (linea arancione).	Tout ce qui va jusqu'à la ligne orange en pointillés est imprimé. Avec « Traits de coupe », de longs traits marquent le bord de l'étiquette (coupe) et de courts le bord du fond perdu (ligne orange).
+칸 간격을 {n} mm 이상으로 두어야 라벨 사이에서도 재단 여백이 온전히 인쇄됩니다.	Make the gap at least {n} mm for the full bleed to print between labels too.	Imposta una spaziatura di almeno {n} mm perché l'abbondanza venga stampata per intero anche tra le etichette.	Prévoyez un espacement d'au moins {n} mm pour que le fond perdu s'imprime entièrement entre les étiquettes.
+라벨 색	Label colour	Colore etichetta	Couleur de l'étiquette
+프린터 정렬 보정…	Printer alignment…	Allineamento stampante…	Calibrage de l'imprimante…
+배경 이미지	Background image	Immagine di sfondo	Image de fond
+이미지 선택	Choose image	Scegli immagine	Choisir une image
+채움	Fill	Riempi	Remplir
+배경도 인쇄	Print the background too	Stampa anche lo sfondo	Imprimer aussi le fond
+미리 인쇄된 테두리 (견출지)	Pre-printed frame (index labels)	Cornice prestampata (etichette indice)	Cadre pré-imprimé (étiquettes repères)
+화면에 표시 (인쇄 안 됨)	Show on screen (not printed)	Mostra a schermo (non stampata)	Afficher à l'écran (non imprimé)
+입력 영역 {w} × {h} mm. 개체를 옮기면 입력 영역 가장자리에도 맞춰집니다. 다른 인쇄된 그림은 도형·이미지로 그린 뒤 속성에서 "인쇄 안 함"을 켜면 됩니다.	Writable area {w} × {h} mm. Objects also snap to its edges. For other printed artwork, draw it as a shape or image and turn on "Don't print" in its properties.	Area scrivibile {w} × {h} mm. Gli oggetti si agganciano anche ai suoi bordi. Per altra grafica stampata, disegnala come forma o immagine e attiva "Non stampare" nelle proprietà.	Zone inscriptible {w} × {h} mm. Les objets s'alignent aussi sur ses bords. Pour un autre motif imprimé, dessinez-le en forme ou image et activez « Ne pas imprimer » dans ses propriétés.
+마법사로 수정…	Edit with wizard…	Modifica con la procedura guidata…	Modifier avec l'assistant…
+테두리·그림이 이미 인쇄된 라벨지에 내용만 인쇄할 때, 입력 영역 크기·테두리 두께·라벨 간격을 넣으면 용지가 설정되고 인쇄된 위치가 화면에 보입니다.	When printing only the content onto labels whose frame or artwork is already printed, enter the writable area, frame widths and spacing: the paper is set up and the printed parts are shown on screen.	Per stampare solo il contenuto su etichette con cornice o grafica già stampate, inserisci area scrivibile, spessore della cornice e spaziatura: la carta viene configurata e le parti stampate compaiono a schermo.	Pour n'imprimer que le contenu sur des étiquettes dont le cadre ou le motif est déjà imprimé, saisissez la zone inscriptible, l'épaisseur du cadre et l'espacement : le papier est configuré et les parties imprimées s'affichent à l'écran.
+견출지 마법사…	Pre-printed label wizard…	Procedura per etichette prestampate…	Assistant d'étiquettes pré-imprimées…
+새 디자인	New design	Nuovo design	Nouveau design
+규칙에 맞지 않는 행은 이 디자인을 씁니다	Rows that match no rule use this design	Le righe che non corrispondono a nessuna regola usano questo design	Les lignes qui ne correspondent à aucune règle utilisent ce design
+기본	Default	Predefinito	Par défaut
+"{name}" 디자인을 삭제할까요?	Delete the design "{name}"?	Eliminare il design "{name}"?	Supprimer le design « {name} » ?
+맨 위 디자인이 기본입니다. 순서를 바꾸려면 ↑를 누르세요.	The top design is the default. Press ↑ to change the order.	Il design in cima è quello predefinito. Premi ↑ per cambiare l'ordine.	Le design du haut est celui par défaut. Appuyez sur ↑ pour changer l'ordre.
+기본 디자인으로	Make default	Rendi predefinito	Définir par défaut
+면 (양면 인쇄)	Sides (double-sided)	Lati (fronte-retro)	Faces (recto verso)
+뒷면 (없음)	Back (none)	Retro (nessuno)	Verso (aucun)
+앞면 복사해서 시작	Start from a copy of the front	Parti da una copia del fronte	Partir d'une copie du recto
+뒷면을 삭제할까요?	Delete the back?	Eliminare il retro?	Supprimer le verso ?
+뒷면 삭제	Delete back	Elimina retro	Supprimer le verso
+내보내기에서 "양면"을 켜면 각 장 뒤에 뒷면 장을 추가하거나(앞뒤 따로 인쇄), 앞면 옆·아래에 뒷면을 붙여 한 면에 인쇄한 뒤 접을 수 있습니다(펼쳐서 접기).	With "Double-sided" on in the export window, you can add a back sheet after each sheet (Print backs separately), or print the back beside or below the front on one side and fold (Print and fold).	Con "Fronte-retro" attivo nell'esportazione puoi aggiungere un foglio retro dopo ogni foglio (Stampa i retri a parte), oppure stampare il retro accanto o sotto il fronte sullo stesso lato e piegare (Stampa e piega).	Avec « Recto verso » dans l'export, vous pouvez ajouter une feuille verso après chaque feuille (Imprimer les versos à part), ou imprimer le verso à côté ou sous le recto sur une face puis plier (Imprimer et plier).
+디자인 자동 선택 규칙	Design rules	Regole di scelta del design	Règles de choix du design
+디자인이 2개 이상일 때 행 값에 따라 디자인을 고를 수 있습니다. 예: 참가구분 = 연사 → 연사 명찰.	With two or more designs, a row's values can pick its design. E.g. Role = Speaker → speaker badge.	Con due o più design, i valori di una riga possono sceglierne il design. Es. Ruolo = Relatore → badge relatore.	Avec deux designs ou plus, les valeurs d'une ligne peuvent choisir son design. Ex. Rôle = Intervenant → badge intervenant.
+(열 선택)	(choose column)	(scegli colonna)	(choisir une colonne)
+시작 번호	Start number	Numero iniziale	Numéro de départ
+{code}는 출력 순서대로 이 번호부터 1씩 증가합니다.	{code} counts up by 1 from this number in print order.	{code} aumenta di 1 a partire da questo numero, in ordine di stampa.	{code} augmente de 1 à partir de ce numéro, dans l'ordre d'impression.
+# ui/ops.ts
+3개 이상 선택하세요.	Select three or more objects.	Seleziona tre o più oggetti.	Sélectionnez au moins trois objets.
+먼저 용지 설정에서 재단 여백(블리드)을 정하세요.	Set a bleed in the paper settings first.	Imposta prima l'abbondanza nelle impostazioni della carta.	Définissez d'abord un fond perdu dans les réglages du papier.
+회전하지 않은 개체를 선택하세요.	Select objects that are not rotated.	Seleziona oggetti non ruotati.	Sélectionnez des objets non pivotés.
+# ui/PreprintWizard.tsx
+견출지 {w}×{h}	Pre-printed {w}×{h}	Prestampata {w}×{h}	Pré-imprimée {w}×{h}
+견출지 마법사	Pre-printed label wizard	Procedura per etichette prestampate	Assistant d'étiquettes pré-imprimées
+테두리는 화면에만 보이고 인쇄되지 않습니다.	The frame is shown on screen only and never printed.	La cornice si vede solo a schermo e non viene stampata.	Le cadre ne s'affiche qu'à l'écran et n'est jamais imprimé.
+그림이 미리 인쇄된 라벨지(견출지 등)에 내용만 인쇄할 때 씁니다. 라벨지를 자로 재어 입력하면 그 모양대로 용지와 칸이 설정되고, 인쇄된 테두리 위치가 디자인 화면에 겹쳐 보입니다.	For printing only the content onto label stock with pre-printed artwork (such as index labels). Measure the sheet with a ruler and enter the sizes: the paper and grid are set up to match, and the printed frame is overlaid on the design.	Per stampare solo il contenuto su etichette con grafica prestampata (come le etichette indice). Misura il foglio con un righello e inserisci le misure: carta e griglia vengono impostate di conseguenza e la cornice stampata appare sovrapposta al design.	Pour n'imprimer que le contenu sur des étiquettes au motif pré-imprimé (comme les étiquettes repères). Mesurez la planche à la règle et saisissez les tailles : le papier et la grille sont configurés en conséquence et le cadre imprimé se superpose au design.
+현재 ({w}×{h})	Current ({w}×{h})	Attuale ({w}×{h})	Actuel ({w}×{h})
+입력 영역 (안쪽 흰 부분)	Writable area (inner white part)	Area scrivibile (parte bianca interna)	Zone inscriptible (partie blanche intérieure)
+테두리 두께 (라벨 가장자리 ~ 입력 영역)	Frame width (label edge to writable area)	Spessore cornice (dal bordo all'area scrivibile)	Épaisseur du cadre (du bord à la zone inscriptible)
+좌우	Sides	Lati	Côtés
+모서리·색	Corners · colour	Angoli · colore	Coins · couleur
+바깥	Outer	Esterno	Extérieur
+안쪽	Inner	Interno	Intérieur
+테두리 색 (화면 표시용)	Frame colour (for display)	Colore cornice (solo visualizzazione)	Couleur du cadre (affichage)
+견출지 사이 간격·배치	Spacing · layout	Spaziatura · disposizione	Espacement · disposition
+최소 여백	Min margin	Margine minimo	Marge minimale
+용지 가장자리에서 띄울 거리 (칸 수 계산용, 실제 배치는 가운데 정렬)	Distance from the paper edge (for counting labels; the grid itself is centred)	Distanza dal bordo del foglio (per contare le etichette; la griglia viene centrata)	Distance au bord du papier (pour compter les étiquettes ; la grille est centrée)
+용지에 들어가는 최대 칸 수 ({cols}×{rows})	As many as fit on the paper ({cols}×{rows})	Quante ne entrano nel foglio ({cols}×{rows})	Autant que le papier en contient ({cols}×{rows})
+라벨 한 칸: {w} × {h} mm · {n}칸 · 가로 피치 {px} / 세로 피치 {py} mm	One label: {w} × {h} mm · {n} labels · pitch {px} horizontal / {py} vertical mm	Un'etichetta: {w} × {h} mm · {n} etichette · passo {px} orizzontale / {py} verticale mm	Une étiquette : {w} × {h} mm · {n} étiquettes · pas {px} horizontal / {py} vertical mm
+# ui/QuickPrint.tsx
+인쇄할 라벨이 없습니다.	There are no labels to print.	Non ci sono etichette da stampare.	Aucune étiquette à imprimer.
+값을 입력하세요.	Enter a value.	Inserisci un valore.	Saisissez une valeur.
+(빈 라벨)	(blank label)	(etichetta vuota)	(étiquette vide)
+이 템플릿에는 입력할 값({{열 이름}})이 없습니다. 매수만 정해 인쇄하세요.	This template has no values to fill in ({{column name}}). Just choose the number of copies and print.	Questo modello non ha valori da compilare ({{nome colonna}}). Scegli solo il numero di copie e stampa.	Ce modèle n'a aucune valeur à remplir ({{nom de colonne}}). Choisissez le nombre de copies et imprimez.
+라벨 크기 1장	One label size	Formato etichetta	Format étiquette
+라벨 프린터용: 라벨 크기 페이지에 1장씩	For label printers: one label per label-size page	Per stampanti di etichette: un'etichetta per pagina formato etichetta	Pour imprimantes d'étiquettes : une étiquette par page au format étiquette
+라벨지	Label sheet	Foglio di etichette	Planche d'étiquettes
+현재 용지({cols}×{rows})에 배치	Laid out on the current paper ({cols}×{rows})	Disposte sulla carta attuale ({cols}×{rows})	Disposées sur le papier actuel ({cols}×{rows})
+번째 칸부터	(starting label position)	(posizione iniziale)	(position de départ)
+목록에 추가	Add to list	Aggiungi all'elenco	Ajouter à la liste
+빼기	Remove	Togli	Retirer
+목록 전체 인쇄 ({n}장)	Print whole list ({n} labels)	Stampa tutto l'elenco ({n} etichette)	Imprimer toute la liste ({n} étiquettes)
+비우기	Clear	Svuota	Vider
+예시 데이터로 표시 중 — 값을 입력하면 바로 바뀝니다	Showing sample data — it changes as you type	Dati di esempio — cambiano mentre scrivi	Données d'exemple — elles changent pendant la saisie
+뒷면 180°	back 180°	retro 180°	verso 180°
+긴 쪽 뒤집기	long-edge flip	capovolgimento sul lato lungo	retournement bord long
+짧은 쪽 뒤집기	short-edge flip	capovolgimento sul lato corto	retournement bord court
+ — 템플릿에 저장된 양면 설정이 없어 이 브라우저의 설정을 씁니다	 — the template has no saved double-sided settings, so this browser's settings are used	 — il modello non ha impostazioni fronte-retro salvate, quindi si usano quelle di questo browser	 — le modèle n'a pas de réglages recto verso enregistrés : ceux de ce navigateur sont utilisés
+이 템플릿으로 바로 빠른 출력 전체 화면을 여는 링크 (명단은 포함하지 않음)	A link that opens full-screen quick print with this template (the list is not included)	Link che apre la stampa rapida a schermo intero con questo modello (l'elenco non è incluso)	Lien qui ouvre l'impression rapide en plein écran avec ce modèle (la liste n'est pas incluse)
+편집기를 닫고 빠른 출력 전용 화면으로 전환합니다 (다시 돌아올 수 있습니다)	Closes the editor and switches to the quick print page (you can come back)	Chiude l'editor e passa alla pagina di stampa rapida (puoi tornare indietro)	Ferme l'éditeur et passe à la page d'impression rapide (vous pouvez revenir)
+전체 화면으로	Full screen	Schermo intero	Plein écran
+대화상자를 닫고 디자인 편집으로 돌아갑니다	Closes the dialog and goes back to editing the design	Chiude la finestra e torna alla modifica del design	Ferme la boîte de dialogue et revient à la modification du design
+# ui/TableCanvas.tsx
+위에 행 넣기	Insert row above	Inserisci riga sopra	Insérer une ligne au-dessus
+선택한 칸 위에 빈 행	An empty row above the selected cells	Una riga vuota sopra le celle selezionate	Une ligne vide au-dessus des cellules sélectionnées
+아래에 행 넣기	Insert row below	Inserisci riga sotto	Insérer une ligne en dessous
+선택한 칸 아래에 빈 행	An empty row below the selected cells	Una riga vuota sotto le celle selezionate	Une ligne vide sous les cellules sélectionnées
+왼쪽에 열 넣기	Insert column left	Inserisci colonna a sinistra	Insérer une colonne à gauche
+선택한 칸 왼쪽에 빈 열	An empty column left of the selected cells	Una colonna vuota a sinistra delle celle selezionate	Une colonne vide à gauche des cellules sélectionnées
+오른쪽에 열 넣기	Insert column right	Inserisci colonna a destra	Insérer une colonne à droite
+선택한 칸 오른쪽에 빈 열	An empty column right of the selected cells	Una colonna vuota a destra delle celle selezionate	Une colonne vide à droite des cellules sélectionnées
+행 {n}개 삭제	Delete {n} rows	Elimina {n} righe	Supprimer {n} lignes
+선택한 칸이 있는 행을 지웁니다	Deletes the rows of the selected cells	Elimina le righe delle celle selezionate	Supprime les lignes des cellules sélectionnées
+열 {n}개 삭제	Delete {n} columns	Elimina {n} colonne	Supprimer {n} colonnes
+선택한 칸이 있는 열을 지웁니다	Deletes the columns of the selected cells	Elimina le colonne delle celle selezionate	Supprime les colonnes des cellules sélectionnées
+칸 합치기	Merge cells	Unisci celle	Fusionner les cellules
+고른 칸들을 한 칸으로 (예: 2시간 연속 수업, 휴식 시간)	Makes the chosen cells one cell (e.g. a double lesson, a break)	Unisce le celle scelte in una (es. lezione doppia, intervallo)	Fait des cellules choisies une seule (ex. cours double, pause)
+합친 칸 나누기	Unmerge cells	Separa celle	Annuler la fusion
+합친 칸을 원래 칸으로	Splits merged cells back into their cells	Riporta le celle unite alle celle originali	Rétablit les cellules d'origine
+내용 지우기	Clear content	Cancella contenuto	Effacer le contenu
+선택한 칸의 글자를 지웁니다 (Delete)	Clears the text of the selected cells (Delete)	Cancella il testo delle celle selezionate (Canc)	Efface le texte des cellules sélectionnées (Suppr)
+끌어서 열 너비 조절	Drag to resize the column	Trascina per ridimensionare la colonna	Faites glisser pour redimensionner la colonne
+끌어서 행 높이 조절	Drag to resize the row	Trascina per ridimensionare la riga	Faites glisser pour redimensionner la ligne
+오른쪽 끝에 열 추가	Add a column at the right	Aggiungi una colonna a destra	Ajouter une colonne à droite
+아래 끝에 행 추가	Add a row at the bottom	Aggiungi una riga in fondo	Ajouter une ligne en bas
+{r}행 {c}열	R{r} C{c}	R{r} C{c}	L{r} C{c}
+{rows}×{cols}칸	{rows}×{cols} cells	{rows}×{cols} celle	{rows}×{cols} cellules
+＋행 위	＋Row above	＋Riga sopra	＋Ligne dessus
+＋행 아래	＋Row below	＋Riga sotto	＋Ligne dessous
+＋열 왼쪽	＋Col left	＋Col. sinistra	＋Col. gauche
+＋열 오른쪽	＋Col right	＋Col. destra	＋Col. droite
+−행	−Row	−Riga	−Ligne
+−열	−Col	−Col.	−Col.
+합치기	Merge	Unisci	Fusionner
+나누기	Unmerge	Separa	Séparer
+왼쪽 정렬	Align left	Allinea a sinistra	Aligner à gauche
+가운데 정렬	Center	Centra	Centrer
+오른쪽 정렬	Align right	Allinea a destra	Aligner à droite
+칸 배경	Cell background	Sfondo cella	Fond de cellule
+칸 배경 기본값	Default cell background	Sfondo cella predefinito	Fond de cellule par défaut
+표 편집 끝내기 (Esc)	Finish editing the table (Esc)	Termina la modifica della tabella (Esc)	Terminer la modification du tableau (Échap)
+# ui/TableEditor.tsx
+{rows}행 × {cols}열	{rows} rows × {cols} columns	{rows} righe × {cols} colonne	{rows} lignes × {cols} colonnes
+칸을 클릭하고 바로 입력하세요. 끌거나 Shift+클릭으로 여러 칸, 오른쪽 클릭으로 행·열 메뉴, 칸 사이 선을 끌면 크기 조절 · Esc로 끝내기	Click a cell and type. Drag or Shift+click for several cells, right-click for the row/column menu, drag a grid line to resize · Esc to finish	Fai clic su una cella e scrivi. Trascina o Maiusc+clic per più celle, clic destro per il menu righe/colonne, trascina una linea della griglia per ridimensionare · Esc per finire	Cliquez sur une cellule et tapez. Glissez ou Maj+clic pour plusieurs cellules, clic droit pour le menu lignes/colonnes, glissez une ligne de la grille pour redimensionner · Échap pour terminer
+칸 편집하기	Edit cells	Modifica celle	Modifier les cellules
+캔버스에서 표를 더블클릭해도 칸 편집이 시작됩니다. 엑셀에서 복사한 표는 칸을 고르고 Ctrl+V로 붙여넣습니다.	Double-clicking the table on the canvas also starts editing. To paste a table copied from Excel, pick a cell and press Ctrl+V.	Anche il doppio clic sulla tabella nell'area di lavoro avvia la modifica. Per incollare una tabella copiata da Excel, scegli una cella e premi Ctrl+V.	Un double-clic sur le tableau dans le canevas lance aussi la modification. Pour coller un tableau copié depuis Excel, choisissez une cellule et appuyez sur Ctrl+V.
+요일×교시, 학술대회 시간표, 빈 표 중에서 다시 고릅니다	Choose again between weekly timetable, conference programme and blank table	Scegli di nuovo tra orario settimanale, programma del convegno e tabella vuota	Choisir à nouveau entre emploi du temps, programme de congrès et tableau vide
+표 형식 바꾸기…	Change table layout…	Cambia layout tabella…	Changer la disposition…
+열 너비 같게	Equal column widths	Colonne di uguale larghezza	Colonnes de même largeur
+행 높이 같게	Equal row heights	Righe di uguale altezza	Lignes de même hauteur
+선택한 칸 ({n}칸)	Selected cells ({n})	Celle selezionate ({n})	Cellules sélectionnées ({n})
+선택한 칸 ({r}행 {c}열)	Selected cell (row {r}, column {c})	Cella selezionata (riga {r}, colonna {c})	Cellule sélectionnée (ligne {r}, colonne {c})
+기본값으로	Reset to default	Ripristina predefinito	Rétablir la valeur par défaut
+머리글만 굵게	Bold only in headers	Grassetto solo nelle intestazioni	Gras seulement dans les en-têtes
+보통	Regular	Normale	Normal
+열 너비	Column width	Larghezza colonna	Largeur de colonne
+{n}열의 상대 너비 (다른 열과의 비율). 캔버스에서 칸 사이 선을 끌어도 됩니다	Relative width of column {n} (ratio to the others). You can also drag the grid line on the canvas	Larghezza relativa della colonna {n} (rispetto alle altre). Puoi anche trascinare la linea della griglia nell'area di lavoro	Largeur relative de la colonne {n} (par rapport aux autres). Vous pouvez aussi faire glisser la ligne de la grille dans le canevas
+행 높이	Row height	Altezza riga	Hauteur de ligne
+{n}행의 상대 높이 (다른 행과의 비율)	Relative height of row {n} (ratio to the others)	Altezza relativa della riga {n} (rispetto alle altre)	Hauteur relative de la ligne {n} (par rapport aux autres)
+선택한 칸에 데이터 열 넣기	Insert a data column into the selected cell	Inserisci una colonna di dati nella cella selezionata	Insérer une colonne de données dans la cellule sélectionnée
+데이터 열 넣기	Insert data column	Inserisci colonna di dati	Insérer une colonne de données
+표 서식	Table style	Stile tabella	Style du tableau
+칸에 넘치면 최소 크기까지 자동 축소	Shrinks down to the minimum size when a cell overflows	Si riduce fino alla dimensione minima se la cella trabocca	Se réduit jusqu'à la taille minimale si la cellule déborde
+안쪽 여백	Padding	Spaziatura interna	Marge intérieure
+첫 행 머리글	Header row	Riga di intestazione	Ligne d'en-tête
+첫 열 머리글	Header column	Colonna di intestazione	Colonne d'en-tête
+머리글 배경	Header background	Sfondo intestazione	Fond de l'en-tête
+머리글 글자	Header text	Testo intestazione	Texte de l'en-tête
+안쪽 선	Inner lines	Linee interne	Traits intérieurs
+바깥 선	Outer border	Bordo esterno	Bordure extérieure
+# ui/TableWizard.tsx
+요일 × 교시	Weekday × period	Giorno × ora	Jour × heure de cours
+학교·학원 시간표. 가로는 요일, 세로는 교시	School timetable: days across, periods down	Orario scolastico: giorni in orizzontale, ore in verticale	Emploi du temps : jours en colonnes, heures en lignes
+학술대회 시간표	Conference programme	Programma del convegno	Programme de congrès
+실제 시각으로 나눈 세션, 커피 브레이크·점심이 표 전체를 가로지름	Sessions by clock time; coffee breaks and lunch span the whole table	Sessioni per orario; coffee break e pranzo attraversano tutta la tabella	Sessions par horaire ; pauses café et déjeuner couvrent tout le tableau
+빈 표	Blank table	Tabella vuota	Tableau vide
+행과 열 수만 정해서 시작	Start by setting the number of rows and columns	Inizia scegliendo il numero di righe e colonne	Commencez par choisir le nombre de lignes et de colonnes
+세션	Session	Sessione	Session
+트랙(방·날짜)마다 따로 채우는 칸	A cell to fill for each track (room or day)	Una cella da compilare per ogni traccia (sala o giorno)	Une cellule à remplir pour chaque piste (salle ou jour)
+전체#plenary	Plenary	Plenaria	Plénière
+모든 트랙을 가로지르는 한 칸 (기조강연, 개회식)	One cell across every track (keynote, opening)	Una cella su tutte le tracce (keynote, apertura)	Une cellule sur toutes les pistes (conférence plénière, ouverture)
+휴식	Break	Pausa	Pause
+모든 트랙을 가로지르는 회색 칸 (커피 브레이크, 점심)	A grey cell across every track (coffee break, lunch)	Una cella grigia su tutte le tracce (coffee break, pranzo)	Une cellule grise sur toutes les pistes (pause café, déjeuner)
+표 형식 바꾸기	Change table layout	Cambia layout tabella	Changer la disposition du tableau
+표 만들기	New table	Nuova tabella	Nouveau tableau
+지금 표의 내용은 새 형식으로 바뀝니다 (Ctrl+Z로 되돌리기)	The current table content is replaced by the new layout (Ctrl+Z to undo)	Il contenuto attuale della tabella viene sostituito dal nuovo layout (Ctrl+Z per annullare)	Le contenu actuel du tableau est remplacé par la nouvelle disposition (Ctrl+Z pour annuler)
+만들기	Create	Crea	Créer
+요일	Days	Giorni	Jours
+교시 수	Periods	Numero di ore	Nombre d'heures
+몇 교시 뒤에 점심시간 행을 넣을지 (0 = 넣지 않음)	After which period to add a lunch row (0 = none)	Dopo quale ora inserire la riga del pranzo (0 = nessuna)	Après quelle heure ajouter la ligne du déjeuner (0 = aucune)
+교시 뒤	after period	dopo l'ora	après l'heure
+교시 옆에 시각 표시	Show times next to periods	Mostra gli orari accanto alle ore	Afficher les horaires à côté des heures
+수업	Lesson	Lezione	Cours
+분	min	min	min
+쉬는 시간	Break	Intervallo	Récréation
+트랙 (쉼표로 구분 · 방이나 날짜)	Tracks (comma-separated · rooms or days)	Tracce (separate da virgole · sale o giorni)	Pistes (séparées par des virgules · salles ou jours)
+Room A, Room B  또는  Day 1, Day 2	Room A, Room B  or  Day 1, Day 2	Sala A, Sala B  oppure  Giorno 1, Giorno 2	Salle A, Salle B  ou  Jour 1, Jour 2
+끝	End	Fine	Fin
+이 블록 삭제	Delete this block	Elimina questo blocco	Supprimer ce bloc
+블록 추가	Add block	Aggiungi blocco	Ajouter un bloc
+09:00–15:30, 커피 브레이크·점심 포함	09:00–15:30, with coffee break and lunch	09:00–15:30, con coffee break e pranzo	09:00–15:30, avec pause café et déjeuner
+기본값	Defaults	Predefiniti	Valeurs par défaut
+세션: 트랙마다 따로 채움 · 전체: 기조강연처럼 모든 트랙을 한 칸으로 · 휴식: 커피 브레이크·점심 (회색)	Session: filled per track · Plenary: one cell across all tracks, like a keynote · Break: coffee break, lunch (grey)	Sessione: compilata per traccia · Plenaria: una cella su tutte le tracce, come un keynote · Pausa: coffee break, pranzo (grigio)	Session : remplie par piste · Plénière : une cellule sur toutes les pistes, comme une conférence · Pause : pause café, déjeuner (gris)
+시간 길이에 맞춰 행 높이 정하기	Row heights follow durations	Altezza delle righe in base alla durata	Hauteur des lignes selon la durée
+90분 세션은 30분 휴식보다 3배 높게	A 90-minute session is three times as tall as a 30-minute break	Una sessione di 90 minuti è alta tre volte una pausa di 30	Une session de 90 minutes est trois fois plus haute qu'une pause de 30
+휴식 칸	Break cells	Celle di pausa	Cellules de pause
+만든 뒤에는 캔버스에서 표를 더블클릭해 칸에 바로 입력합니다.	Once created, double-click the table on the canvas to type into its cells.	Una volta creata, fai doppio clic sulla tabella nell'area di lavoro per scrivere nelle celle.	Une fois créé, double-cliquez sur le tableau dans le canevas pour saisir dans ses cellules.
+행#count	Rows	Righe	Lignes
+열#count	Columns	Colonne	Colonnes
+# ui/Toolbar.tsx
+선택	Select	Seleziona	Sélection
+라벨·명찰 디자이너	Label & badge designer	Editor di etichette e badge	Éditeur d'étiquettes et de badges
+새로 만들기 · 템플릿…	New · templates…	Nuovo · modelli…	Nouveau · modèles…
+열기…	Open…	Apri…	Ouvrir…
+저장	Save	Salva	Enregistrer
+다른 이름으로 저장…	Save as…	Salva con nome…	Enregistrer sous…
+-디자인만	-design-only	-solo-design	-design-seul
+디자인만 저장 (데이터 제외)	Save design only (without data)	Salva solo il design (senza dati)	Enregistrer le design seul (sans données)
+링크로 공유…	Share as link…	Condividi con un link…	Partager par lien…
+글꼴 관리…	Fonts…	Font…	Polices…
+프로그램 정보…	About…	Informazioni…	À propos…
+저장되지 않음	Not saved	Non salvato	Non enregistré
+실행 취소	Undo	Annulla	Annuler
+다시 실행	Redo	Ripeti	Rétablir
+축소	Zoom out	Riduci	Zoom arrière
+화면에 맞추기 (Ctrl+0) · 100% = 실제 크기	Fit to screen (Ctrl+0) · 100% = actual size	Adatta allo schermo (Ctrl+0) · 100% = dimensioni reali	Ajuster à l'écran (Ctrl+0) · 100 % = taille réelle
+확대	Zoom in	Ingrandisci	Zoom avant
+디자인을 링크로 공유 (서버에 저장되지 않음)	Share the design as a link (nothing is stored on a server)	Condividi il design con un link (nulla viene salvato su un server)	Partager le design par lien (rien n'est stocké sur un serveur)
+링크 공유	Share link	Condividi link	Partager le lien
+필요한 값만 입력하고 미리보기를 보며 바로 인쇄	Enter just the values you need, check the preview, print	Inserisci solo i valori necessari, controlla l'anteprima e stampa	Saisissez seulement les valeurs utiles, vérifiez l'aperçu, imprimez
+이름 검색 후 1장 바로 인쇄, 현장 등록	Find a name and print one label, or register on site	Cerca un nome e stampa un'etichetta, o registra in loco	Rechercher un nom et imprimer une étiquette, ou inscrire sur place
+현장 재발행	On-site reprint	Ristampa in loco	Réimpression sur place
+양면 인쇄용 뒷면	Back side for double-sided printing	Retro per la stampa fronte-retro	Verso pour l'impression recto verso
+미리볼 데이터 행 (PageUp/PageDown)	Data row to preview (PageUp/PageDown)	Riga di dati in anteprima (PagSu/PagGiù)	Ligne de données en aperçu (PgPréc/PgSuiv)
+이 행은 규칙에 따라 다른 디자인으로 출력됩니다	By the design rules, this row prints with another design	Per le regole di design, questa riga viene stampata con un altro design	D'après les règles, cette ligne s'imprime avec un autre design
+→ 이 행은 "{name}"	→ this row uses "{name}"	→ questa riga usa "{name}"	→ cette ligne utilise « {name} »
+데이터 없음 — 디자인 그대로 출력	No data — the design prints as it is	Nessun dato — il design viene stampato così com'è	Aucune donnée — le design s'imprime tel quel

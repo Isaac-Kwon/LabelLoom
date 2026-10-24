@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { migrateProject } from '../model/defaults';
 import type { Project } from '../model/types';
 import { download, safeName } from './export';
@@ -76,7 +77,7 @@ export async function saveProjectFile(p: Project, saveAs = false): Promise<strin
   if (w.showSaveFilePicker) {
     try {
       if (!handle || saveAs) {
-        handle = await w.showSaveFilePicker({ suggestedName: suggested, types: [{ description: 'LabelLoom 프로젝트', accept: { 'application/json': ['.json'] } }] });
+        handle = await w.showSaveFilePicker({ suggestedName: suggested, types: [{ description: t('LabelLoom 프로젝트'), accept: { 'application/json': ['.json'] } }] });
       }
       const ws = await handle.createWritable();
       await ws.write(json);
@@ -109,7 +110,7 @@ export async function openProjectFile(): Promise<{ project: Project; name: strin
   let file: File | null = null;
   if (w.showOpenFilePicker) {
     try {
-      const [h] = await w.showOpenFilePicker({ types: [{ description: 'LabelLoom 프로젝트', accept: { 'application/json': ['.json'] } }] });
+      const [h] = await w.showOpenFilePicker({ types: [{ description: t('LabelLoom 프로젝트'), accept: { 'application/json': ['.json'] } }] });
       handle = h;
       file = await h.getFile();
     } catch (e) {
@@ -123,7 +124,7 @@ export async function openProjectFile(): Promise<{ project: Project; name: strin
 
 export function parseProject(text: string): Project {
   let raw: unknown;
-  try { raw = JSON.parse(text); } catch { throw new Error('JSON 형식이 올바르지 않습니다.'); }
+  try { raw = JSON.parse(text); } catch { throw new Error(t('JSON 형식이 올바르지 않습니다.')); }
   return migrateProject(raw);
 }
 

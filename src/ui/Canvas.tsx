@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { t } from '../i18n';
 import { newRow } from '../model/defaults';
 import type { BarcodeObj, LabelObject, QrObj, TableObj, TextObj } from '../model/types';
 import { preprintArea, preprintMarkup } from '../render/preprint';
@@ -493,8 +494,8 @@ function InlineEditor({ o, left, top, onClose }: { o: ContentObj; left: number; 
       {cols.length > 0 && (
         <>
           <div className="ie-head">
-            <span>데이터 · {row ? `${currentRow + 1}행` : '새 행'}</span>
-            <span className="ie-hint">아래 표에 바로 반영</span>
+            <span>{t('데이터')} · {row ? t('{n}행', { n: currentRow + 1 }) : t('새 행')}</span>
+            <span className="ie-hint">{t('아래 표에 바로 반영')}</span>
           </div>
           {cols.map((c) => (
             <label key={c} className="ie-field">
@@ -505,10 +506,10 @@ function InlineEditor({ o, left, top, onClose }: { o: ContentObj; left: number; 
         </>
       )}
       <label className="ie-field">
-        <span>{cols.length ? '디자인 문구 (모든 라벨)' : '내용'}</span>
+        <span>{cols.length ? t('디자인 문구 (모든 라벨)') : t('내용')}</span>
         <textarea rows={multi || o.content.includes('\n') ? 3 : 1} value={o.content} onChange={(e) => setContent(e.target.value)} spellCheck={false} />
       </label>
-      <div className="ie-foot">Enter 완료 · Shift+Enter 줄바꿈 · Esc 취소</div>
+      <div className="ie-foot">{t('Enter 완료 · Shift+Enter 줄바꿈 · Esc 취소')}</div>
     </div>
   );
 }

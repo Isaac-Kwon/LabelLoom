@@ -59,7 +59,7 @@ function collect(): Pkg[] {
 function thirdPartyText(pkgs: Pkg[]): string {
   const line = '='.repeat(78);
   const head = `LabelLoom에 포함된 서드파티 소프트웨어 / Third-party software bundled in LabelLoom\n\n${pkgs.map((p) => `- ${p.name} ${p.version} (${p.license})`).join('\n')}\n`;
-  const body = pkgs.map((p) => `${line}\n${p.name} ${p.version}\nLicense: ${p.license}${p.homepage ? `\n${p.homepage}` : ''}\n${line}\n\n${p.text || '(라이선스 전문이 패키지에 없습니다)'}\n`);
+  const body = pkgs.map((p) => `${line}\n${p.name} ${p.version}\nLicense: ${p.license}${p.homepage ? `\n${p.homepage}` : ''}\n${line}\n\n${p.text || '(라이선스 전문이 패키지에 없습니다 / License text not included in the package)'}\n`);
   return [head, ...body].join('\n');
 }
 

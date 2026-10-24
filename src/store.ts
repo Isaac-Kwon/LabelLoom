@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { m, t } from './i18n';
 import { newDesign, newObject, newProject, uid } from './model/defaults';
 import { PAPER_PRESETS } from './model/presets';
 import type { Design, LabelObject, ObjType, Project } from './model/types';
@@ -184,7 +185,7 @@ export const act = {
   add(type: ObjType, x?: number, y?: number, w?: number, h?: number, extra?: Partial<LabelObject>) {
     const o = { ...newObject(type, x, y, w, h), ...extra } as LabelObject;
     const objs = currentObjects(useStore.getState());
-    o.name = `${nameOf(type)} ${objs.filter((x) => x.type === type).length + 1}`;
+    o.name = `${t(NAME_OF[type])} ${objs.filter((x) => x.type === type).length + 1}`;
     act.editObjects((list) => [...list, o]);
     useStore.getState().select([o.id]);
     useStore.getState().setTool('select');
@@ -211,16 +212,17 @@ export const act = {
   addDesign(copyFrom?: Design) {
     const s = useStore.getState();
     const d = copyFrom
-      ? { ...structuredClone(copyFrom), id: uid(), name: copyFrom.name + ' 복사본' }
-      : newDesign(`디자인 ${s.project.designs.length + 1}`);
+      ? { ...structuredClone(copyFrom), id: uid(), name: t('{name} 복사본', { name: copyFrom.name }) }
+      : newDesign(t('디자인 {n}', { n: s.project.designs.length + 1 }));
     s.commit((p) => ({ ...p, designs: [...p.designs, d] }));
     s.setDesign(d.id);
   },
 };
 
-function nameOf(t: ObjType) {
-  return ({ text: '텍스트', rect: '사각형', ellipse: '원', triangle: '삼각형', line: '선', barcode: '바코드', qr: 'QR', image: '이미지', svg: 'SVG', table: '표' } as const)[t];
-}
+const NAME_OF: Record<ObjType, ReturnType<typeof m>> = {
+  text: m('텍스트'), rect: m('사각형'), ellipse: m('원'), triangle: m('삼각형'), line: m('선'),
+  barcode: m('바코드'), qr: m('QR'), image: m('이미지'), svg: m('SVG'), table: m('표'),
+};
 
 /** Expand a selection to whole groups. */
 export function expandGroups(objs: LabelObject[], ids: string[]): string[] {

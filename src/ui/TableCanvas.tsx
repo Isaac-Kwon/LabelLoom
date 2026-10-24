@@ -3,6 +3,7 @@ import {
   cellRange, clearRange, deleteCols, deleteRows, insertCol, insertRow, mergeAt, mergeCells, moveLine, pasteGrid,
   rangeText, styleCells, tableGeometry, tableSize, unmergeRange, validMerges, type CellRange,
 } from '../model/table';
+import { t } from '../i18n';
 import type { LabelObject, TableCellStyle, TableObj } from '../model/types';
 import { act, useStore, type CellSel } from '../store';
 
@@ -51,24 +52,24 @@ export function tableCommands(o: TableObj, sel: CellSel | null): TableCommand[] 
   const apply = (p: Partial<TableObj> | null, after: () => void) => { if (p) { act.update([o.id], p as Partial<LabelObject>); after(); } };
   const merged = validMerges(o).some((m) => m.r <= g.r1 && m.r + m.rs - 1 >= g.r0 && m.c <= g.c1 && m.c + m.cs - 1 >= g.c0);
   return [
-    { key: 'rowAbove', label: '위에 행 넣기', title: '선택한 칸 위에 빈 행', run: () => apply(insertRow(o, g.r0), () => to(g.r0, a.c)) },
-    { key: 'rowBelow', label: '아래에 행 넣기', title: '선택한 칸 아래에 빈 행', run: () => apply(insertRow(o, g.r1 + 1), () => to(g.r1 + 1, a.c)) },
-    { key: 'colLeft', label: '왼쪽에 열 넣기', title: '선택한 칸 왼쪽에 빈 열', run: () => apply(insertCol(o, g.c0), () => to(a.r, g.c0)) },
-    { key: 'colRight', label: '오른쪽에 열 넣기', title: '선택한 칸 오른쪽에 빈 열', run: () => apply(insertCol(o, g.c1 + 1), () => to(a.r, g.c1 + 1)) },
+    { key: 'rowAbove', label: t('위에 행 넣기'), title: t('선택한 칸 위에 빈 행'), run: () => apply(insertRow(o, g.r0), () => to(g.r0, a.c)) },
+    { key: 'rowBelow', label: t('아래에 행 넣기'), title: t('선택한 칸 아래에 빈 행'), run: () => apply(insertRow(o, g.r1 + 1), () => to(g.r1 + 1, a.c)) },
+    { key: 'colLeft', label: t('왼쪽에 열 넣기'), title: t('선택한 칸 왼쪽에 빈 열'), run: () => apply(insertCol(o, g.c0), () => to(a.r, g.c0)) },
+    { key: 'colRight', label: t('오른쪽에 열 넣기'), title: t('선택한 칸 오른쪽에 빈 열'), run: () => apply(insertCol(o, g.c1 + 1), () => to(a.r, g.c1 + 1)) },
     {
-      key: 'delRows', label: nr > 1 ? `행 ${nr}개 삭제` : '행 삭제', title: '선택한 칸이 있는 행을 지웁니다', sep: true, disabled: nr >= rows,
+      key: 'delRows', label: nr > 1 ? t('행 {n}개 삭제', { n: nr }) : t('행 삭제'), title: t('선택한 칸이 있는 행을 지웁니다'), sep: true, disabled: nr >= rows,
       run: () => apply(deleteRows(o, g.r0, g.r1), () => to(Math.min(g.r0, rows - nr - 1), a.c)),
     },
     {
-      key: 'delCols', label: nc > 1 ? `열 ${nc}개 삭제` : '열 삭제', title: '선택한 칸이 있는 열을 지웁니다', disabled: nc >= cols,
+      key: 'delCols', label: nc > 1 ? t('열 {n}개 삭제', { n: nc }) : t('열 삭제'), title: t('선택한 칸이 있는 열을 지웁니다'), disabled: nc >= cols,
       run: () => apply(deleteCols(o, g.c0, g.c1), () => to(a.r, Math.min(g.c0, cols - nc - 1))),
     },
     {
-      key: 'merge', label: '칸 합치기', title: '고른 칸들을 한 칸으로 (예: 2시간 연속 수업, 휴식 시간)', sep: true, disabled: nr * nc < 2,
+      key: 'merge', label: t('칸 합치기'), title: t('고른 칸들을 한 칸으로 (예: 2시간 연속 수업, 휴식 시간)'), sep: true, disabled: nr * nc < 2,
       run: () => apply(mergeCells(o, { r: g.r0, c: g.c0 }, { r: g.r1, c: g.c1 }), () => to(g.r0, g.c0)),
     },
-    { key: 'unmerge', label: '합친 칸 나누기', title: '합친 칸을 원래 칸으로', disabled: !merged, run: () => apply(unmergeRange(o, g), () => to(g.r0, g.c0, g.r1, g.c1)) },
-    { key: 'clear', label: '내용 지우기', title: '선택한 칸의 글자를 지웁니다 (Delete)', sep: true, run: () => apply(clearRange(o, g), () => undefined) },
+    { key: 'unmerge', label: t('합친 칸 나누기'), title: t('합친 칸을 원래 칸으로'), disabled: !merged, run: () => apply(unmergeRange(o, g), () => to(g.r0, g.c0, g.r1, g.c1)) },
+    { key: 'clear', label: t('내용 지우기'), title: t('선택한 칸의 글자를 지웁니다 (Delete)'), sep: true, run: () => apply(clearRange(o, g), () => undefined) },
   ];
 }
 
@@ -280,11 +281,11 @@ export function TableOverlay({ o, pan, zoom, size, toMm }: {
         onContextMenu={(e) => { e.preventDefault(); e.stopPropagation(); setMenu({ x: e.clientX, y: e.clientY }); }}>
         <div className="tbl-range" style={box(xs[g.c0], ys[g.r0], xs[g.c1 + 1] - xs[g.c0], ys[g.r1 + 1] - ys[g.r0])} />
         {xs.slice(1, -1).map((x, i) => (
-          <div key={'c' + i} className="tbl-grip col" style={{ left: x * z - 4, height: o.h * z }} title="끌어서 열 너비 조절"
+          <div key={'c' + i} className="tbl-grip col" style={{ left: x * z - 4, height: o.h * z }} title={t('끌어서 열 너비 조절')}
             onPointerDown={(e) => onGripDown(e, 'col', i + 1)} />
         ))}
         {ys.slice(1, -1).map((y, i) => (
-          <div key={'r' + i} className="tbl-grip row" style={{ top: y * z - 4, width: o.w * z }} title="끌어서 행 높이 조절"
+          <div key={'r' + i} className="tbl-grip row" style={{ top: y * z - 4, width: o.w * z }} title={t('끌어서 행 높이 조절')}
             onPointerDown={(e) => onGripDown(e, 'row', i + 1)} />
         ))}
         <textarea ref={ta} className={`tbl-input ${editing ? 'on' : ''}`} spellCheck={false}
@@ -298,36 +299,36 @@ export function TableOverlay({ o, pan, zoom, size, toMm }: {
           onChange={(e) => { if (!editing) setEditing(true); setText(e.target.value); }}
           onKeyDown={onKey} onCopy={(e) => onCopy(e)} onCut={(e) => onCopy(e, true)} onPaste={onPaste}
           onPointerDown={(e) => { if (editing) e.stopPropagation(); }} />
-        <button className="tbl-add col" title="오른쪽 끝에 열 추가" style={{ left: o.w * z + 6, top: o.h * z / 2 - 11 }}
+        <button className="tbl-add col" title={t('오른쪽 끝에 열 추가')} style={{ left: o.w * z + 6, top: o.h * z / 2 - 11 }}
           onPointerDown={(e) => e.stopPropagation()} onClick={() => { act.update([o.id], insertCol(o, cols) as Partial<LabelObject>); to(a.r, cols); focus(); }}>＋</button>
-        <button className="tbl-add row" title="아래 끝에 행 추가" style={{ left: o.w * z / 2 - 11, top: o.h * z + 6 }}
+        <button className="tbl-add row" title={t('아래 끝에 행 추가')} style={{ left: o.w * z / 2 - 11, top: o.h * z + 6 }}
           onPointerDown={(e) => e.stopPropagation()} onClick={() => { act.update([o.id], insertRow(o, rows) as Partial<LabelObject>); to(rows, a.c); focus(); }}>＋</button>
       </div>
 
       <div className="tbl-bar" style={{ left: barLeft, top: barTop }} onPointerDown={(e) => e.stopPropagation()} onMouseDown={(e) => { if ((e.target as HTMLElement).tagName !== 'INPUT') e.preventDefault(); }}>
-        <span className="tbl-bar-pos">{g.r0 === g.r1 && g.c0 === g.c1 ? `${a.r + 1}행 ${a.c + 1}열` : `${g.r1 - g.r0 + 1}×${g.c1 - g.c0 + 1}칸`}</span>
-        <BarBtn c={cmds} k="rowAbove" text="＋행 위" run={run} />
-        <BarBtn c={cmds} k="rowBelow" text="＋행 아래" run={run} />
-        <BarBtn c={cmds} k="colLeft" text="＋열 왼쪽" run={run} />
-        <BarBtn c={cmds} k="colRight" text="＋열 오른쪽" run={run} />
-        <BarBtn c={cmds} k="delRows" text="−행" run={run} />
-        <BarBtn c={cmds} k="delCols" text="−열" run={run} />
+        <span className="tbl-bar-pos">{g.r0 === g.r1 && g.c0 === g.c1 ? t('{r}행 {c}열', { r: a.r + 1, c: a.c + 1 }) : t('{rows}×{cols}칸', { rows: g.r1 - g.r0 + 1, cols: g.c1 - g.c0 + 1 })}</span>
+        <BarBtn c={cmds} k="rowAbove" text={t('＋행 위')} run={run} />
+        <BarBtn c={cmds} k="rowBelow" text={t('＋행 아래')} run={run} />
+        <BarBtn c={cmds} k="colLeft" text={t('＋열 왼쪽')} run={run} />
+        <BarBtn c={cmds} k="colRight" text={t('＋열 오른쪽')} run={run} />
+        <BarBtn c={cmds} k="delRows" text={t('−행')} run={run} />
+        <BarBtn c={cmds} k="delCols" text={t('−열')} run={run} />
         <i />
-        <BarBtn c={cmds} k="merge" text="합치기" run={run} />
-        <BarBtn c={cmds} k="unmerge" text="나누기" run={run} />
+        <BarBtn c={cmds} k="merge" text={t('합치기')} run={run} />
+        <BarBtn c={cmds} k="unmerge" text={t('나누기')} run={run} />
         <i />
-        <button className={st.bold ?? head ? 'on' : ''} title="굵게 (Ctrl+B)" onClick={() => { styleSel(o, sel, { bold: !(st.bold ?? head) }); focus(); }}><b>B</b></button>
+        <button className={st.bold ?? head ? 'on' : ''} title={`${t('굵게')} (Ctrl+B)`} onClick={() => { styleSel(o, sel, { bold: !(st.bold ?? head) }); focus(); }}><b>B</b></button>
         {(['left', 'center', 'right'] as const).map((al) => (
-          <button key={al} className={(st.align ?? o.align) === al ? 'on' : ''} title={{ left: '왼쪽 정렬', center: '가운데 정렬', right: '오른쪽 정렬' }[al]}
+          <button key={al} className={(st.align ?? o.align) === al ? 'on' : ''} title={{ left: t('왼쪽 정렬'), center: t('가운데 정렬'), right: t('오른쪽 정렬') }[al]}
             onClick={() => { styleSel(o, sel, { align: al === o.align ? undefined : al }); focus(); }}>{{ left: '⇤', center: '↔', right: '⇥' }[al]}</button>
         ))}
         <i />
         {SWATCHES.map((c) => (
-          <button key={c || 'none'} className={`swatch ${(st.fill ?? '') === c ? 'on' : ''}`} title={c ? `칸 배경 ${c}` : '칸 배경 기본값'}
+          <button key={c || 'none'} className={`swatch ${(st.fill ?? '') === c ? 'on' : ''}`} title={c ? `${t('칸 배경')} ${c}` : t('칸 배경 기본값')}
             style={{ background: c || undefined }} onClick={() => { styleSel(o, sel, { fill: c || undefined }); focus(); }}>{c ? '' : '∅'}</button>
         ))}
         <i />
-        <button onClick={exit} title="표 편집 끝내기 (Esc)">완료</button>
+        <button onClick={exit} title={t('표 편집 끝내기 (Esc)')}>{t('완료')}</button>
       </div>
 
       {menu && (

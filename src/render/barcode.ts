@@ -1,4 +1,5 @@
 import bwipjs from 'bwip-js/browser';
+import { m, t } from '../i18n';
 import type { BarcodeObj, QrObj } from '../model/types';
 
 export const SYMBOLOGIES: { group: string; items: { id: string; label: string; sample: string }[] }[] = [
@@ -12,8 +13,8 @@ export const SYMBOLOGIES: { group: string; items: { id: string; label: string; s
       { id: 'code93', label: 'Code 93', sample: 'CODE93' },
       { id: 'ean13', label: 'EAN-13', sample: '880123456789' },
       { id: 'ean8', label: 'EAN-8', sample: '8801234' },
-      { id: 'ean5', label: 'EAN-5 (애드온)', sample: '90200' },
-      { id: 'ean2', label: 'EAN-2 (애드온)', sample: '05' },
+      { id: 'ean5', label: m('EAN-5 (애드온)'), sample: '90200' },
+      { id: 'ean2', label: m('EAN-2 (애드온)'), sample: '05' },
       { id: 'upca', label: 'UPC-A', sample: '01234567890' },
       { id: 'upce', label: 'UPC-E', sample: '0123456' },
       { id: 'interleaved2of5', label: 'ITF (Interleaved 2 of 5)', sample: '12345678' },
@@ -27,7 +28,7 @@ export const SYMBOLOGIES: { group: string; items: { id: string; label: string; s
 ];
 
 export const CODES_2D: { id: QrObj['symbology']; label: string }[] = [
-  { id: 'qrcode', label: 'QR 코드' },
+  { id: 'qrcode', label: m('QR 코드') },
   { id: 'gs1qrcode', label: 'GS1 QR' },
   { id: 'datamatrix', label: 'Data Matrix' },
   { id: 'gs1datamatrix', label: 'GS1 Data Matrix' },
@@ -78,7 +79,7 @@ function clean<T extends object>(o: T): T {
 
 /** 1D barcode sized so that its natural aspect ratio matches the box. */
 export function barcodeSvg(o: BarcodeObj, text: string): CodeResult {
-  if (!text) return { error: '내용 없음' };
+  if (!text) return { error: t('내용 없음') };
   const isGs1 = o.symbology.startsWith('gs1');
   const baseOpts = (height: number, textsize?: number) => clean({
     bcid: o.symbology, text, scale: 1, height,
@@ -102,7 +103,7 @@ export function barcodeSvg(o: BarcodeObj, text: string): CodeResult {
 }
 
 export function code2dSvg(o: QrObj, text: string): CodeResult {
-  if (!text) return { error: '내용 없음' };
+  if (!text) return { error: t('내용 없음') };
   const pad = Math.round(o.quietZone * 2);
   const isGs1 = o.symbology.startsWith('gs1');
   const ec = o.symbology === 'qrcode' || o.symbology === 'gs1qrcode' ? (o.logo ? 'H' : o.errorLevel) : undefined;

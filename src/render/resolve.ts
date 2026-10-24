@@ -1,3 +1,4 @@
+import { m, type Msg } from '../i18n';
 import type { Design, LabelObject, Project, Row, RuleOp } from '../model/types';
 
 export interface ResolveCtx {
@@ -99,15 +100,15 @@ export function testRule(op: RuleOp, subject: string, value: string): boolean {
   }
 }
 
-export const RULE_OPS: { op: RuleOp; label: string; needsValue: boolean }[] = [
-  { op: 'eq', label: '= 같음', needsValue: true },
-  { op: 'neq', label: '≠ 다름', needsValue: true },
-  { op: 'contains', label: '포함', needsValue: true },
-  { op: 'empty', label: '비어 있음', needsValue: false },
-  { op: 'notEmpty', label: '값 있음', needsValue: false },
-  { op: 'hangul', label: '한글 포함', needsValue: false },
-  { op: 'latin', label: '영문(한글 없음)', needsValue: false },
-  { op: 'longer', label: '글자 수 >', needsValue: true },
+export const RULE_OPS: { op: RuleOp; label: Msg; needsValue: boolean }[] = [
+  { op: 'eq', label: m('= 같음'), needsValue: true },
+  { op: 'neq', label: m('≠ 다름'), needsValue: true },
+  { op: 'contains', label: m('포함'), needsValue: true },
+  { op: 'empty', label: m('비어 있음'), needsValue: false },
+  { op: 'notEmpty', label: m('값 있음'), needsValue: false },
+  { op: 'hangul', label: m('한글 포함'), needsValue: false },
+  { op: 'latin', label: m('영문(한글 없음)'), needsValue: false },
+  { op: 'longer', label: m('글자 수 >'), needsValue: true },
 ];
 
 export function pickDesign(p: Project, row?: Row): Design {

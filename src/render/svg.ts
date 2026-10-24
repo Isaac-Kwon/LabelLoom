@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { cellKey, cellSpans, tableGeometry } from '../model/table';
 import type { BarcodeObj, Fill, ImageObj, LabelObject, Paper, Project, QrObj, ShapeObj, SvgObj, TableObj, TextObj } from '../model/types';
 import { barcodeSvg, code2dSvg } from './barcode';
@@ -134,8 +135,8 @@ function qrMarkup(o: QrObj, content: string, editor?: boolean): string {
 
 const PAR = { contain: 'xMidYMid meet', cover: 'xMidYMid slice', stretch: 'none' } as const;
 
-function imageMarkup(o: ImageObj, editor?: boolean): string {
-  if (!o.src) return editor ? `<rect width="${n(o.w)}" height="${n(o.h)}" fill="#f1f5f9" stroke="#94a3b8" stroke-width="0.2" stroke-dasharray="1 0.6"/><text x="${n(o.w / 2)}" y="${n(o.h / 2 + 1)}" font-size="${n(Math.min(3, o.h / 3))}" text-anchor="middle" fill="#64748b" font-family="sans-serif">이미지</text>` : '';
+function imageMarkup(o: ImageObj, editor?: boolean, placeholder = t('이미지')): string {
+  if (!o.src) return editor ? `<rect width="${n(o.w)}" height="${n(o.h)}" fill="#f1f5f9" stroke="#94a3b8" stroke-width="0.2" stroke-dasharray="1 0.6"/><text x="${n(o.w / 2)}" y="${n(o.h / 2 + 1)}" font-size="${n(Math.min(3, o.h / 3))}" text-anchor="middle" fill="#64748b" font-family="sans-serif">${esc(placeholder)}</text>` : '';
   return `<image href="${o.src}" width="${n(o.w)}" height="${n(o.h)}" preserveAspectRatio="${PAR[o.fit]}"/>`;
 }
 
@@ -159,10 +160,10 @@ export function sanitizeSvg(raw: string): { viewBox: string; inner: string } | n
 
 const svgCache = new Map<string, ReturnType<typeof sanitizeSvg>>();
 function svgMarkup(o: SvgObj, editor?: boolean): string {
-  if (!o.svg) return imageMarkup({ ...o, type: 'image', src: '', fit: 'contain' }, editor).replace('이미지', 'SVG');
+  if (!o.svg) return imageMarkup({ ...o, type: 'image', src: '', fit: 'contain' }, editor, 'SVG');
   let s = svgCache.get(o.svg);
   if (s === undefined) { s = sanitizeSvg(o.svg); svgCache.set(o.svg, s); }
-  if (!s) return errorBox(o, 'SVG 오류', editor);
+  if (!s) return errorBox(o, t('SVG 오류'), editor);
   return `<svg x="0" y="0" width="${n(o.w)}" height="${n(o.h)}" viewBox="${esc(s.viewBox)}" preserveAspectRatio="${o.fit === 'stretch' ? 'none' : 'xMidYMid meet'}">${s.inner}</svg>`;
 }
 

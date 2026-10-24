@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { BUILD_DETAIL, BUILD_LABEL } from './build';
+import { t } from './i18n';
 import { registerFonts } from './io/fonts';
 import { forgetFileHandle, loadAutosave, openProjectFile, parseProject, pushRecent, saveAutosave, saveProjectFile } from './io/project';
 import { decodeShare, readShareHash } from './io/share';
@@ -60,7 +61,7 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
     /** Open p in place of the autosaved work, which is kept in the recent list (after asking). */
     const adopt = async (p: Project, what: string, done: string) => {
       const prev = await loadAutosave();
-      if (!prev || confirm(`${what} "${p.name}"을(를) 엽니다.\n지금 작업 중인 내용은 "최근 저장한 작업"에 보관됩니다.`)) {
+      if (!prev || confirm(t('{what} "{name}"을(를) 엽니다.\n지금 작업 중인 내용은 "최근 저장한 작업"에 보관됩니다.', { what, name: p.name }))) {
         if (prev) await pushRecent(migrateProject(prev));
         loadProject(p);
         useStore.getState().notify(done);
@@ -70,12 +71,12 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
       const share = readShareHash();
       const s = useStore.getState();
       if (initial) {
-        await adopt(initial, '빠른 출력 템플릿', '빠른 출력 템플릿을 편집기에서 열었습니다.');
+        await adopt(initial, t('빠른 출력 템플릿'), t('빠른 출력 템플릿을 편집기에서 열었습니다.'));
       } else if (share) {
         try {
-          await adopt(await decodeShare(share.code), '공유된 디자인', '공유 링크에서 디자인을 불러왔습니다.');
+          await adopt(await decodeShare(share.code), t('공유된 디자인'), t('공유 링크에서 디자인을 불러왔습니다.'));
         } catch (e) {
-          s.notify('공유 링크를 읽을 수 없습니다: ' + (e as Error).message);
+          s.notify(t('공유 링크를 읽을 수 없습니다: {error}', { error: (e as Error).message }));
         }
         history.replaceState(null, '', location.pathname + location.search);
       } else {
@@ -101,7 +102,7 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
   const onSave = useCallback(async (saveAs = false) => {
     const s = useStore.getState();
     const name = await saveProjectFile(s.project, saveAs);
-    if (name) { s.setFileName(name); s.notify(`저장했습니다: ${name}`); void pushRecent(s.project); }
+    if (name) { s.setFileName(name); s.notify(t('저장했습니다: {name}', { name })); void pushRecent(s.project); }
   }, []);
   const onOpen = useCallback(async () => {
     try {
@@ -194,7 +195,7 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
       {dialog === 'about' && <AboutDialog />}
       {dialog === 'preprint' && <PreprintWizard />}
       {dialog === 'table' && <TableWizard />}
-      {dropping && <DropOverlay title="여기에 놓으세요" kinds={['.json 프로젝트', 'xlsx · csv 데이터', '이미지 · SVG']} />}
+      {dropping && <DropOverlay title={t('여기에 놓으세요')} kinds={[t('.json 프로젝트'), t('xlsx · csv 데이터'), t('이미지 · SVG')]} />}
       {toast && <div className="toast">{toast}</div>}
       <div className="build-tag" title={BUILD_DETAIL}>{BUILD_LABEL}</div>
     </div>

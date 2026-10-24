@@ -2,7 +2,8 @@ import type {
   BarcodeObj, Design, ImageObj, LabelObject, ObjType, Paper, Project, QrObj, Row, ShapeObj, SvgObj, TableObj, TextObj,
 } from './types';
 import { SCHEMA_VERSION } from './types';
-import { WEEKDAYS, weeklyLayout } from './tableLayouts';
+import { weekdays, weeklyLayout } from './tableLayouts';
+import { m, t, type Msg } from '../i18n';
 
 export const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
 
@@ -13,17 +14,19 @@ const base = (type: ObjType, x: number, y: number, w: number, h: number) => ({
   rules: [], hideIfEmpty: false,
 });
 
-export const TYPE_LABEL: Record<ObjType, string> = {
-  text: '텍스트', rect: '사각형', ellipse: '원', triangle: '삼각형', line: '선',
-  barcode: '바코드', qr: 'QR/2D 코드', image: '이미지', svg: 'SVG', table: '표',
+const TYPE_LABEL: Record<ObjType, Msg> = {
+  text: m('텍스트'), rect: m('사각형'), ellipse: m('원'), triangle: m('삼각형'), line: m('선'),
+  barcode: m('바코드'), qr: m('QR/2D 코드'), image: m('이미지'), svg: m('SVG'), table: m('표'),
 };
+export const OBJ_TYPES = Object.keys(TYPE_LABEL) as ObjType[];
+export const typeLabel = (type: ObjType) => t(TYPE_LABEL[type]);
 
 
 export function newObject(type: ObjType, x = 5, y = 5, w?: number, h?: number): LabelObject {
   switch (type) {
     case 'text': {
       const o: TextObj = {
-        ...base('text', x, y, w ?? 40, h ?? 10), type: 'text', content: '텍스트',
+        ...base('text', x, y, w ?? 40, h ?? 10), type: 'text', content: t('텍스트'),
         fontFamily: DEFAULT_FONT, fontSize: 14, minFontSize: 6, bold: false, italic: false, underline: false,
         align: 'left', vAlign: 'middle', multiline: false, fit: 'shrink', letterSpacing: 0, lineHeight: 1.2,
         ellipsis: false, fill: { type: 'solid', color: '#111111' }, effects: {},
@@ -63,7 +66,7 @@ export function newObject(type: ObjType, x = 5, y = 5, w?: number, h?: number): 
     case 'table': {
       const o: TableObj = {
         ...base('table', x, y, w ?? 60, h ?? 30), type: 'table',
-        ...weeklyLayout({ days: WEEKDAYS.slice(0, 5), periods: 4, showTimes: false, start: '09:00', lesson: 50, rest: 10, lunchAfter: 0, lunch: 60 }),
+        ...weeklyLayout({ days: weekdays().slice(0, 5), periods: 4, showTimes: false, start: '09:00', lesson: 50, rest: 10, lunchAfter: 0, lunch: 60 }),
         fontFamily: DEFAULT_FONT, fontSize: 9, minFontSize: 4, color: '#111111', align: 'center', vAlign: 'middle',
         padding: 0.6, fill: '', headerRow: true, headerCol: true, headerFill: '#e8eefc', headerColor: '#111111',
         borderColor: '#1f2937', borderWidth: 0.2, outerWidth: 0.4,
@@ -73,7 +76,7 @@ export function newObject(type: ObjType, x = 5, y = 5, w?: number, h?: number): 
   }
 }
 
-export function newDesign(name = '디자인 1', objects: LabelObject[] = []): Design {
+export function newDesign(name = t('디자인 {n}', { n: 1 }), objects: LabelObject[] = []): Design {
   return { id: uid(), name, objects };
 }
 
@@ -81,7 +84,7 @@ export function newRow(values: Record<string, string> = {}): Row {
   return { id: uid(), print: true, copies: 1, values };
 }
 
-export function newProject(paper: Paper, designs?: Design[], name = '새 라벨'): Project {
+export function newProject(paper: Paper, designs?: Design[], name = t('새 라벨')): Project {
   return {
     app: 'labelloom', version: SCHEMA_VERSION, name, paper,
     designs: designs ?? [newDesign()], designRules: [], fonts: [],
@@ -94,7 +97,7 @@ export function newProject(paper: Paper, designs?: Design[], name = '새 라벨'
 /** Fill in missing fields so older or hand-edited files keep loading. */
 export function migrateProject(raw: unknown): Project {
   const p = raw as Partial<Project>;
-  if (!p || typeof p !== 'object' || !p.paper || !Array.isArray(p.designs)) throw new Error('LabelLoom 프로젝트 파일이 아닙니다.');
+  if (!p || typeof p !== 'object' || !p.paper || !Array.isArray(p.designs)) throw new Error(t('LabelLoom 프로젝트 파일이 아닙니다.'));
   const def = newProject(p.paper as Paper);
   const proj: Project = { ...def, ...p, app: 'labelloom', version: SCHEMA_VERSION } as Project;
   proj.paper = { ...def.paper, ...p.paper };

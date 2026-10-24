@@ -52,7 +52,12 @@ src/
   render/   SVG 렌더러, 텍스트 배치, 바코드, 템플릿 해석, 출력 페이지 계산
   io/       JSON 저장·IndexedDB, xlsx/csv, PDF·PNG·인쇄, URL 공유, 글꼴
   ui/       캔버스, 패널, 대화상자
+  i18n/     화면 언어(한국어·English·Italiano·Français)
 ```
+
+화면 문구는 한국어 원문을 그대로 키로 씁니다: `t('저장')`, `t('저장했습니다: {name}', { name })`.
+번역은 `src/i18n/messages.tsv`에 한 줄씩(한국어 · 영어 · 이탈리아어 · 프랑스어, 탭으로 구분) 적고 `npm run i18n`으로 `en.ts`·`it.ts`·`fr.ts`를 다시 만듭니다.
+번역이 빠진 문구는 타입 검사(`npm run build`)에서 걸립니다. 언어를 하나 더하려면 `messages.tsv`에 열을 추가하고 `src/i18n/index.ts`의 `Lang`·`LANGS`에 넣습니다.
 
 ## GitHub Pages 배포
 

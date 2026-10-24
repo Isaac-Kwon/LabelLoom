@@ -1,3 +1,4 @@
+import { m, type Msg } from '../i18n';
 import type { Paper } from './types';
 
 const A4 = { width: 210, height: 297 };
@@ -47,7 +48,7 @@ export function centerGrid(pw: number, ph: number, lw: number, lh: number, cols:
 
 export const PAPER_PRESETS: { group: string; items: Paper[] }[] = [
   {
-    group: 'A4 라벨지',
+    group: m('A4 라벨지'),
     items: [
       sheet('A4 3×7 (63.5×38.1)', A4, 63.5, 38.1, 3, 7, 2.5, 0, 2),
       sheet('A4 3×8 (63.5×33.9)', A4, 63.5, 33.9, 3, 8, 2.5, 0, 2),
@@ -56,36 +57,36 @@ export const PAPER_PRESETS: { group: string; items: Paper[] }[] = [
       sheet('A4 4×10 (48.5×25.4)', A4, 48.5, 25.4, 4, 10, 0, 0),
       sheet('A4 5×13 (38.1×21.2)', A4, 38.1, 21.2, 5, 13, 2.5, 0, 1),
       sheet('A4 4×6 (45×45)', A4, 45, 45, 4, 6, 3, 3, 3),
-      sheet('A4 원형 4×6 (Ø40)', A4, 40, 40, 4, 6, 7, 7, 20),
-      sheet('A4 원형 3×4 (Ø60)', A4, 60, 60, 3, 4, 6, 8, 30),
+      sheet(m('A4 원형 4×6 (Ø40)'), A4, 40, 40, 4, 6, 7, 7, 20),
+      sheet(m('A4 원형 3×4 (Ø60)'), A4, 60, 60, 3, 4, 6, 8, 30),
       sheet('A4 2×2 (105×148.5)', A4, 105, 148.5, 2, 2),
-      sheet('A4 1칸 (전체)', A4, 210, 297, 1, 1),
+      sheet(m('A4 1칸 (전체)'), A4, 210, 297, 1, 1),
     ],
   },
   {
-    group: '명찰·행사',
+    group: m('명찰·행사'),
     items: [
-      sheet('A4 명찰 2×5 (90×55)', A4, 90, 55, 2, 5),
-      sheet('A4 명찰 2×4 (90×60)', A4, 90, 60, 2, 4, 5, 5),
-      sheet('A4 명찰 2×3 (100×70)', A4, 100, 70, 2, 3, 5, 10),
-      roll('명찰 단면 90×55', 90, 55, 3),
-      roll('명찰 100×70', 100, 70, 3),
-      roll('목걸이 명찰 A6 (105×148)', 105, 148),
-      makePaper({ name: '테이블 네임텐트 (A4 가로)', width: 297, height: 210, labelWidth: 297, labelHeight: 210, safeMargin: 5 }),
-      makePaper({ name: '테이블 네임텐트 (Letter 가로)', width: 279.4, height: 215.9, labelWidth: 279.4, labelHeight: 215.9, safeMargin: 5 }),
+      sheet(m('A4 명찰 2×5 (90×55)'), A4, 90, 55, 2, 5),
+      sheet(m('A4 명찰 2×4 (90×60)'), A4, 90, 60, 2, 4, 5, 5),
+      sheet(m('A4 명찰 2×3 (100×70)'), A4, 100, 70, 2, 3, 5, 10),
+      roll(m('명찰 단면 90×55'), 90, 55, 3),
+      roll(m('명찰 100×70'), 100, 70, 3),
+      roll(m('목걸이 명찰 A6 (105×148)'), 105, 148),
+      makePaper({ name: m('테이블 네임텐트 (A4 가로)'), width: 297, height: 210, labelWidth: 297, labelHeight: 210, safeMargin: 5 }),
+      makePaper({ name: m('테이블 네임텐트 (Letter 가로)'), width: 279.4, height: 215.9, labelWidth: 279.4, labelHeight: 215.9, safeMargin: 5 }),
     ],
   },
   {
-    group: '롤 라벨 (라벨 프린터)',
+    group: m('롤 라벨 (라벨 프린터)'),
     items: [
       roll('50×30', 50, 30, 1.5),
       roll('40×20', 40, 20, 1.5),
       roll('30×20', 30, 20, 1.5),
       roll('60×40', 60, 40, 1.5),
       roll('100×50', 100, 50),
-      roll('택배 100×150', 100, 150),
-      roll('정사각 40×40', 40, 40, 1.5),
-      roll('원형 Ø40', 40, 40, 20),
+      roll(m('택배 100×150'), 100, 150),
+      roll(m('정사각 40×40'), 40, 40, 1.5),
+      roll(m('원형 Ø40'), 40, 40, 20),
     ],
   },
   {
@@ -107,7 +108,7 @@ export function preset(name: string): Paper {
 }
 
 export type PaperKind = 'A4' | 'Letter' | 'roll';
-export const PAPER_KIND_LABEL: Record<PaperKind, string> = { A4: 'A4 시트', Letter: 'Letter 시트', roll: '롤·낱장' };
+export const PAPER_KIND_LABEL: Record<PaperKind, Msg> = { A4: m('A4 시트'), Letter: m('Letter 시트'), roll: m('롤·낱장') };
 
 export function paperKind(p: Paper): PaperKind {
   const is = (a: number, b: number) => (Math.abs(p.width - a) < 1 && Math.abs(p.height - b) < 1) || (Math.abs(p.width - b) < 1 && Math.abs(p.height - a) < 1);

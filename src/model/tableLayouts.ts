@@ -1,3 +1,4 @@
+import { m, t } from '../i18n';
 import { cellKey } from './table';
 import type { TableCellStyle, TableMerge, TableObj } from './types';
 
@@ -35,30 +36,35 @@ export interface WeeklyOpts {
   lunch: number; // minutes
 }
 
-export const WEEKDAYS = ['월', '화', '수', '목', '금', '토', '일'];
+const WEEKDAYS = [m('월'), m('화'), m('수'), m('목'), m('금'), m('토'), m('일')];
+/** Monday first, in the UI language. */
+export const weekdays = () => WEEKDAYS.map((d) => t(d));
 
 export function weeklyLayout(o: WeeklyOpts): TableLayout {
   const cells: string[][] = [['', ...o.days]];
   const merges: TableMerge[] = [];
   const styles: Record<string, TableCellStyle> = {};
-  let t = parseTime(o.start);
-  if (!Number.isFinite(t)) t = 9 * 60;
+  const lunchRows = new Set<number>();
+  let time = parseTime(o.start);
+  if (!Number.isFinite(time)) time = 9 * 60;
   for (let p = 1; p <= o.periods; p++) {
-    const label = o.showTimes ? `${p}교시\n${fmtTime(t)}–${fmtTime(t + o.lesson)}` : `${p}교시`;
+    const name = t('{n}교시', { n: p });
+    const label = o.showTimes ? `${name}\n${fmtTime(time)}–${fmtTime(time + o.lesson)}` : name;
     cells.push([label, ...o.days.map(() => '')]);
-    t += o.lesson;
+    time += o.lesson;
     if (p === o.lunchAfter && p < o.periods) {
       const r = cells.length;
-      cells.push([o.showTimes ? `점심\n${fmtTime(t)}–${fmtTime(t + o.lunch)}` : '점심', '점심시간', ...o.days.slice(1).map(() => '')]);
+      lunchRows.add(r);
+      cells.push([o.showTimes ? `${t('점심')}\n${fmtTime(time)}–${fmtTime(time + o.lunch)}` : t('점심'), t('점심시간'), ...o.days.slice(1).map(() => '')]);
       if (o.days.length > 1) merges.push({ r, c: 1, rs: 1, cs: o.days.length });
       styles[cellKey(r, 1)] = { fill: '#f1f5f9', color: '#475569' };
-      t += o.lunch;
-    } else t += o.rest;
+      time += o.lunch;
+    } else time += o.rest;
   }
   return {
     cells, merges, styles, headerRow: true, headerCol: true,
     colWidths: cells[0].map((_, c) => (c === 0 ? (o.showTimes ? 1.5 : 1.1) : 1)),
-    rowHeights: cells.map((row, r) => (r === 0 ? 0.8 : row[1] === '점심시간' ? 0.6 : 1)),
+    rowHeights: cells.map((_, r) => (r === 0 ? 0.8 : lunchRows.has(r) ? 0.6 : 1)),
   };
 }
 
@@ -97,7 +103,7 @@ export const blockMinutes = (b: ProgramBlock) => {
 export function programLayout(o: ProgramOpts): TableLayout {
   const tracks = o.tracks.length ? o.tracks : [''];
   const n = tracks.length;
-  const cells: string[][] = [['시간', ...tracks]];
+  const cells: string[][] = [[t('시간'), ...tracks]];
   const merges: TableMerge[] = [];
   const styles: Record<string, TableCellStyle> = {};
   const heights = [0];

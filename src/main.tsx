@@ -1,6 +1,7 @@
-import { StrictMode, useState } from 'react';
+import { Fragment, StrictMode, useState, useSyncExternalStore } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
+import { getLang, subscribeLang } from './i18n';
 import { saveAutosave } from './io/project';
 import { setupPwa, UpdateBar } from './pwa';
 import type { Project, Row } from './model/types';
@@ -15,6 +16,8 @@ type Mode = { quick: true; from?: Project } | { quick: false; initial?: Project 
 /** Quick print page or the editor. Both switch in place: the editor hands its project over, and gets back a different template only if one was opened. */
 function Root() {
   const [mode, setMode] = useState<Mode>(() => (quickUrl() ? { quick: true } : { quick: false }));
+  // a new language remounts the screens; the work stays in the store
+  const lang = useSyncExternalStore(subscribeLang, getLang);
 
   const toQuick = () => {
     const p = useStore.getState().project;
@@ -32,7 +35,7 @@ function Root() {
 
   if (mode.quick) {
     const from = mode.from;
-    return <>
+    return <Fragment key={lang}>
       <UpdateBar />
       <QuickApp start={from} onPrinted={from ? record : undefined} onEdit={(p) => {
         history.replaceState(null, '', location.pathname);
@@ -43,12 +46,12 @@ function Root() {
         setMode({ quick: false });
         useStore.getState().open('quick');
       })} />
-    </>;
+    </Fragment>;
   }
-  return <>
+  return <Fragment key={lang}>
     <UpdateBar beforeReload={() => saveAutosave(useStore.getState().project)} />
     <App initial={mode.initial} onQuick={toQuick} />
-  </>;
+  </Fragment>;
 }
 
 setupPwa();

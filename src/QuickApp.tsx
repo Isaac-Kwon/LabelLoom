@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { t } from './i18n';
 import { registerFonts } from './io/fonts';
 import { kvGet, kvSet, parseProject, pickFile } from './io/project';
 import { copyQuickLink, decodeShare, quickShareCode, readShareHash } from './io/share';
@@ -7,6 +8,7 @@ import type { Project, Row } from './model/types';
 import { InstallButton } from './pwa';
 import { DropOverlay } from './ui/controls';
 import { QuickForm } from './ui/QuickPrint';
+import { LangSelect } from './ui/Toolbar';
 
 /** Quick print page (?quick, #q=…, or the editor's 빠른 출력 button): a template, its fields, a live preview, print. */
 
@@ -48,7 +50,7 @@ export function QuickApp({ onEdit, onBack, start, onPrinted }: {
       if (start) {
         use(start);
       } else if (share) {
-        try { use(await decodeShare(share.code)); } catch (e) { notify('링크를 읽을 수 없습니다: ' + (e as Error).message); }
+        try { use(await decodeShare(share.code)); } catch (e) { notify(t('링크를 읽을 수 없습니다: {error}', { error: (e as Error).message })); }
       } else {
         const prev = await kvGet<Project>(KEY);
         if (prev) { try { use(migrateProject(prev)); } catch { /* ignore broken entry */ } }
@@ -70,7 +72,7 @@ export function QuickApp({ onEdit, onBack, start, onPrinted }: {
 
   const loadFile = async (f: File | null) => {
     if (!f) return;
-    try { use(parseProject(await f.text())); notify(`템플릿을 불러왔습니다: ${f.name}`); } catch (e) { notify((e as Error).message); }
+    try { use(parseProject(await f.text())); notify(t('템플릿을 불러왔습니다: {name}', { name: f.name })); } catch (e) { notify((e as Error).message); }
   };
   // recording only makes sense for the editor's own project, not another template opened here
   const fromEditor = !!onPrinted && !!start && project === start;
@@ -90,26 +92,27 @@ export function QuickApp({ onEdit, onBack, start, onPrinted }: {
       onDragLeave={(e) => { if (e.currentTarget === e.target) setDropping(false); }}
       onDrop={(e) => { e.preventDefault(); setDropping(false); void loadFile(e.dataTransfer.files[0] ?? null); }}>
       <header className="quick-bar">
-        <strong>LabelLoom 빠른 출력</strong>
+        <strong>LabelLoom {t('빠른 출력')}</strong>
         {project && <span className="muted ellipsis">{project.name}</span>}
         <span className="spacer" />
-        {fromEditor && <label className="check"><input type="checkbox" checked={record} onChange={(e) => setRecord(e.target.checked)} /><span>입력한 내용을 명단에 기록</span></label>}
+        {fromEditor && <label className="check"><input type="checkbox" checked={record} onChange={(e) => setRecord(e.target.checked)} /><span>{t('입력한 내용을 명단에 기록')}</span></label>}
+        <LangSelect />
         <InstallButton />
-        {project && <button onClick={async () => notify(await copyQuickLink(project))} title="이 템플릿으로 바로 빠른 출력 화면을 여는 링크 (명단은 포함하지 않음)">🔗 링크 복사</button>}
-        {project && <button onClick={choose}>다른 템플릿</button>}
+        {project && <button onClick={async () => notify(await copyQuickLink(project))} title={t('이 템플릿으로 바로 빠른 출력 화면을 여는 링크 (명단은 포함하지 않음)')}>🔗 {t('링크 복사')}</button>}
+        {project && <button onClick={choose}>{t('다른 템플릿')}</button>}
         <button onClick={() => onEdit(project)}
-          title={project ? `이 템플릿을 편집기에서 수정합니다${canGoBack ? ' (Esc: 빠른 출력 창으로 돌아가기)' : ''}` : '편집기를 엽니다'}>{project ? '✎ 편집기에서 수정' : '편집기 열기'}</button>
+          title={project ? t('이 템플릿을 편집기에서 수정합니다') + (canGoBack ? t(' (Esc: 빠른 출력 창으로 돌아가기)') : '') : t('편집기를 엽니다')}>{project ? `✎ ${t('편집기에서 수정')}` : t('편집기 열기')}</button>
       </header>
       <main className="quick-main">
         {project ? <QuickForm key={loads} project={project} notify={notify} onPrinted={fromEditor && record ? onPrinted : undefined} />
           : ready && (
             <button className="quick-drop" onClick={choose}>
-              <strong>템플릿 파일을 끌어다 놓거나 클릭해서 고르세요</strong>
-              <span className="muted">LabelLoom에서 저장한 .labelloom.json 파일 · 공유받은 빠른 출력 링크로도 열 수 있습니다</span>
+              <strong>{t('템플릿 파일을 끌어다 놓거나 클릭해서 고르세요')}</strong>
+              <span className="muted">{t('LabelLoom에서 저장한 .labelloom.json 파일 · 공유받은 빠른 출력 링크로도 열 수 있습니다')}</span>
             </button>
           )}
       </main>
-      {dropping && <DropOverlay title="템플릿을 여기에 놓으세요" kinds={['.labelloom.json']} />}
+      {dropping && <DropOverlay title={t('템플릿을 여기에 놓으세요')} kinds={['.labelloom.json']} />}
       {toast && <div className="toast">{toast}</div>}
     </div>
   );

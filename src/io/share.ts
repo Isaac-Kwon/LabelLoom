@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import type { Project } from '../model/types';
 import { newRow } from '../model/defaults';
 import { parseProject, serialize } from './project';
@@ -76,8 +77,8 @@ export async function copyText(text: string): Promise<boolean> {
 export async function copyQuickLink(p: Project): Promise<string> {
   const url = shareUrl(await quickShareCode(p), 'q');
   const kb = new Blob([url]).size / 1024;
-  if (!(await copyText(url))) return '복사하지 못했습니다. 주소창의 주소를 직접 복사하세요.';
-  return kb > 32 ? `링크를 복사했습니다 (${kb.toFixed(0)} KB — 길어서 메신저에서 잘릴 수 있습니다. 이미지를 줄이거나 템플릿 파일로 공유하세요)` : '빠른 출력 링크를 복사했습니다.';
+  if (!(await copyText(url))) return t('복사하지 못했습니다. 주소창의 주소를 직접 복사하세요.');
+  return kb > 32 ? t('링크를 복사했습니다 ({kb} KB — 길어서 메신저에서 잘릴 수 있습니다. 이미지를 줄이거나 템플릿 파일로 공유하세요)', { kb: kb.toFixed(0) }) : t('빠른 출력 링크를 복사했습니다.');
 }
 
 export function readShareHash(): { kind: ShareKind; code: string } | null {
