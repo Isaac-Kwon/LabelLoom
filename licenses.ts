@@ -31,7 +31,7 @@ function licenseText(dir: string): string {
   if (files.length) return files.map((f) => readFileSync(join(dir, f), 'utf8').trim()).join('\n\n');
   // Some small packages only have the license in their README.
   const readme = readdirSync(dir).find((f) => /^readme/i.test(f));
-  const m = readme && readFileSync(join(dir, readme), 'utf8').match(/^#+\s*licen[cs]e\s*\n([\s\S]*?)(?=\n#+\s|$)/im);
+  const m = readme && readFileSync(join(dir, readme), 'utf8').match(/^#+\s*licen[cs]e\s*\n([\s\S]*?)(?=\n#+\s|(?![\s\S]))/im);
   return m ? m[1].replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim() : '';
 }
 
