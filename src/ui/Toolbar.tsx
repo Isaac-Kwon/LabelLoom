@@ -48,6 +48,7 @@ export function Toolbar({ onOpen, onSave }: { onOpen: () => void; onSave: (saveA
           <hr />
           <button onClick={() => s.open('replace')}>{t('찾아 바꾸기…')} <kbd>Ctrl+H</kbd></button>
           <button onClick={() => s.open('remap')}>{t('열 다시 연결…')}</button>
+          <button onClick={() => s.open('snapshots')} title={t('이 브라우저에 저장된 이전 상태로 되돌립니다')}>{t('버전 기록…')}</button>
           <hr />
           <button onClick={() => s.open('share')}>{t('링크로 공유…')}</button>
           <button onClick={() => s.open('fonts')}>{t('글꼴 관리…')}</button>

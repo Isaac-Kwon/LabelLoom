@@ -55,6 +55,30 @@ export async function pushRecent(p: Project) {
 }
 export const loadRecent = async () => (await kvGet<RecentEntry[]>('recent')) ?? [];
 
+/* ---------- snapshots: earlier states of the work, kept in this browser ---------- */
+
+export interface Snapshot { id: string; name: string; at: string; auto: boolean; project: Project }
+
+const SNAP_KEY = 'snapshots';
+const MAX_AUTO = 12, MAX_NAMED = 30;
+/** taken automatically at most this often while the work changes */
+export const AUTO_SNAPSHOT_MS = 10 * 60 * 1000;
+
+export const loadSnapshots = async () => (await kvGet<Snapshot[]>(SNAP_KEY)) ?? [];
+
+/** Adds a snapshot, newest first; keeps the last MAX_AUTO automatic ones and MAX_NAMED named ones. */
+export async function addSnapshot(p: Project, name: string, auto: boolean) {
+  const list = await loadSnapshots();
+  const s: Snapshot = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name, at: new Date().toISOString(), auto, project: p };
+  const next = [s, ...list];
+  const autos = next.filter((x) => x.auto).slice(0, MAX_AUTO), named = next.filter((x) => !x.auto).slice(0, MAX_NAMED);
+  await kvSet(SNAP_KEY, next.filter((x) => autos.includes(x) || named.includes(x)));
+}
+
+export async function deleteSnapshot(id: string) {
+  await kvSet(SNAP_KEY, (await loadSnapshots()).filter((x) => x.id !== id));
+}
+
 /* ---------- JSON files ---------- */
 
 type PickerWindow = Window & {

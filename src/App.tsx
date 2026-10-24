@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { BUILD_DETAIL, BUILD_LABEL } from './build';
 import { t } from './i18n';
 import { registerFonts } from './io/fonts';
-import { forgetFileHandle, isProjectFile, loadAutosave, openProjectFile, pushRecent, readProjectFile, saveAutosave, saveProjectFile } from './io/project';
+import { addSnapshot, AUTO_SNAPSHOT_MS, forgetFileHandle, isProjectFile, loadAutosave, openProjectFile, pushRecent, readProjectFile, saveAutosave, saveProjectFile } from './io/project';
 import { useRemoteSync } from './io/remote';
 import { decodeShare, readShareHash } from './io/share';
 import { migrateProject } from './model/defaults';
@@ -22,6 +22,7 @@ import { TableWizard } from './ui/TableWizard';
 import { Tour } from './ui/Tour';
 import { Inspector } from './ui/Inspector';
 import { RemapDialog, ReplaceDialog } from './ui/ReplaceDialogs';
+import { SnapshotsDialog } from './ui/Snapshots';
 import { LeftPanel } from './ui/LeftPanel';
 import { loadMediaInto } from './ui/media';
 import { editorForced, SmallScreen, unforceEditor, useSmallScreen } from './ui/SmallScreen';
@@ -34,6 +35,8 @@ const TOOL_KEYS: Record<string, Parameters<ReturnType<typeof useStore.getState>[
 
 /** Startup state for this page. App remounts when coming back from the quick print page, and StrictMode runs effects twice in dev. */
 const boot = { started: false, done: false, initial: undefined as Project | undefined };
+/** when the last automatic snapshot was taken (the session start counts as one) */
+let lastSnapshot = Date.now();
 
 export default function App({ initial, onQuick }: { initial?: Project; onQuick: () => void }) {
   const dialog = useStore((s) => s.dialog);
@@ -47,6 +50,8 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
 
   const loadProject = useCallback((p: Project, name = '') => {
     const s = useStore.getState();
+    // the work being replaced stays in the version history
+    if (boot.done && s.past.length) void addSnapshot(s.project, t('{name} (다른 작업을 열기 전)', { name: s.project.name }), true);
     s.setProject(p, { resetView: true });
     s.setDesign(p.designs[0].id);
     s.setFileName(name);
@@ -100,7 +105,10 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
   /* ---------- autosave ---------- */
   useEffect(() => {
     if (!ready) return;
-    const t = setTimeout(() => void saveAutosave(project), 800);
+    const t = setTimeout(() => {
+      void saveAutosave(project);
+      if (Date.now() - lastSnapshot > AUTO_SNAPSHOT_MS) { lastSnapshot = Date.now(); void addSnapshot(project, project.name, true); }
+    }, 800);
     return () => clearTimeout(t);
   }, [project, ready]);
 
@@ -218,6 +226,7 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
       {dialog === 'table' && <TableWizard />}
       {dialog === 'replace' && <ReplaceDialog />}
       {dialog === 'remap' && <RemapDialog />}
+      {dialog === 'snapshots' && <SnapshotsDialog onLoad={loadProject} />}
       <Tour />
       {dropping && <DropOverlay title={t('여기에 놓으세요')} kinds={[t('.json · .zip 프로젝트'),t('xlsx · csv 데이터'), t('이미지 · SVG')]} />}
       {small && <button className="small-back" title={t('작은 화면용 보기 전용 화면으로 돌아갑니다')} onClick={() => { unforceEditor(); setForced(false); }}>← {t('보기 화면으로')}</button>}

@@ -1264,3 +1264,19 @@ N번째 단어 (word:1, 끝에서는 word:-1)	Nth word (word:1, from the end wor
 찾아 바꾸기	Find and replace	Trova e sostituisci	Rechercher et remplacer
 찾아 바꾸기…	Find and replace…	Trova e sostituisci…	Rechercher et remplacer…
 찾을 말	Find	Trova	Rechercher
+# version history
+"{name}" ({time}) 상태로 되돌릴까요?\n지금 상태는 버전 기록에 남습니다.	Go back to "{name}" ({time})?\nThe current state stays in the version history.	Tornare a "{name}" ({time})?\nLo stato attuale resta nella cronologia delle versioni.	Revenir à « {name} » ({time}) ?\nL'état actuel reste dans l'historique des versions.
+{name} (다른 작업을 열기 전)	{name} (before opening other work)	{name} (prima di aprire un altro lavoro)	{name} (avant d'ouvrir un autre travail)
+{rows}행 · 디자인 {n}개	{rows} rows · {n} design(s)	{rows} righe · {n} design	{rows} lignes · {n} design(s)
+되돌리기	Restore	Ripristina	Restaurer
+버전 기록	Version history	Cronologia versioni	Historique des versions
+버전 기록…	Version history…	Cronologia versioni…	Historique des versions…
+버전 기록에서 되돌렸습니다.	Restored from the version history.	Ripristinato dalla cronologia delle versioni.	Restauré depuis l'historique des versions.
+아직 저장된 버전이 없습니다.	No versions saved yet.	Nessuna versione salvata.	Aucune version enregistrée.
+이 브라우저에 저장된 이전 상태로 되돌립니다	Go back to an earlier state saved in this browser	Torna a uno stato precedente salvato in questo browser	Revenir à un état antérieur enregistré dans ce navigateur
+이름 (예: 인쇄 전 최종)	Name (e.g. final before printing)	Nome (es. definitivo prima della stampa)	Nom (ex. version finale avant impression)
+자동	Automatic	Automatico	Automatique
+작업하는 동안 10분마다, 그리고 다른 작업을 열기 전에 자동으로 저장합니다(최근 12개). 이 브라우저에만 있으니 오래 둘 작업은 파일로도 저장하세요.	Saved automatically every 10 minutes while you work and before other work is opened (the last 12). They live in this browser only, so also save work you want to keep as a file.	Salvate automaticamente ogni 10 minuti durante il lavoro e prima di aprire un altro lavoro (le ultime 12). Restano solo in questo browser: salva anche come file il lavoro da conservare.	Enregistrées automatiquement toutes les 10 minutes pendant le travail et avant l'ouverture d'un autre travail (les 12 dernières). Elles restent dans ce navigateur : enregistrez aussi en fichier le travail à conserver.
+지금 상태 저장	Save current state	Salva lo stato attuale	Enregistrer l'état actuel
+지금 상태를 버전 기록에 저장했습니다.	Saved the current state in the version history.	Stato attuale salvato nella cronologia delle versioni.	État actuel enregistré dans l'historique des versions.
+직접 저장	Saved by hand	Salvato a mano	Enregistré manuellement
