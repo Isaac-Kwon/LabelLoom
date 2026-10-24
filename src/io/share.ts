@@ -1,4 +1,5 @@
 import type { Project } from '../model/types';
+import { newRow } from '../model/defaults';
 import { parseProject, serialize } from './project';
 
 /** Settings sharing through the URL fragment: JSON → deflate-raw → base64url. Nothing reaches a server. */
@@ -30,9 +31,17 @@ function stripImages(p: Project): Project {
   };
 }
 
+/** Without the name list the receiver would see empty labels, so leave one row that shows each column's name. */
+function sampleRow(p: Project): Project {
+  const { columns } = p.data;
+  if (!columns.length) return { ...p, data: { columns, rows: [] } };
+  return { ...p, data: { columns, rows: [newRow(Object.fromEntries(columns.map((c) => [c, c])))] } };
+}
+
 export async function encodeShare(p: Project, o: ShareOptions): Promise<string> {
-  const proj = o.includeImages ? p : stripImages(p);
-  const json = JSON.stringify(JSON.parse(serialize(proj, { includeData: o.includeData, includeFonts: o.includeFonts })));
+  let proj = o.includeImages ? p : stripImages(p);
+  if (!o.includeData) proj = sampleRow(proj);
+  const json = JSON.stringify(JSON.parse(serialize(proj, { includeFonts: o.includeFonts })));
   const z = await pipe(new TextEncoder().encode(json), new CompressionStream('deflate-raw'));
   return toB64Url(z);
 }
@@ -49,7 +58,7 @@ export function shareUrl(code: string, kind: ShareKind = 'p') {
   return `${location.origin === 'null' ? 'file://' : location.origin}${location.pathname}${kind === 'q' ? '?quick' : ''}#${kind}=${code}`;
 }
 
-/** Quick print links carry the design only, never the name list (fonts would make them too long). */
+/** Quick print links carry the design and a sample row, never the name list (fonts would make them too long). */
 export const quickShareCode = (p: Project) => encodeShare(p, { includeData: false, includeImages: true, includeFonts: false });
 
 export async function copyText(text: string): Promise<boolean> {
