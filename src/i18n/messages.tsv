@@ -337,7 +337,8 @@ Enter 완료 · Shift+Enter 줄바꿈 · Esc 취소	Enter done · Shift+Enter ne
 새 열 이름	New column name	Nome della nuova colonna	Nom de la nouvelle colonne
 열 이름 변경 (디자인의 {{열 이름}}도 함께 바뀝니다)	Rename column ({{column name}} in the design changes too)	Rinomina colonna (anche {{nome colonna}} nel design cambia)	Renommer la colonne ({{nom de colonne}} dans le design change aussi)
 "{name}" 열을 삭제할까요?	Delete column "{name}"?	Eliminare la colonna "{name}"?	Supprimer la colonne « {name} » ?
-선택한 {n}개 행을 삭제할까요?	Delete the {n} selected rows?	Eliminare le {n} righe selezionate?	Supprimer les {n} lignes sélectionnées ?
+한 번 더 눌러 삭제	Click again to delete	Clicca di nuovo per eliminare	Cliquez encore pour supprimer
+행 번호를 클릭해 여러 행을 고를 수 있습니다	Click row numbers to pick several rows	Fai clic sui numeri di riga per sceglierne più d'una	Cliquez sur les numéros de ligne pour en choisir plusieurs
 모든 행의 인쇄 기록을 지울까요?	Clear the print record of every row?	Cancellare la registrazione di stampa di tutte le righe?	Effacer l'historique d'impression de toutes les lignes ?
 {rows}행 · 인쇄 {labels}장 · 출력됨 {printed}	{rows} rows · {labels} to print · {printed} printed	{rows} righe · {labels} da stampare · {printed} stampate	{rows} lignes · {labels} à imprimer · {printed} imprimées
 가져오기 (xlsx·csv)	Import (xlsx·csv)	Importa (xlsx·csv)	Importer (xlsx·csv)

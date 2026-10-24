@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { locale, getLang, t, tn } from '../i18n';
 import { refreshSource } from '../io/remote';
 import { exportTable, findDuplicates } from '../io/table';
@@ -86,10 +86,26 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
     setCurrentRow(rows.length);
     setTimeout(() => body.current?.scrollTo({ top: 1e9 }), 0);
   };
+  // with no rows picked, the button removes the current row
+  const curRow = rows[currentRow];
+  // the first click arms the button (red), the second deletes
+  const [armed, setArmed] = useState(false);
+  useEffect(() => setArmed(false), [sel, currentRow]);
+  useEffect(() => {
+    if (!armed) return;
+    const id = setTimeout(() => setArmed(false), 3000);
+    return () => clearTimeout(id);
+  }, [armed]);
   const deleteRows = () => {
-    if (!sel.size || !confirm(t('선택한 {n}개 행을 삭제할까요?', { n: sel.size }))) return;
-    setTable((rs) => ({ rows: rs.filter((r) => !sel.has(r.id)) }));
+    const ids = sel.size ? sel : new Set(curRow ? [curRow.id] : []);
+    if (!ids.size) return;
+    if (!armed) { setArmed(true); return; }
+    // the row that slides into the first deleted spot becomes current; past the end, the new last row
+    const first = rows.findIndex((r) => ids.has(r.id));
+    setTable((rs) => ({ rows: rs.filter((r) => !ids.has(r.id)) }));
+    setCurrentRow(Math.max(0, Math.min(first, rows.length - ids.size - 1)));
     setSel(new Set());
+    setArmed(false);
   };
   const checkAll = (v: boolean) => {
     const ids = new Set(view.map((x) => x.r.id));
@@ -144,7 +160,10 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
         <button onClick={() => open('serial')}>{t('일련번호 생성')}</button>
         <button onClick={addRow}>＋ {t('행')}</button>
         <button onClick={addColumn}>＋ {t('열')}</button>
-        <button onClick={deleteRows} disabled={!sel.size}>{t('행 삭제')}{sel.size ? ` (${sel.size})` : ''}</button>
+        <button className={armed ? 'danger' : ''} onClick={deleteRows} onBlur={() => setArmed(false)} disabled={!sel.size && !curRow}
+          title={sel.size ? undefined : t('행 번호를 클릭해 여러 행을 고를 수 있습니다')}>
+          {armed ? t('한 번 더 눌러 삭제') : t('행 삭제')}{sel.size ? ` (${sel.size})` : armed ? ` (${t('{n}행', { n: currentRow + 1 })})` : ''}
+        </button>
         <span className="spacer" />
         <input className="search" type="search" placeholder={t('검색…')} value={filter.text} onChange={(e) => setFilter({ text: e.target.value })} />
         <select value={filter.column} onChange={(e) => setFilter({ column: e.target.value, value: '' })} title={t('열 값으로 거르기')}>

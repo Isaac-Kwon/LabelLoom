@@ -483,3 +483,5 @@ input.stock-search { flex: 1; min-width: 200px; max-width: 320px; }
 }
 .cmd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
 .cmd-grid button { font-size: 12px; padding: 4px 6px; }
+button.danger { background: #dc2626; border-color: #dc2626; color: #fff; }
+button.danger:hover { background: #b91c1c; border-color: #b91c1c; }
