@@ -4,7 +4,8 @@ import type { BarcodeObj, Fill, ImageObj, LabelObject, Paper, Project, QrObj, Sh
 import { barcodeSvg, code2dSvg } from './barcode';
 import { objectPicture } from './images';
 import { resolveObject, resolveTemplate, type ResolveCtx } from './resolve';
-import { layoutText } from './text';
+import { plainText, protectValue } from './rich';
+import { layoutText, type Piece, type TextLine } from './text';
 
 export const esc = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -50,33 +51,89 @@ const stops = (s: { offset: number; color: string }[]) =>
 
 /* ---------- per type ---------- */
 
+/** A line's runs as text content: plain text, with <tspan>s where a run's style differs from the object's. */
+function runsMarkup(o: TextObj, pieces: Piece[], sizeMm: number, colors: boolean): string {
+  return pieces.map((p) => {
+    const r = p.run;
+    let a = '';
+    if (r.bold !== o.bold) a += ` font-weight="${r.bold ? 700 : 400}"`;
+    if (r.italic !== o.italic) a += ` font-style="${r.italic ? 'italic' : 'normal'}"`;
+    if (r.scale !== 1) a += ` font-size="${n(sizeMm * r.scale)}"`;
+    if (colors && r.color) a += ` fill="${esc(r.color)}"`;
+    return a ? `<tspan${a}>${esc(p.text)}</tspan>` : esc(p.text);
+  }).join('');
+}
+
+/** Underlines of the underlined runs of a line starting at x (one bar when the whole line is underlined). */
+function underlines(ln: TextLine, x: number, y: number, sizeMm: number, letterSpacing: number, fill: string): string {
+  const bar = (x0: number, w: number) => `<rect x="${n(x0)}" y="${n(y + sizeMm * 0.12)}" width="${n(Math.max(0, w))}" height="${n(sizeMm * 0.06)}" fill="${fill}"/>`;
+  if (ln.pieces.every((p) => p.run.underline)) return ln.pieces.length ? bar(x, ln.pieces.reduce((s, p) => s + p.adv, 0) - letterSpacing) : '';
+  let at = x, out = '';
+  for (const p of ln.pieces) {
+    if (p.run.underline) out += bar(at, p.adv - letterSpacing);
+    at += p.adv;
+  }
+  return out;
+}
+
+/**
+ * Arc for text on a curve: the baseline bends by `curve` % (100 = half circle) between the left
+ * and right edges, upward (∩, ends at the bottom) for positive values and downward (∪) for negative.
+ */
+function curveArc(o: TextObj) {
+  const k = Math.max(-100, Math.min(100, o.curve ?? 0)) / 100;
+  const d = Math.abs(k) * (o.w / 2);
+  const r = (o.w * o.w / 4 + d * d) / (2 * d);
+  return {
+    length: 2 * r * Math.atan2(o.w / 2, r - d),
+    path: (ascent: number, descent: number) => {
+      const y = k > 0 ? o.h - descent : ascent;
+      return `M0 ${n(y)}A${n(r)} ${n(r)} 0 0 ${k > 0 ? 1 : 0} ${n(o.w)} ${n(y)}`;
+    },
+  };
+}
+
 function textMarkup(o: TextObj, content: string, acc: Acc, override?: string): string {
-  if (!content) return '';
-  const L = layoutText(o, content);
+  if (!plainText(content)) return '';
   const fill = override ?? paint(o.fill, o.id, acc);
-  const total = (L.lines.length - 1) * L.lineAdvance + L.ascent + L.descent;
-  const top = o.vAlign === 'top' ? 0 : o.vAlign === 'bottom' ? o.h - total : (o.h - total) / 2;
   const fam = esc(o.fontFamily);
-  const common = `font-family="${fam}" font-size="${n(L.sizeMm)}" font-weight="${o.bold ? 700 : 400}"${o.italic ? ' font-style="italic"' : ''}${o.letterSpacing ? ` letter-spacing="${n(o.letterSpacing)}"` : ''} xml:space="preserve"`;
-  const out: string[] = [];
   const ol = o.effects.outline;
-  L.lines.forEach((ln, i) => {
-    const x = o.align === 'left' ? 0 : o.align === 'right' ? o.w - ln.width : (o.w - ln.width) / 2;
-    const y = top + L.ascent + i * L.lineAdvance;
-    const t = esc(ln.text);
-    const tx = L.scaleX !== 1 ? `<g transform="translate(${n(x)} 0) scale(${n(L.scaleX)} 1)">` : '';
-    const px = L.scaleX !== 1 ? 0 : x;
+  const curved = !!o.curve && Math.abs(o.curve) >= 1;
+  // on a curve the text is one line along the arc, sized to the arc's length
+  const arc = curved ? curveArc(o) : null;
+  const L = arc ? layoutText({ ...o, multiline: false, fit: o.fit === 'stretch' ? 'shrink' : o.fit }, content, o.fontSize, arc.length) : layoutText(o, content);
+  const common = `font-family="${fam}" font-size="${n(L.sizeMm)}" font-weight="${o.bold ? 700 : 400}"${o.italic ? ' font-style="italic"' : ''}${o.letterSpacing ? ` letter-spacing="${n(o.letterSpacing)}"` : ''} xml:space="preserve"`;
+  // outline layers and shadows draw every run in their own colour
+  const layersOf = (pos: string, body: (colors: boolean) => string, extra = '') => {
     const layers: string[] = [];
     if (ol && !override) {
-      if (ol.double) layers.push(`<text x="${n(px)}" y="${n(y)}" ${common} fill="${ol.color2}" stroke="${ol.color2}" stroke-width="${n((ol.width + ol.width2) * 2)}" stroke-linejoin="round">${t}</text>`);
-      layers.push(`<text x="${n(px)}" y="${n(y)}" ${common} fill="${ol.color}" stroke="${ol.color}" stroke-width="${n(ol.width * 2)}" stroke-linejoin="round">${t}</text>`);
+      if (ol.double) layers.push(`<text ${pos} ${common} fill="${ol.color2}" stroke="${ol.color2}" stroke-width="${n((ol.width + ol.width2) * 2)}" stroke-linejoin="round"${extra}>${body(false)}</text>`);
+      layers.push(`<text ${pos} ${common} fill="${ol.color}" stroke="${ol.color}" stroke-width="${n(ol.width * 2)}" stroke-linejoin="round"${extra}>${body(false)}</text>`);
     }
-    layers.push(`<text x="${n(px)}" y="${n(y)}" ${common} fill="${fill}">${t}</text>`);
-    if (o.underline) {
-      const uy = y + L.sizeMm * 0.12;
-      layers.push(`<rect x="${n(px)}" y="${n(uy)}" width="${n(ln.width / L.scaleX)}" height="${n(L.sizeMm * 0.06)}" fill="${fill}"/>`);
-    }
-    out.push(tx ? tx + layers.join('') + '</g>' : layers.join(''));
+    layers.push(`<text ${pos} ${common} fill="${fill}"${extra}>${body(!override)}</text>`);
+    return layers.join('');
+  };
+
+  if (arc) {
+    const id = `${acc.idp}tp${o.id}`;
+    // the shadow draws the same text first, so the path may be there already
+    if (!acc.defs.some((x) => x.startsWith(`<path id="${id}"`))) acc.defs.push(`<path id="${id}" d="${arc.path(L.ascent * L.lines[0].scale, L.descent * L.lines[0].scale)}"/>`);
+    const [offset, anchor] = o.align === 'left' ? ['0%', 'start'] : o.align === 'right' ? ['100%', 'end'] : ['50%', 'middle'];
+    const ln = L.lines[0];
+    const deco = ln.pieces.some((p) => p.run.underline) ? ' text-decoration="underline"' : '';
+    return layersOf('', (colors) => `<textPath href="#${id}" startOffset="${offset}" text-anchor="${anchor}">${runsMarkup(o, ln.pieces, L.sizeMm, colors)}</textPath>`, deco);
+  }
+
+  const top = o.vAlign === 'top' ? 0 : o.vAlign === 'bottom' ? o.h - L.height : (o.h - L.height) / 2;
+  const out: string[] = [];
+  L.lines.forEach((ln, i) => {
+    const x = o.align === 'left' ? 0 : o.align === 'right' ? o.w - ln.width : (o.w - ln.width) / 2;
+    const y = top + L.baselines[i];
+    const tx = L.scaleX !== 1 ? `<g transform="translate(${n(x)} 0) scale(${n(L.scaleX)} 1)">` : '';
+    const px = L.scaleX !== 1 ? 0 : x;
+    let layers = layersOf(`x="${n(px)}" y="${n(y)}"`, (colors) => runsMarkup(o, ln.pieces, L.sizeMm, colors));
+    if (ln.pieces.some((p) => p.run.underline)) layers += underlines(ln, px, y, L.sizeMm, o.letterSpacing, fill);
+    out.push(tx ? tx + layers + '</g>' : layers);
   });
   return out.join('');
 }
@@ -189,8 +246,8 @@ function tableMarkup(o: TableObj, ctx: ResolveCtx, acc: Acc): string {
     const fill = st.fill || (head ? o.headerFill : o.fill);
     if (fill) bg.push(`<rect x="${n(x0)}" y="${n(y0)}" width="${n(w)}" height="${n(h)}" fill="${fill}"/>`);
     if (o.borderWidth > 0) grid.push(`<rect x="${n(x0)}" y="${n(y0)}" width="${n(w)}" height="${n(h)}"/>`);
-    const content = resolveTemplate(o.cells[r]?.[c] ?? '', ctx);
-    if (!content) continue;
+    const content = resolveTemplate(o.cells[r]?.[c] ?? '', ctx, protectValue);
+    if (!plainText(content)) continue;
     const t: TextObj = {
       id: `${o.id}_${r}_${c}`, type: 'text', name: '', x: 0, y: 0, w: Math.max(0.1, w - 2 * pad), h: Math.max(0.1, h - 2 * pad),
       rotation: 0, opacity: 1, locked: false, hidden: false, rules: [], hideIfEmpty: false,
@@ -491,7 +548,11 @@ export function designColors(p: Project, max = 16): string[] {
   add(p.paper.labelColor);
   for (const d of p.designs) for (const o of [...d.objects, ...(d.back ?? [])]) {
     switch (o.type) {
-      case 'text': fill(o.fill); if (o.effects.outline) add(o.effects.outline.color); break;
+      case 'text':
+        fill(o.fill);
+        if (o.effects.outline) add(o.effects.outline.color);
+        for (const x of o.content.matchAll(/<color=(#[0-9a-f]{3,6})>/gi)) add(x[1]);
+        break;
       case 'rect': case 'ellipse': case 'triangle': case 'line':
         if (o.type !== 'line') fill(o.fill);
         if (o.strokeWidth > 0) add(o.stroke);

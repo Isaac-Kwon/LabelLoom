@@ -138,30 +138,6 @@ export function convert(o: LabelObject, type: ObjType): LabelObject {
   return { ...fresh, ...keep, ...('content' in fresh && fresh.type !== 'image' ? content : {}) } as LabelObject;
 }
 
-/**
- * Grow the selected objects past the trim line by the bleed on every side they touch
- * (within 1 mm of the label edge). An object touching no edge fills the whole label + bleed.
- * With no bleed this snaps those sides to the label edge.
- */
-export function extendToBleed() {
-  const s = st();
-  const { labelWidth: W, labelHeight: H } = s.project.paper;
-  const bleed = Math.max(0, s.project.paper.bleed);
-  const objs = sel().filter((o) => !o.locked && !o.rotation);
-  if (!objs.length) { s.notify(t('회전하지 않은 개체를 선택하세요.')); return; }
-  const near = 1;
-  act.update(objs.map((o) => o.id), (o) => {
-    let x0 = o.x, y0 = o.y, x1 = o.x + o.w, y1 = o.y + o.h;
-    const l = x0 <= near, t = y0 <= near, r = x1 >= W - near, b = y1 >= H - near;
-    const all = !l && !t && !r && !b;
-    if (l || all) x0 = -bleed;
-    if (t || all) y0 = -bleed;
-    if (r || all) x1 = W + bleed;
-    if (b || all) y1 = H + bleed;
-    return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
-  });
-}
-
 /** Give the selected objects the label's width (from its left edge) or height (from its top edge). */
 export function matchLabel(dim: 'w' | 'h') {
   const s = st();

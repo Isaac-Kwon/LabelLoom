@@ -322,7 +322,6 @@ Enter 완료 · Shift+Enter 줄바꿈 · Esc 취소	Enter done · Shift+Enter ne
 레이어 목록의 눈 아이콘으로 다시 보이게 할 수 있습니다	Show it again with the eye icon in the layer list	Puoi mostrarlo di nuovo con l'icona a occhio nell'elenco dei livelli	Vous pouvez le réafficher avec l'icône œil de la liste des calques
 인쇄하기	Print it	Stampa	Imprimer
 인쇄 안 함 (안내용)	Don't print (guide only)	Non stampare (solo guida)	Ne pas imprimer (repère uniquement)
-재단 여백까지 늘리기	Extend to bleed	Estendi al margine di abbondanza	Étendre au fond perdu
 라벨 기준 정렬	Align to label	Allinea all'etichetta	Aligner sur l'étiquette
 선택 영역 기준 정렬	Align to selection	Allinea alla selezione	Aligner sur la sélection
 왼쪽 맞춤	Align left	Allinea a sinistra	Aligner à gauche
@@ -701,8 +700,6 @@ URL 불러오기는 실험적 기능입니다. 서버나 네트워크 환경에 
 맨 뒤	Back	In fondo	Arrière-plan
 공통	Common	Comuni	Communs
 불투명도	Opacity	Opacità	Opacité
-라벨 가장자리에 닿은 변을 재단선 밖 {n} mm까지 늘립니다. 가장자리에 닿지 않으면 라벨 전체 + 재단 여백을 채웁니다.	Extends edges touching the label edge to {n} mm beyond the trim line. If none touch, fills the whole label plus bleed.	Estende i lati che toccano il bordo dell'etichetta fino a {n} mm oltre la linea di rifilo. Se nessuno lo tocca, riempie l'intera etichetta più l'abbondanza.	Étend les bords qui touchent le bord de l'étiquette jusqu'à {n} mm au-delà du trait de coupe. Si aucun ne le touche, remplit toute l'étiquette plus le fond perdu.
-재단 여백이 0 mm라 라벨 가장자리 근처(1 mm 이내)의 변을 가장자리에 맞춥니다. 가장자리에 닿지 않으면 라벨 전체를 채웁니다. 재단 여백은 용지 설정에서 정합니다.	With no bleed set, snaps sides within 1 mm of the label edge to the edge. If none are that close, fills the whole label. Set the bleed in the paper settings.	Senza abbondanza, porta al bordo i lati entro 1 mm dal bordo dell'etichetta. Se nessuno è così vicino, riempie l'intera etichetta. L'abbondanza si imposta nelle impostazioni della carta.	Sans fond perdu, aligne sur le bord les côtés à moins de 1 mm du bord de l'étiquette. Si aucun n'est si proche, remplit toute l'étiquette. Le fond perdu se règle dans les réglages du papier.
 W = 라벨 폭	W = label width	L = larghezza etichetta	L = largeur de l'étiquette
 H = 라벨 높이	H = label height	A = altezza etichetta	H = hauteur de l'étiquette
 라벨 폭과 같게 하고 왼쪽 끝에 붙입니다.	Makes it as wide as the label and moves it to the left edge.	La rende larga quanto l'etichetta e la sposta al bordo sinistro.	Lui donne la largeur de l'étiquette et le place contre le bord gauche.
@@ -890,7 +887,6 @@ QR / 2D 코드	QR / 2D code	Codice QR / 2D	Code QR / 2D
 웹에서 자세히 보기	Read more on the web	Approfondisci sul web	En savoir plus sur le web
 # ui/ops.ts
 3개 이상 선택하세요.	Select three or more objects.	Seleziona tre o più oggetti.	Sélectionnez au moins trois objets.
-회전하지 않은 개체를 선택하세요.	Select objects that are not rotated.	Seleziona oggetti non ruotati.	Sélectionnez des objets non pivotés.
 # ui/PreprintWizard.tsx
 견출지 {w}×{h}	Pre-printed {w}×{h}	Prestampata {w}×{h}	Pré-imprimée {w}×{h}
 견출지 마법사	Pre-printed label wizard	Procedura per etichette prestampate	Assistant d'étiquettes pré-imprimées
@@ -1192,3 +1188,11 @@ N번째 단어 (word:1, 끝에서는 word:-1)	Nth word (word:1, from the end wor
 커서가 있는 {{열}}의 값을 바꿉니다 (예: {{이름|upper}})	Changes the value of the {{column name}} the cursor is in (e.g. {{Name|upper}})	Cambia il valore del {{nome colonna}} in cui si trova il cursore (es. {{Nome|upper}})	Modifie la valeur du {{nom de colonne}} où se trouve le curseur (ex. {{Nom|upper}})
 값 변환	Value filter	Filtro valore	Filtre de valeur
 값을 바꿀 {{열}} 안에 커서를 두세요.	Put the cursor inside the {{column name}} to change.	Metti il cursore dentro il {{nome colonna}} da cambiare.	Placez le curseur dans le {{nom de colonne}} à modifier.
+# rich text, curved text
+고른 글자	Selected text	Testo selezionato	Texte sélectionné
+고른 글자에만 적용합니다. 고른 글자가 없으면 전체에 적용합니다.	Applies to the selected characters only, or to all of the content when nothing is selected.	Si applica solo ai caratteri selezionati, o a tutto il contenuto se non è selezionato nulla.	S'applique aux caractères sélectionnés seulement, ou à tout le contenu si rien n'est sélectionné.
+곡선	Curve	Curva	Courbe
+굵게·색·크기 표시를 모두 지웁니다	Removes all bold, color and size tags	Rimuove tutti i tag di grassetto, colore e dimensione	Supprime toutes les balises de gras, couleur et taille
+글자를 호를 따라 배치합니다. +는 위로 볼록(∩), −는 아래로 볼록(∪), 100%는 반원입니다. 곡선에서는 한 줄로 배치됩니다.	Sets the text along an arc. + bends up (∩), − bends down (∪), 100% is a half circle. Curved text is always one line.	Dispone il testo lungo un arco. + curva verso l'alto (∩), − verso il basso (∪), 100% è un semicerchio. Il testo curvo è sempre su una riga.	Dispose le texte le long d'un arc. + courbe vers le haut (∩), − vers le bas (∪), 100 % est un demi-cercle. Le texte courbé tient toujours sur une ligne.
+서식 지우기	Clear formatting	Cancella formattazione	Effacer la mise en forme
+직선으로	Straighten	Raddrizza	Redresser

@@ -6,11 +6,12 @@ import { OBJ_TYPES, typeLabel } from '../model/defaults';
 import type { BarcodeObj, Effects, Fill, ImageObj, LabelObject, ObjType, QrObj, ShapeObj, StyleRule, TextObj } from '../model/types';
 import { barcodeSvg, code2dSvg, CODES_2D, moduleSizeMm, SYMBOLOGIES } from '../render/barcode';
 import { findPicture, isUrl, usedPictureKeys } from '../render/images';
+import { hasMarkup, plainText } from '../render/rich';
 import { FILTERS, previewCtx, resolveObject, RULE_OPS } from '../render/resolve';
 import { act, currentObjects, useStore } from '../store';
 import { Check, Color, Num, Row, Section, Select, Seg } from './controls';
 import { addPictures, pickImageInto, pictureFromUrl, saveRowPictures } from './media';
-import { align, convert, distribute, extendToBleed, group, matchLabel, matchSize, reorder, ungroup } from './ops';
+import { align, convert, distribute, group, matchLabel, matchSize, reorder, ungroup } from './ops';
 import { TableSection } from './TableEditor';
 
 export function Inspector() {
@@ -85,21 +86,7 @@ function Multi({ objs }: { objs: LabelObject[] }) {
       <Row label={t('불투명도')}><Num value={objs[0].opacity * 100} step={5} min={0} max={100} unit="%" onChange={(v) => act.update(ids, { opacity: v / 100 })} /></Row>
       <Row><Check label={t('잠금')} checked={allLocked} onChange={(v) => act.update(ids, { locked: v })} /></Row>
       <Row><Check label={t('인쇄 안 함 (안내용)')} title={t(NO_PRINT_HINT)} checked={objs.every((o) => o.noPrint)} onChange={(v) => act.update(ids, { noPrint: v })} /></Row>
-      <BleedButton />
     </Section>
-  );
-}
-
-function BleedButton() {
-  const bleed = useStore((s) => s.project.paper.bleed);
-  return (
-    <Row>
-      <button onClick={extendToBleed} title={bleed > 0
-        ? t('라벨 가장자리에 닿은 변을 재단선 밖 {n} mm까지 늘립니다. 가장자리에 닿지 않으면 라벨 전체 + 재단 여백을 채웁니다.', { n: bleed })
-        : t('재단 여백이 0 mm라 라벨 가장자리 근처(1 mm 이내)의 변을 가장자리에 맞춥니다. 가장자리에 닿지 않으면 라벨 전체를 채웁니다. 재단 여백은 용지 설정에서 정합니다.')}>
-        ⤢ {t('재단 여백까지 늘리기')} ({Math.max(0, bleed)} mm)
-      </button>
-    </Row>
   );
 }
 
@@ -134,7 +121,6 @@ function Single({ o }: { o: LabelObject }) {
           <button onClick={() => matchLabel('w')} title={t('라벨 폭과 같게 하고 왼쪽 끝에 붙입니다.')}>{t('W = 라벨 폭')}</button>
           <button onClick={() => matchLabel('h')} title={t('라벨 높이와 같게 하고 위쪽 끝에 붙입니다.')}>{t('H = 라벨 높이')}</button>
         </div>
-        <BleedButton />
       </Section>
       {'content' in o && o.type !== 'image' && <ContentSection o={o} />}
       {o.type === 'text' && <TextSection o={o} />}
@@ -197,8 +183,19 @@ function ContentSection({ o, title, hint }: { o: TextObj | BarcodeObj | QrObj | 
     const at = close + 1 + f.length;
     setTimeout(() => { ta?.focus(); ta?.setSelectionRange(at, at); }, 0);
   };
+  // rich text: wrap the selected part of the content in a tag (the whole content when nothing is selected)
+  const wrapSel = (open: string, close: string) => {
+    const ta = ref.current;
+    let s0 = ta?.selectionStart ?? 0, e0 = ta?.selectionEnd ?? 0;
+    if (s0 === e0) { s0 = 0; e0 = o.content.length; }
+    act.update([o.id], { content: o.content.slice(0, s0) + open + o.content.slice(s0, e0) + close + o.content.slice(e0) } as Partial<LabelObject>);
+    setTimeout(() => { ta?.focus(); ta?.setSelectionRange(s0 + open.length, e0 + open.length); }, 0);
+  };
+  const [runColor, setRunColor] = useState('#dc2626');
+  const [runSize, setRunSize] = useState(70);
   const row = project.data.rows[currentRow];
-  const resolved = resolveObject(o, previewCtx(row, currentRow, project.seqStart)).content;
+  const resolvedRaw = resolveObject(o, previewCtx(row, currentRow, project.seqStart)).content;
+  const resolved = o.type === 'text' ? plainText(resolvedRaw) : resolvedRaw;
   return (
     <Section title={title ?? t('내용 · 데이터 연결')} tour="content">
       {hint && <p className="muted small">{hint}</p>}
@@ -218,11 +215,27 @@ function ContentSection({ o, title, hint }: { o: TextObj | BarcodeObj | QrObj | 
           {FILTERS.map((x) => <option key={x.example} value={x.example}>{t(x.label)}</option>)}
         </select>
       </div>
+      {o.type === 'text' && (
+        <div className="btn-row rich-row" title={t('고른 글자에만 적용합니다. 고른 글자가 없으면 전체에 적용합니다.')}>
+          <span className="muted small">{t('고른 글자')}</span>
+          <button className="icon small" onClick={() => wrapSel(o.bold ? '<b=0>' : '<b>', '</b>')} title={t('굵게')}><b>B</b></button>
+          <button className="icon small" onClick={() => wrapSel(o.italic ? '<i=0>' : '<i>', '</i>')} title={t('기울임')}><i>I</i></button>
+          <button className="icon small" onClick={() => wrapSel(o.underline ? '<u=0>' : '<u>', '</u>')} title={t('밑줄')}><u>U</u></button>
+          <input type="color" value={runColor} onChange={(e) => setRunColor(e.target.value)} title={t('글자색')} />
+          <button className="small" onClick={() => wrapSel(`<color=${runColor}>`, '</color>')}>{t('색')}</button>
+          <Num value={runSize} step={5} min={10} max={500} unit="%" width={70} onChange={setRunSize} />
+          <button className="small" onClick={() => wrapSel(`<size=${runSize}%>`, '</size>')}>{t('크기')}</button>
+          {hasMarkup(o.content) && <button className="small" onClick={() => act.update([o.id], { content: plainTags(o.content) } as Partial<LabelObject>)} title={t('굵게·색·크기 표시를 모두 지웁니다')}>{t('서식 지우기')}</button>}
+        </div>
+      )}
       <div className="preview-value" title={t('현재 행으로 계산된 값')}>{resolved ? resolved.replace(/[\x00-\x1f]/g, (c) => (c === '\n' ? '↵' : '·')) : <span className="muted">{t('(빈 값)')}</span>}</div>
       <Check label={t('값이 비면 숨김')} checked={o.hideIfEmpty} onChange={(v) => act.update([o.id], { hideIfEmpty: v })} />
     </Section>
   );
 }
+
+/** Content with the rich-text tags taken out (values in {{…}} untouched). */
+const plainTags = (s: string) => s.replace(/<\/?(b|i|u|color|size)(=[^<>]*)?>/gi, '');
 
 /* ---------- images ---------- */
 
@@ -353,6 +366,11 @@ function TextSection({ o }: { o: TextObj }) {
         ]} />
       </Row>
       <Check label={t('넘치면 말줄임(…)')} checked={o.ellipsis} onChange={(v) => up({ ellipsis: v })} />
+      <Row label={t('곡선')}>
+        <Num value={o.curve ?? 0} step={5} min={-100} max={100} unit="%" width={90} onChange={(v) => up({ curve: Math.round(v) })}
+          title={t('글자를 호를 따라 배치합니다. +는 위로 볼록(∩), −는 아래로 볼록(∪), 100%는 반원입니다. 곡선에서는 한 줄로 배치됩니다.')} />
+        {!!o.curve && <button className="small" onClick={() => up({ curve: 0 })}>{t('직선으로')}</button>}
+      </Row>
       <FillEditor label={t('글자색')} fill={o.fill} onChange={(fill) => up({ fill })} allowNone={false} />
     </Section>
   );

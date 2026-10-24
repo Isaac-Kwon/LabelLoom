@@ -1,5 +1,6 @@
 import { m, type Msg } from '../i18n';
 import type { Design, LabelObject, Project, Row, RuleOp } from '../model/types';
+import { plainText, protectValue } from './rich';
 
 export interface ResolveCtx {
   row?: Row;
@@ -270,15 +271,18 @@ export interface Resolved<T extends LabelObject = LabelObject> {
 
 /** Apply content templates and conditional style rules for one data row. */
 export function resolveObject(o: LabelObject, ctx: ResolveCtx): Resolved {
-  let content = 'content' in o ? resolveTemplate(o.content, ctx) : '';
+  // a text's content may carry rich-text tags; values filled in never do (see render/rich.ts)
+  const fill = (tpl: string) => resolveTemplate(tpl, ctx, o.type === 'text' ? protectValue : undefined);
+  const plain = (s: string) => (o.type === 'text' ? plainText(s) : s);
+  let content = 'content' in o ? fill(o.content) : '';
   let obj: LabelObject = o;
   let hidden = o.hidden;
   for (const r of o.rules) {
-    const subject = r.column ? ctx.row?.values[r.column] ?? '' : content;
+    const subject = r.column ? ctx.row?.values[r.column] ?? '' : plain(content);
     if (!testRule(r.op, subject, r.value)) continue;
     const s = r.set;
     if (s.hidden) hidden = true;
-    if (s.text !== undefined && s.text !== '') content = resolveTemplate(s.text, ctx);
+    if (s.text !== undefined && s.text !== '') content = fill(s.text);
     if (s.color) {
       if (obj.type === 'text') obj = { ...obj, fill: { type: 'solid', color: s.color } };
       else if (obj.type === 'barcode' || obj.type === 'qr' || obj.type === 'table') obj = { ...obj, color: s.color };
@@ -288,6 +292,6 @@ export function resolveObject(o: LabelObject, ctx: ResolveCtx): Resolved {
     if (s.fontSize && obj.type === 'text') obj = { ...obj, fontSize: s.fontSize };
   }
   // an image without a template shows its own file, so it never counts as empty
-  if (o.hideIfEmpty && 'content' in o && content.trim() === '' && (o.type !== 'image' || o.content.trim())) hidden = true;
+  if (o.hideIfEmpty && 'content' in o && plain(content).trim() === '' && (o.type !== 'image' || o.content.trim())) hidden = true;
   return { obj, content, hidden };
 }

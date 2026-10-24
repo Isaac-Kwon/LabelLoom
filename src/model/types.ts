@@ -67,6 +67,8 @@ export interface TextObj extends Base {
   letterSpacing: number; // mm
   lineHeight: number; // multiple of font size
   ellipsis: boolean;
+  /** bend of the baseline in % (−100…100, 100 = half circle upward); 0 = straight */
+  curve?: number;
   fill: Fill;
   effects: Effects;
 }

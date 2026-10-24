@@ -5,6 +5,7 @@ import { t } from '../i18n';
 import type { LabelObject, Project } from '../model/types';
 import { paginate, type JobItem, type Page } from '../render/jobs';
 import { resolveTemplate, type ResolveCtx } from '../render/resolve';
+import { hasMarkup } from '../render/rich';
 import { fontFaceCss, labelDocument, labelMarkup, sheetDocument, sheetLayout, testPageDocument, type RasterPatch, type SheetCell, type SheetOpts } from '../render/svg';
 
 export function download(blob: Blob, name: string) {
@@ -103,11 +104,13 @@ function needsRaster(o: LabelObject, ttf: Set<string>): boolean {
   switch (o.type) {
     case 'text':
       return !ttf.has(firstFamily(o.fontFamily)) || o.bold || o.italic || o.fill.type !== 'solid' ||
-        !!o.effects.shadow || !!o.effects.outline || o.letterSpacing !== 0;
+        !!o.effects.shadow || !!o.effects.outline || o.letterSpacing !== 0 || !!o.curve || hasMarkup(o.content) ||
+        o.rules.some((r) => !!r.set.text && hasMarkup(r.set.text));
     case 'rect': case 'ellipse': case 'triangle': case 'line':
       return !!o.effects.shadow && o.effects.shadow.blur > 0;
     case 'table':
-      return !ttf.has(firstFamily(o.fontFamily)) || o.headerRow || o.headerCol || Object.values(o.styles).some((s) => s.bold);
+      return !ttf.has(firstFamily(o.fontFamily)) || o.headerRow || o.headerCol || Object.values(o.styles).some((s) => s.bold) ||
+        o.cells.some((r) => r.some(hasMarkup));
     default: return false;
   }
 }

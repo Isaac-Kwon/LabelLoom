@@ -151,6 +151,7 @@ h3 { font-size: 13px; margin: 14px 0 6px; }
 .color { display: flex; align-items: center; gap: 4px; flex: 1; min-width: 0; }
 .color input[type="color"] { width: 28px; height: 26px; padding: 1px; border: 1px solid var(--border-strong); border-radius: 5px; background: var(--input); flex-shrink: 0; }
 .color .hex { width: 80px; flex: 1; font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+.rich-row input[type="color"] { width: 28px; height: 24px; padding: 1px; border: 1px solid var(--border-strong); border-radius: 5px; background: var(--input); }
 .check { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; font-size: 12.5px; }
 .seg { display: inline-flex; border: 1px solid var(--border-strong); border-radius: 6px; overflow: hidden; }
 .seg button { border: none; border-radius: 0; padding: 3px 8px; background: var(--panel); }

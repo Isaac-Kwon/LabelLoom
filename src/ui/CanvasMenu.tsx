@@ -3,7 +3,7 @@ import { m, t, type Msg } from '../i18n';
 import type { LabelObject } from '../model/types';
 import { act, currentObjects, useStore } from '../store';
 import { pickImageInto } from './media';
-import { align, copy, duplicate, extendToBleed, group, inlineEditable, paste, reorder, selectAll, ungroup } from './ops';
+import { align, copy, duplicate, group, inlineEditable, paste, reorder, selectAll, ungroup } from './ops';
 import { editTable } from './TableCanvas';
 
 type Item = { label: Msg; key?: string; run: () => void; disabled?: boolean; title?: Msg } | 'sep';
@@ -77,7 +77,6 @@ export function CanvasMenu({ x, y, at, onEdit, onClose }: {
       { label: allLocked ? m('잠금 해제') : m('잠금'), run: () => act.update([...ids], { locked: !allLocked }) },
       { label: m('숨기기'), title: m('레이어 목록의 눈 아이콘으로 다시 보이게 할 수 있습니다'), run: () => { act.update([...ids], { hidden: true }); s.select([]); } },
       { label: allNoPrint ? m('인쇄하기') : m('인쇄 안 함 (안내용)'), run: () => act.update([...ids], { noPrint: !allNoPrint }) },
-      { label: m('재단 여백까지 늘리기'), run: extendToBleed, disabled: allLocked },
     );
   }
 
