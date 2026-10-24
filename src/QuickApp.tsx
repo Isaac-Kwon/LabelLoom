@@ -5,6 +5,7 @@ import { copyQuickLink, decodeShare, quickShareCode, readShareHash } from './io/
 import { migrateProject } from './model/defaults';
 import type { Project, Row } from './model/types';
 import { InstallButton } from './pwa';
+import { DropOverlay } from './ui/controls';
 import { QuickForm } from './ui/QuickPrint';
 
 /** Quick print page (?quick, #q=…, or the editor's 빠른 출력 button): a template, its fields, a live preview, print. */
@@ -108,7 +109,7 @@ export function QuickApp({ onEdit, onBack, start, onPrinted }: {
             </button>
           )}
       </main>
-      {dropping && <div className="drop-overlay">템플릿 파일(.json)을 놓으세요</div>}
+      {dropping && <DropOverlay title="템플릿을 여기에 놓으세요" kinds={['.labelloom.json']} />}
       {toast && <div className="toast">{toast}</div>}
     </div>
   );

@@ -128,3 +128,17 @@ export function Progress({ done, total, label }: { done: number; total: number; 
     </div>
   );
 }
+
+export function DropOverlay({ title, kinds }: { title: string; kinds: string[] }) {
+  return (
+    <div className="drop-overlay">
+      <div className="drop-card">
+        <svg className="drop-icon" viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M12 3v12" /><path d="m7 10 5 5 5-5" /><path d="M5 19h14" />
+        </svg>
+        <strong>{title}</strong>
+        <div className="drop-kinds">{kinds.map((k) => <span key={k}>{k}</span>)}</div>
+      </div>
+    </div>
+  );
+}
