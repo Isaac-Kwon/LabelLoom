@@ -4,6 +4,7 @@ import { kvGet, kvSet, parseProject, pickFile } from './io/project';
 import { decodeShare, readShareHash } from './io/share';
 import { migrateProject } from './model/defaults';
 import type { Project, Row } from './model/types';
+import { InstallButton } from './pwa';
 import { QuickForm } from './ui/QuickPrint';
 
 /** Quick print page (?quick, #q=…, or the editor's 빠른 출력 button): a template, its fields, a live preview, print. */
@@ -73,6 +74,7 @@ export function QuickApp({ onEdit, start, onPrinted }: {
         {project && <span className="muted ellipsis">{project.name}</span>}
         <span className="spacer" />
         {fromEditor && <label className="check"><input type="checkbox" checked={record} onChange={(e) => setRecord(e.target.checked)} /><span>입력한 내용을 명단에 기록</span></label>}
+        <InstallButton />
         {project && <button onClick={choose}>다른 템플릿</button>}
         <button onClick={() => onEdit(project)}
           title={project ? '이 템플릿을 편집기에서 수정합니다' : '편집기를 엽니다'}>{project ? '✎ 편집기에서 수정' : '편집기 열기'}</button>

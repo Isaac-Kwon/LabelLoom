@@ -2,6 +2,7 @@ import { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import { saveAutosave } from './io/project';
+import { setupPwa, UpdateBar } from './pwa';
 import type { Project, Row } from './model/types';
 import { QuickApp } from './QuickApp';
 import { useStore } from './store';
@@ -31,13 +32,21 @@ function Root() {
 
   if (mode.quick) {
     const from = mode.from;
-    return <QuickApp start={from} onPrinted={from ? record : undefined} onEdit={(p) => {
-      history.replaceState(null, '', location.pathname);
-      setMode({ quick: false, initial: p && p !== from ? p : undefined });
-    }} />;
+    return <>
+      <UpdateBar />
+      <QuickApp start={from} onPrinted={from ? record : undefined} onEdit={(p) => {
+        history.replaceState(null, '', location.pathname);
+        setMode({ quick: false, initial: p && p !== from ? p : undefined });
+      }} />
+    </>;
   }
-  return <App initial={mode.initial} onQuick={toQuick} />;
+  return <>
+    <UpdateBar beforeReload={() => saveAutosave(useStore.getState().project)} />
+    <App initial={mode.initial} onQuick={toQuick} />
+  </>;
 }
+
+setupPwa();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

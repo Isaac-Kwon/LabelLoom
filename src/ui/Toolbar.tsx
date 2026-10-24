@@ -1,6 +1,7 @@
 import { serialize } from '../io/project';
 import { download, safeName } from '../io/export';
 import type { ObjType } from '../model/types';
+import { InstallButton } from '../pwa';
 import { pickDesign } from '../render/resolve';
 import { act, currentDesign, useStore, type Tool } from '../store';
 
@@ -68,6 +69,7 @@ export function Toolbar({ onOpen, onSave }: { onOpen: () => void; onSave: (saveA
         <button className="zoom" onClick={() => window.dispatchEvent(new Event('labelloom:fit'))} title="화면에 맞추기 (Ctrl+0) · 100% = 실제 크기">{Math.round((zoom / PX_PER_MM_100) * 100)}%</button>
         <button className="icon" onClick={() => s.setZoom(zoom * 1.25)} title="확대">＋</button>
       </div>
+      <InstallButton />
       <button onClick={() => s.open('quick')} title="필요한 값만 입력하고 미리보기를 보며 바로 인쇄">빠른 출력</button>
       <button onClick={() => s.open('reprint')} title="이름 검색 후 1장 바로 인쇄, 현장 등록">현장 재발행</button>
       <button className="primary" onClick={() => s.open('export')} title="Ctrl+P">인쇄 · 내보내기</button>

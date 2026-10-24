@@ -47,6 +47,8 @@
 
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; margin: 0; }
+#root { display: flex; flex-direction: column; }
+#root > .app, #root > .quick-app { flex: 1; min-height: 0; height: auto; }
 body { background: var(--bg); color: var(--text); overflow: hidden; }
 button, input, select, textarea { font: inherit; color: inherit; }
 button {
@@ -287,6 +289,8 @@ div.card { border: 1px solid var(--border-strong); background: var(--panel); cur
 .keys td { padding: 4px 6px; border-bottom: 1px solid var(--border); vertical-align: top; }
 .keys td:first-child { white-space: nowrap; }
 
+.update-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 6px 12px; background: var(--accent-soft); border-bottom: 1px solid var(--border); flex: none; }
+.update-bar .err { color: var(--warn-text); }
 .build-tag { position: fixed; right: 4px; bottom: 2px; font-size: 9px; color: var(--muted); opacity: 0.6; pointer-events: none; user-select: none; z-index: 1; }
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #111827; color: #fff; padding: 9px 16px; border-radius: 8px; box-shadow: var(--shadow); z-index: 200; font-size: 13px; }
 .drop-overlay { position: fixed; inset: 0; background: rgba(37, 99, 235, 0.15); border: 3px dashed var(--accent); z-index: 150; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; pointer-events: none; color: var(--text); }
@@ -325,6 +329,7 @@ div.card { border: 1px solid var(--border-strong); background: var(--panel); cur
 @media (max-width: 720px) {
   body:has(.quick-app) { overflow: auto; }
   .quick-app { height: auto; min-height: 100%; }
+  #root > .quick-app { flex: 1 0 auto; }
   .quick-bar { gap: 6px; padding: 8px 12px; flex-wrap: wrap; }
   .quick-main { padding: 12px; }
   .quick-form { grid-template-columns: 1fr; }

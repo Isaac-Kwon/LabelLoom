@@ -1,0 +1,20 @@
+{
+  "name": "LabelLoom",
+  "short_name": "LabelLoom",
+  "description": "라벨·명찰·바코드를 디자인하고 엑셀 명단으로 대량 인쇄",
+  "lang": "ko",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f4f6",
+  "theme_color": "#2563eb",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "빠른 출력", "url": "./?quick", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] }
+  ]
+}
