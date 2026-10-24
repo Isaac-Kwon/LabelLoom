@@ -1,6 +1,7 @@
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { viteSingleFile } from 'vite-plugin-singlefile';
+import { licenses } from './licenses';
 
 const BUILD_TIME = new Date().toISOString();
 
@@ -16,7 +17,7 @@ const versionFile = (): Plugin => ({
 // Served from https://isaac-kwon.github.io/LabelLoom/. Everything is inlined into dist/index.html, so the file also runs offline.
 export default defineConfig({
   base: '/LabelLoom/',
-  plugins: [react(), viteSingleFile(), versionFile()],
+  plugins: [react(), viteSingleFile(), versionFile(), licenses()],
   define: { __BUILD_TIME__: JSON.stringify(BUILD_TIME) },
   build: {
     target: 'es2022',
