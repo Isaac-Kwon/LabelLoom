@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 튜토리얼 / Tutorial
+    url: https://github.com/Isaac-Kwon/LabelLoom/blob/main/docs/tutorial/README.md
+    about: 사용법은 먼저 튜토리얼을 확인해 주십시오 (앱에서는 F1). / Check the tutorial first (F1 in the app). English version is in docs/tutorial/en.

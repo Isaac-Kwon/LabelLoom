@@ -1,0 +1,33 @@
+name: 기능 제안 / Feature request
+description: 새 기능이나 개선 아이디어 / Suggest a new feature or an improvement
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        한국어와 English 중 편한 언어로 작성하십시오. / Write in Korean or English, whichever you prefer.
+  - type: textarea
+    id: problem
+    attributes:
+      label: 하려는 일 / What are you trying to do?
+      description: 지금 무엇이 불편하거나 안 되는지, 어떤 상황에서 쓰는지 적어 주십시오. / What is hard or impossible today, and in what situation?
+      placeholder: 학술대회 명찰을 인쇄하는데, 소속이 길면 …
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: 원하는 방식 / What would you like?
+      description: 어떻게 동작하면 좋을지 적어 주십시오. 그림이나 참고 화면도 좋습니다. / How should it work? Sketches or screenshots from other tools are welcome.
+    validations:
+      required: true
+  - type: textarea
+    id: workaround
+    attributes:
+      label: 지금 쓰는 우회 방법 / Current workaround
+      description: 지금은 어떻게 해결하고 있습니까? (없으면 비워 두십시오) / How do you get by today? Leave empty if none.
+  - type: textarea
+    id: files
+    attributes:
+      label: 첨부 / Attachments
+      description: 예시 라벨, `.labelloom.json`, 라벨지 규격 등. 개인정보는 지워 주십시오. / Example labels, a `.labelloom.json`, label stock specs. Please remove personal data.
