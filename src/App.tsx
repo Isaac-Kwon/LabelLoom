@@ -12,6 +12,7 @@ import { DataPanel } from './ui/DataPanel';
 import { AboutDialog, CalibrationDialog, FontsDialog, ReprintDialog, SerialDialog, ShareDialog, ShortcutsDialog, StartDialog } from './ui/Dialogs';
 import { ExportDialog } from './ui/ExportDialog';
 import { ImportDialog } from './ui/ImportDialog';
+import { PreprintWizard } from './ui/PreprintWizard';
 import { QuickDialog } from './ui/QuickPrint';
 import { Inspector } from './ui/Inspector';
 import { LeftPanel } from './ui/LeftPanel';
@@ -189,6 +190,7 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
       {dialog === 'fonts' && <FontsDialog />}
       {dialog === 'shortcuts' && <ShortcutsDialog />}
       {dialog === 'about' && <AboutDialog />}
+      {dialog === 'preprint' && <PreprintWizard />}
       {dropping && <div className="drop-overlay">파일을 놓으세요 — .json 프로젝트 · xlsx/csv 데이터 · 이미지/SVG</div>}
       {toast && <div className="toast">{toast}</div>}
       <div className="build-tag" title={BUILD_DETAIL}>{BUILD_LABEL}</div>

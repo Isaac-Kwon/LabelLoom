@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { newRow } from '../model/defaults';
 import type { BarcodeObj, LabelObject, QrObj, TextObj } from '../model/types';
+import { preprintArea, preprintMarkup } from '../render/preprint';
 import { previewCtx, templateColumns } from '../render/resolve';
 import { labelMarkup, objTransform } from '../render/svg';
 import { act, currentObjects, expandGroups, useStore } from '../store';
@@ -71,6 +72,7 @@ export function Canvas() {
     () => labelMarkup(project, objects, previewCtx(row, currentRow, project.seqStart), { editor: true, idp: 'ed' }),
     [project, objects, row, currentRow],
   );
+  const preprint = useMemo(() => (paper.preprint?.show ? preprintMarkup(paper) : ''), [paper]);
 
   /* ---------- view fitting ---------- */
   const fit = useCallback(() => {
@@ -198,13 +200,17 @@ export function Canvas() {
     const xs = [0, LW / 2, LW, paper.safeMargin, LW - paper.safeMargin];
     const ys = [0, LH / 2, LH, paper.safeMargin, LH - paper.safeMargin];
     if (bl > 0) { xs.push(-bl, LW + bl); ys.push(-bl, LH + bl); }
+    if (paper.preprint) {
+      const a = preprintArea(paper);
+      xs.push(a.x, a.x + a.w); ys.push(a.y, a.y + a.h);
+    }
     for (const o of objects) {
       if (ids.has(o.id) || o.hidden || o.rotation) continue;
       xs.push(o.x, o.x + o.w / 2, o.x + o.w);
       ys.push(o.y, o.y + o.h / 2, o.y + o.h);
     }
     return { xs, ys };
-  }, [objects, selection, LW, LH, paper.safeMargin, bl]);
+  }, [objects, selection, LW, LH, paper, bl]);
 
   const snap = (vals: number[], targets: number[], th: number) => {
     let best: { d: number; t: number } | null = null;
@@ -328,6 +334,8 @@ export function Canvas() {
           {bl > 0 && <rect x={-bl} y={-bl} width={LW + 2 * bl} height={LH + 2 * bl} fill="#fff" opacity={0.55} />}
           <rect width={LW} height={LH} rx={bl > 0 ? 0 : paper.cornerRadius} fill="#fff" filter="url(#paper-shadow)" />
           <g className="label-content" dangerouslySetInnerHTML={{ __html: markup }} />
+          {/* artwork already on the stock: shown as if printed under the content, never exported */}
+          {preprint && <g className="preprint" opacity={0.85} pointerEvents="none" dangerouslySetInnerHTML={{ __html: preprint }} />}
           {/* anything beyond the trim line + bleed is not printed: fade it */}
           <path d={`M${-bl - 1e4} ${-bl - 1e4}h${LW + 2 * bl + 2e4}v${LH + 2 * bl + 2e4}h${-(LW + 2 * bl + 2e4)}Z M${-bl} ${-bl}v${LH + 2 * bl}h${LW + 2 * bl}v${-(LH + 2 * bl)}Z`}
             style={{ fill: 'var(--canvas)' }} fillRule="evenodd" opacity={0.72} pointerEvents="none" />

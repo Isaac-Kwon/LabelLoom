@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { download, exportPdf, exportPngZip, exportSplitPdfZip, printPages, printTestPage, safeName } from '../io/export';
 import { barcodeSvg, code2dSvg } from '../render/barcode';
 import { buildItems, DEFAULT_DUPLEX, jobFold, paginate, projectDuplex, selectRows, type JobOptions, type Scope } from '../render/jobs';
+import { preprintSheetMarkup } from '../render/preprint';
 import { resolveObject } from '../render/resolve';
 import { sheetDocument, sheetLayout, testPointsFit, type TestPoints } from '../render/svg';
 import type { Project } from '../model/types';
@@ -87,10 +88,14 @@ export function ExportDialog() {
   const sheetOpts = { cropMarks, markLabels, testPoints, outlines, calibrate, mirror: job.mirror, fold };
   const markOpts = { cropMarks, markLabels, testPoints };
   const setTp = (k: keyof TestPoints) => (v: boolean) => setTestPoints((t) => ({ ...t, [k]: v }));
+  const [showPreprint, setShowPreprint] = useState(true);
   const previewSvg = useMemo(() => {
     const pg = pages[Math.min(page, pages.length - 1)];
-    return pg ? sheetDocument(project, pg.cells, { ...sheetOpts, outlines: true, calibrate: false, mirror: pg.back ? job.mirror : 'none' }, 999) : '';
-  }, [pages, page, project, cropMarks, markLabels, testPoints, job.mirror, fold?.dir, fold?.rotate]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (!pg) return '';
+    const svg = sheetDocument(project, pg.cells, { ...sheetOpts, outlines: true, calibrate: false, mirror: pg.back ? job.mirror : 'none' }, 999);
+    // the stock's own artwork (never printed) sits on the fronts of the label grid; fold layouts use plain paper
+    return showPreprint && !pg.back && !fold ? svg.replace(/<\/svg>$/, preprintSheetMarkup(project.paper) + '</svg>') : svg;
+  }, [pages, page, project, cropMarks, markLabels, testPoints, job.mirror, fold?.dir, fold?.rotate, showPreprint]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const remember = () => {
     try {
@@ -287,6 +292,7 @@ export function ExportDialog() {
           {pages.length ? (
             <>
               <div className="preview-sheet" dangerouslySetInnerHTML={{ __html: previewSvg }} />
+              {pa.preprint && !fold && <Check label="견출지 테두리 겹쳐 보기 (인쇄 안 됨)" checked={showPreprint} onChange={setShowPreprint} />}
               <div className="btn-row center">
                 <button disabled={page <= 0} onClick={() => setPage(page - 1)}>◀</button>
                 <span>{Math.min(page, pages.length - 1) + 1} / {pages.length}{pages[Math.min(page, pages.length - 1)]?.back ? ' (뒷면)' : ''}</span>

@@ -163,6 +163,21 @@ export interface Design {
 
 export interface DesignRule { column: string; op: RuleOp; value: string; designId: string }
 
+/**
+ * Artwork already printed on the label stock, such as the coloured frame of an index label
+ * (견출지). Shown in the editor and previews as a guide, never printed.
+ */
+export interface Preprint {
+  color: string;
+  /** frame width from the label edge to the writable area */
+  borderTop: number;
+  borderBottom: number;
+  borderSide: number;
+  /** corner radius of the writable area */
+  innerRadius: number;
+  show: boolean;
+}
+
 export interface Paper {
   name: string;
   width: number;
@@ -182,6 +197,7 @@ export interface Paper {
   dpi: number;
   background?: { src: string; fit: 'contain' | 'cover' | 'stretch'; opacity: number; print: boolean };
   labelColor: string;
+  preprint?: Preprint;
 }
 
 export interface Calibration { offsetX: number; offsetY: number; scaleX: number; scaleY: number }
