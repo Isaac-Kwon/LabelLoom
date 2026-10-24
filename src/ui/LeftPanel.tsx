@@ -233,9 +233,15 @@ function PaperPanel() {
       <Section title="안내선·출력">
         <div className="grid2">
           <Num label="안전 여백" title="인쇄되지 않을 수 있는 가장자리 안내선" value={paper.safeMargin} step={0.5} min={0} unit="mm" onChange={(v) => up({ safeMargin: v })} />
-          <Num label="재단 여백" title="bleed — 라벨 밖으로 확장해 인쇄되는 영역" value={paper.bleed} step={0.5} min={0} max={5} unit="mm" onChange={(v) => up({ bleed: v })} />
+          <Num label="재단 여백" title="블리드(bleed) — 재단선 밖으로 더 인쇄되는 영역. 가장자리에 닿는 도형·배경을 이만큼 크게 그리면 재단이 조금 어긋나도 흰 틈이 생기지 않습니다." value={paper.bleed} step={0.5} min={0} max={5} unit="mm" onChange={(v) => up({ bleed: v })} />
           <Num label="해상도" value={paper.dpi} step={50} min={72} max={1200} unit="dpi" onChange={(v) => up({ dpi: v })} />
         </div>
+        {paper.bleed > 0 && (
+          <p className="muted small">
+            주황 점선까지 그린 부분이 인쇄됩니다. 인쇄할 때 "재단선 표시"를 켜면 재단 여백 바깥에 재단 표시가 찍힙니다.
+            {((paper.cols > 1 && paper.gapX < 2 * paper.bleed) || (paper.rows > 1 && paper.gapY < 2 * paper.bleed)) && ` 칸 간격을 ${2 * paper.bleed} mm 이상으로 두어야 라벨 사이에서도 재단 여백이 온전히 인쇄됩니다.`}
+          </p>
+        )}
         <Row label="라벨 색"><Color value={paper.labelColor} onChange={(c) => up({ labelColor: c })} /></Row>
         <Row><button onClick={() => useStore.getState().open('calibration')}>프린터 정렬 보정…</button></Row>
       </Section>

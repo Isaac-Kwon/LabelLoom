@@ -8,7 +8,7 @@ import { previewCtx, resolveObject, RULE_OPS } from '../render/resolve';
 import { act, currentObjects, useStore } from '../store';
 import { Check, Color, Num, Row, Section, Select, Seg } from './controls';
 import { pickImageInto } from './media';
-import { align, convert, distribute, group, matchSize, reorder, ungroup } from './ops';
+import { align, convert, distribute, extendToBleed, group, matchSize, reorder, ungroup } from './ops';
 import { TableSection } from './TableEditor';
 
 export function Inspector() {
@@ -82,7 +82,21 @@ function Multi({ objs }: { objs: LabelObject[] }) {
     <Section title="공통">
       <Row label="불투명도"><Num value={objs[0].opacity * 100} step={5} min={0} max={100} unit="%" onChange={(v) => act.update(ids, { opacity: v / 100 })} /></Row>
       <Row><Check label="잠금" checked={allLocked} onChange={(v) => act.update(ids, { locked: v })} /></Row>
+      <BleedButton />
     </Section>
+  );
+}
+
+function BleedButton() {
+  const bleed = useStore((s) => s.project.paper.bleed);
+  return (
+    <Row>
+      <button onClick={extendToBleed} title={bleed > 0
+        ? `라벨 가장자리에 닿은 변을 재단선 밖 ${bleed} mm까지 늘립니다. 가장자리에 닿지 않으면 라벨 전체 + 재단 여백을 채웁니다.`
+        : '용지 설정에서 재단 여백(블리드)을 먼저 정하세요.'}>
+        ⤢ 재단 여백까지 늘리기{bleed > 0 ? ` (${bleed} mm)` : ''}
+      </button>
+    </Row>
   );
 }
 
@@ -110,6 +124,7 @@ function Single({ o }: { o: LabelObject }) {
           <Num label="회전" value={o.rotation} step={1} unit="°" onChange={(v) => up({ rotation: ((v % 360) + 360) % 360 })} />
           <Num label="불투명" value={Math.round(o.opacity * 100)} step={5} min={0} max={100} unit="%" onChange={(v) => up({ opacity: v / 100 })} />
         </div>
+        <BleedButton />
       </Section>
       {'content' in o && <ContentSection o={o} />}
       {o.type === 'text' && <TextSection o={o} />}

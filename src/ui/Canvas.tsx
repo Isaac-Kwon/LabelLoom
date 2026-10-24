@@ -37,6 +37,7 @@ export function Canvas() {
   const objects = currentObjects({ project, designId, side });
   const paper = project.paper;
   const LW = paper.labelWidth, LH = paper.labelHeight;
+  const bl = Math.max(0, paper.bleed);
 
   const wrap = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState({ w: 800, h: 600 });
@@ -161,13 +162,14 @@ export function Canvas() {
     const ids = new Set(selection);
     const xs = [0, LW / 2, LW, paper.safeMargin, LW - paper.safeMargin];
     const ys = [0, LH / 2, LH, paper.safeMargin, LH - paper.safeMargin];
+    if (bl > 0) { xs.push(-bl, LW + bl); ys.push(-bl, LH + bl); }
     for (const o of objects) {
       if (ids.has(o.id) || o.hidden || o.rotation) continue;
       xs.push(o.x, o.x + o.w / 2, o.x + o.w);
       ys.push(o.y, o.y + o.h / 2, o.y + o.h);
     }
     return { xs, ys };
-  }, [objects, selection, LW, LH, paper.safeMargin]);
+  }, [objects, selection, LW, LH, paper.safeMargin, bl]);
 
   const snap = (vals: number[], targets: number[], th: number) => {
     let best: { d: number; t: number } | null = null;
@@ -288,10 +290,14 @@ export function Canvas() {
           <pattern id="checker" width={4 * px} height={4 * px} patternUnits="userSpaceOnUse"><rect width={2 * px} height={2 * px} fill="#e5e7eb" /><rect x={2 * px} y={2 * px} width={2 * px} height={2 * px} fill="#e5e7eb" /></pattern>
         </defs>
         <g transform={`translate(${pan.x} ${pan.y}) scale(${zoom})`}>
-          {paper.bleed > 0 && <rect x={-paper.bleed} y={-paper.bleed} width={LW + 2 * paper.bleed} height={LH + 2 * paper.bleed} fill="none" stroke="#f97316" strokeWidth={px} strokeDasharray={`${4 * px} ${3 * px}`} />}
-          <rect width={LW} height={LH} rx={paper.cornerRadius} fill="#fff" filter="url(#paper-shadow)" />
+          {bl > 0 && <rect x={-bl} y={-bl} width={LW + 2 * bl} height={LH + 2 * bl} fill="#fff" opacity={0.55} />}
+          <rect width={LW} height={LH} rx={bl > 0 ? 0 : paper.cornerRadius} fill="#fff" filter="url(#paper-shadow)" />
           <g className="label-content" dangerouslySetInnerHTML={{ __html: markup }} />
-          <rect width={LW} height={LH} rx={paper.cornerRadius} fill="none" stroke="#94a3b8" strokeWidth={px} />
+          {/* anything beyond the trim line + bleed is not printed: fade it */}
+          <path d={`M${-bl - 1e4} ${-bl - 1e4}h${LW + 2 * bl + 2e4}v${LH + 2 * bl + 2e4}h${-(LW + 2 * bl + 2e4)}Z M${-bl} ${-bl}v${LH + 2 * bl}h${LW + 2 * bl}v${-(LH + 2 * bl)}Z`}
+            style={{ fill: 'var(--canvas)' }} fillRule="evenodd" opacity={0.72} pointerEvents="none" />
+          {bl > 0 && <rect x={-bl} y={-bl} width={LW + 2 * bl} height={LH + 2 * bl} fill="none" stroke="#f97316" strokeWidth={px} strokeDasharray={`${4 * px} ${3 * px}`} pointerEvents="none" />}
+          <rect width={LW} height={LH} rx={paper.cornerRadius} fill="none" stroke={bl > 0 ? '#475569' : '#94a3b8'} strokeWidth={px} pointerEvents="none" />
           {paper.safeMargin > 0 && (
             <rect x={paper.safeMargin} y={paper.safeMargin} width={Math.max(0, LW - 2 * paper.safeMargin)} height={Math.max(0, LH - 2 * paper.safeMargin)}
               fill="none" stroke="#38bdf8" strokeWidth={px} strokeDasharray={`${3 * px} ${3 * px}`} opacity={0.6} pointerEvents="none" />

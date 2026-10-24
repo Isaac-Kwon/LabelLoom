@@ -101,8 +101,8 @@ function needsRaster(o: LabelObject, ttf: Set<string>): boolean {
   }
 }
 
-/** Axis-aligned bounds of an object (with generous padding for effects and overflow). */
-function bounds(o: LabelObject, labelW: number, labelH: number) {
+/** Axis-aligned bounds of an object (with generous padding for effects and overflow), limited to the label plus bleed. */
+function bounds(o: LabelObject, labelW: number, labelH: number, bleed: number) {
   const r = (o.rotation * Math.PI) / 180;
   const c = Math.abs(Math.cos(r)), s = Math.abs(Math.sin(r));
   const bw = o.w * c + o.h * s, bh = o.w * s + o.h * c;
@@ -114,8 +114,9 @@ function bounds(o: LabelObject, labelW: number, labelH: number) {
     if (ol) pad += ol.width + (ol.double ? ol.width2 : 0);
   }
   if (o.type === 'text' && o.fit === 'none') pad += o.w; // text may overflow its box
-  const x0 = Math.max(-2, cx - bw / 2 - pad), y0 = Math.max(-2, cy - bh / 2 - pad);
-  const x1 = Math.min(labelW + 2, cx + bw / 2 + pad), y1 = Math.min(labelH + 2, cy + bh / 2 + pad);
+  const e = Math.max(0, bleed) + 2;
+  const x0 = Math.max(-e, cx - bw / 2 - pad), y0 = Math.max(-e, cy - bh / 2 - pad);
+  const x1 = Math.min(labelW + e, cx + bw / 2 + pad), y1 = Math.min(labelH + e, cy + bh / 2 + pad);
   return { x: x0, y: y0, w: Math.max(0.1, x1 - x0), h: Math.max(0.1, y1 - y0) };
 }
 
@@ -124,7 +125,7 @@ async function rasterPatches(p: Project, objects: LabelObject[], ctx: ResolveCtx
   const css = p.fonts.length ? `<style>${fontFaceCss(p)}</style>` : '';
   for (const o of objects) {
     if (!needsRaster(o, ttf)) continue;
-    const b = bounds(o, p.paper.labelWidth, p.paper.labelHeight);
+    const b = bounds(o, p.paper.labelWidth, p.paper.labelHeight, p.paper.bleed);
     const markup = labelMarkup(p, [o], ctx, { paperBg: false, idp: 'r' });
     if (!markup.includes('<')) continue;
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${b.w}mm" height="${b.h}mm" viewBox="${b.x} ${b.y} ${b.w} ${b.h}">${css}${markup}</svg>`;

@@ -246,10 +246,13 @@ export function labelMarkup(p: Project, objects: LabelObject[], ctx: ResolveCtx,
   const paper = p.paper;
   let bg = '';
   if (opts.paperBg !== false) {
-    if (paper.labelColor && paper.labelColor !== '#ffffff') bg += `<rect width="${n(paper.labelWidth)}" height="${n(paper.labelHeight)}" rx="${n(paper.cornerRadius)}" fill="${paper.labelColor}"/>`;
+    // with bleed the label colour and background extend past the trim line
+    const bl = Math.max(0, paper.bleed);
+    const box = `x="${n(-bl)}" y="${n(-bl)}" width="${n(paper.labelWidth + 2 * bl)}" height="${n(paper.labelHeight + 2 * bl)}"`;
+    if (paper.labelColor && paper.labelColor !== '#ffffff') bg += `<rect ${box} rx="${n(bl ? 0 : paper.cornerRadius)}" fill="${paper.labelColor}"/>`;
     const b = paper.background;
     if (b?.src && (opts.editor || b.print)) {
-      bg += `<image href="${b.src}" width="${n(paper.labelWidth)}" height="${n(paper.labelHeight)}" preserveAspectRatio="${PAR[b.fit]}" opacity="${n(b.opacity)}"/>`;
+      bg += `<image href="${b.src}" ${box} preserveAspectRatio="${PAR[b.fit]}" opacity="${n(b.opacity)}"/>`;
     }
   }
   const body = objects.filter((o) => !opts.only || opts.only.has(o.id)).map((o) => objectMarkup(o, ctx, acc, opts)).join('');
@@ -286,20 +289,30 @@ export interface SheetOpts {
   mirror?: 'none' | 'cols' | 'rows';
 }
 
+interface Sides { l: number; t: number; r: number; b: number }
+
+function placeLabel(p: Project, cell: SheetCell, x: number, y: number, b: Sides, cid: string): string {
+  const pa = p.paper, W = pa.labelWidth, H = pa.labelHeight;
+  const rx = b.l || b.t || b.r || b.b ? 0 : pa.cornerRadius;
+  return `<clipPath id="${cid}"><rect x="${n(-b.l)}" y="${n(-b.t)}" width="${n(W + b.l + b.r)}" height="${n(H + b.t + b.b)}" rx="${n(rx)}"/></clipPath>` +
+    `<g transform="translate(${n(x)} ${n(y)})"><g clip-path="url(#${cid})">${labelMarkup(p, cell.objects, cell.ctx, { idp: cid + '_', raster: cell.raster })}</g></g>`;
+}
+
 export function sheetDocument(p: Project, cells: (SheetCell | null)[], o: SheetOpts = {}, pageNo = 0): string {
   const pa = p.paper;
   const parts: string[] = [];
-  const bl = pa.bleed;
+  const bl = Math.max(0, pa.bleed);
+  // bleed reaches at most halfway into the gap between neighbours, so it never shows on the next label
+  const side = (edge: boolean, gap: number) => (edge ? bl : Math.min(bl, gap / 2));
   cells.forEach((cell, i) => {
     let idx = i;
     if (o.mirror === 'cols') idx = Math.floor(i / pa.cols) * pa.cols + (pa.cols - 1 - (i % pa.cols));
     if (o.mirror === 'rows') idx = (pa.rows - 1 - Math.floor(i / pa.cols)) * pa.cols + (i % pa.cols);
-    const { x, y } = cellOrigin(pa, idx);
+    const { x, y, col, row } = cellOrigin(pa, idx);
     if (o.outlines) parts.push(`<rect x="${n(x)}" y="${n(y)}" width="${n(pa.labelWidth)}" height="${n(pa.labelHeight)}" rx="${n(pa.cornerRadius)}" fill="none" stroke="#9ca3af" stroke-width="0.2"/>`);
     if (!cell) return;
-    const cid = `c${pageNo}_${i}`;
-    parts.push(`<clipPath id="${cid}"><rect x="${n(-bl)}" y="${n(-bl)}" width="${n(pa.labelWidth + 2 * bl)}" height="${n(pa.labelHeight + 2 * bl)}" rx="${n(bl ? 0 : pa.cornerRadius)}"/></clipPath>`);
-    parts.push(`<g transform="translate(${n(x)} ${n(y)})"><g clip-path="url(#${cid})">${labelMarkup(p, cell.objects, cell.ctx, { idp: cid + '_', raster: cell.raster })}</g></g>`);
+    const b: Sides = { l: side(col === 0, pa.gapX), r: side(col === pa.cols - 1, pa.gapX), t: side(row === 0, pa.gapY), b: side(row === pa.rows - 1, pa.gapY) };
+    parts.push(placeLabel(p, cell, x, y, b, `c${pageNo}_${i}`));
   });
   if (o.cropMarks) parts.push(cropMarks(pa));
   const cal = p.calibration;
@@ -309,15 +322,32 @@ export function sheetDocument(p: Project, cells: (SheetCell | null)[], o: SheetO
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${n(pa.width)}mm" height="${n(pa.height)}mm" viewBox="0 0 ${n(pa.width)} ${n(pa.height)}">${style}<g${tf}>${parts.join('')}</g></svg>`;
 }
 
+/**
+ * Corner crop marks for every label, kept outside the bleed. Marks between labels are drawn only
+ * when the gap leaves room for them.
+ */
 function cropMarks(pa: Paper): string {
-  const xs = new Set<number>(), ys = new Set<number>();
-  for (let c = 0; c < pa.cols; c++) { const x = pa.marginLeft + c * (pa.labelWidth + pa.gapX); xs.add(x); xs.add(x + pa.labelWidth); }
-  for (let r = 0; r < pa.rows; r++) { const y = pa.marginTop + r * (pa.labelHeight + pa.gapY); ys.add(y); ys.add(y + pa.labelHeight); }
-  const L = 3, g = 1, out: string[] = [];
-  const top = pa.marginTop, bottom = pa.marginTop + pa.rows * pa.labelHeight + (pa.rows - 1) * pa.gapY;
-  const left = pa.marginLeft, right = pa.marginLeft + pa.cols * pa.labelWidth + (pa.cols - 1) * pa.gapX;
-  xs.forEach((x) => { out.push(`M${n(x)} ${n(top - g - L)}V${n(top - g)}M${n(x)} ${n(bottom + g)}V${n(bottom + g + L)}`); });
-  ys.forEach((y) => { out.push(`M${n(left - g - L)} ${n(y)}H${n(left - g)}M${n(right + g)} ${n(y)}H${n(right + g + L)}`); });
+  const bl = Math.max(0, pa.bleed);
+  const mark = (edge: boolean, gap: number) => {
+    const g = (edge ? bl : Math.min(bl, gap / 2)) + 1;
+    const len = edge ? 3 : Math.min(3, gap / 2 - g);
+    return len >= 0.8 ? { g, len } : null;
+  };
+  const out: string[] = [];
+  for (let i = 0; i < pa.cols * pa.rows; i++) {
+    const { x, y, col, row } = cellOrigin(pa, i);
+    const x1 = x + pa.labelWidth, y1 = y + pa.labelHeight;
+    const ml = mark(col === 0, pa.gapX), mr = mark(col === pa.cols - 1, pa.gapX);
+    const mt = mark(row === 0, pa.gapY), mb = mark(row === pa.rows - 1, pa.gapY);
+    for (const xx of [x, x1]) {
+      if (mt) out.push(`M${n(xx)} ${n(y - mt.g)}V${n(y - mt.g - mt.len)}`);
+      if (mb) out.push(`M${n(xx)} ${n(y1 + mb.g)}V${n(y1 + mb.g + mb.len)}`);
+    }
+    for (const yy of [y, y1]) {
+      if (ml) out.push(`M${n(x - ml.g)} ${n(yy)}H${n(x - ml.g - ml.len)}`);
+      if (mr) out.push(`M${n(x1 + mr.g)} ${n(yy)}H${n(x1 + mr.g + mr.len)}`);
+    }
+  }
   return `<path d="${out.join('')}" stroke="#000" stroke-width="0.15" fill="none"/>`;
 }
 

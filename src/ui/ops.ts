@@ -129,6 +129,29 @@ export function convert(o: LabelObject, type: ObjType): LabelObject {
   return { ...fresh, ...keep, ...('content' in fresh ? content : {}) } as LabelObject;
 }
 
+/**
+ * Grow the selected objects past the trim line by the bleed on every side they touch
+ * (within 1 mm of the label edge). An object touching no edge fills the whole label + bleed.
+ */
+export function extendToBleed() {
+  const s = st();
+  const { labelWidth: W, labelHeight: H, bleed } = s.project.paper;
+  if (bleed <= 0) { s.notify('먼저 용지 설정에서 재단 여백(블리드)을 정하세요.'); return; }
+  const objs = sel().filter((o) => !o.locked && !o.rotation);
+  if (!objs.length) { s.notify('회전하지 않은 개체를 선택하세요.'); return; }
+  const near = 1;
+  act.update(objs.map((o) => o.id), (o) => {
+    let x0 = o.x, y0 = o.y, x1 = o.x + o.w, y1 = o.y + o.h;
+    const l = x0 <= near, t = y0 <= near, r = x1 >= W - near, b = y1 >= H - near;
+    const all = !l && !t && !r && !b;
+    if (l || all) x0 = -bleed;
+    if (t || all) y0 = -bleed;
+    if (r || all) x1 = W + bleed;
+    if (b || all) y1 = H + bleed;
+    return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
+  });
+}
+
 export function selectAll() {
   const s = st();
   s.select(currentObjects(s).filter((o) => !o.locked && !o.hidden).map((o) => o.id));
