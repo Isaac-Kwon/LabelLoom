@@ -70,6 +70,7 @@ export function Toolbar({ onOpen, onSave }: { onOpen: () => void; onSave: (saveA
         <button className="zoom" onClick={() => window.dispatchEvent(new Event('labelloom:fit'))} title="화면에 맞추기 (Ctrl+0) · 100% = 실제 크기">{Math.round((zoom / PX_PER_MM_100) * 100)}%</button>
         <button className="icon" onClick={() => s.setZoom(zoom * 1.25)} title="확대">＋</button>
       </div>
+      <button onClick={() => s.open('share')} title="디자인을 링크로 공유 (서버에 저장되지 않음)">링크 공유</button>
       <InstallButton />
       <button onClick={() => s.open('quick')} title="필요한 값만 입력하고 미리보기를 보며 바로 인쇄">빠른 출력</button>
       <button onClick={() => s.open('reprint')} title="이름 검색 후 1장 바로 인쇄, 현장 등록">현장 재발행</button>
