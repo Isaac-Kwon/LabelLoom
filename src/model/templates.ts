@@ -95,6 +95,23 @@ function badge(paper: Paper): Project {
   return project(paper, '일반 명찰', inArea(objects, paper), '학술대회 명찰', attendeeTable());
 }
 
+/** One look for every attendee: no role column, the footer carries the date and venue. */
+function plainBadge(paper: Paper): Project {
+  const objects = fitTo([
+    obj('rect', 0, 0, 90, 10, { name: '상단 띠', fill: solid('#1e3a8a'), strokeWidth: 0 }),
+    text(4, 1, 82, 8, '2026 추계 학술대회', { name: '행사명', fill: solid('#ffffff'), bold: true, fontSize: 11, align: 'center' }),
+    text(5, 14, 58, 14, '{{이름}}', { name: '이름', bold: true, fontSize: 28, minFontSize: 12 }),
+    text(5, 28.5, 58, 7, '{{소속}}', { name: '소속', fontSize: 11, minFontSize: 6 }),
+    text(5, 35.5, 58, 5, '{{직함}}', { name: '직함', fontSize: 9, fill: solid('#4b5563'), hideIfEmpty: true }),
+    obj('qr', 67, 14, 18, 18, { name: 'QR', content: '{{ID}}' }),
+    text(64, 32.5, 24, 4, '{{ID}}', { name: 'ID', fontSize: 7, align: 'center', fill: solid('#4b5563') }),
+    obj('rect', 0, 47, 90, 8, { name: '하단 띠', fill: solid('#e0e7ff'), strokeWidth: 0 }),
+    text(4, 47.8, 82, 6.4, '2026. 11. 6.(금) – 7.(토) · 대전컨벤션센터', { name: '일시·장소', fill: solid('#1e3a8a'), fontSize: 9, align: 'center' }),
+  ], 90, 55, paper);
+  const cols = ['이름', '소속', '직함', 'ID', '이메일'];
+  return project(paper, '공통 명찰', objects, '학술대회 명찰 (공통)', table(cols, ATTENDEES.map(([n, a, t, , id, m]) => [n, a, t, id, m])));
+}
+
 function simpleBadge(paper: Paper): Project {
   const objects = fitTo([
     obj('rect', 0, 0, 3, 55, { name: '포인트 띠', fill: solid('#0f766e'), strokeWidth: 0 }),
@@ -311,6 +328,7 @@ const ps = (...names: string[]) => names.map(preset);
 export const TEMPLATES: Template[] = [
   { id: 'blank', name: '빈 라벨', desc: '모든 용지 · 처음부터 디자인', papers: [preset('50×30'), ...PAPER_PRESETS.flatMap((g) => g.items).filter((p) => p.name !== '50×30')], make: (p) => newProject({ ...p }) },
   { id: 'badge', name: '학술대회 명찰', desc: '참가구분별 색 띠 · QR', papers: ps('A4 명찰 2×5 (90×55)', 'A4 명찰 2×4 (90×60)', 'A4 명찰 2×3 (100×70)', '명찰 단면 90×55', '명찰 100×70', '목걸이 명찰 A6 (105×148)'), make: badge },
+  { id: 'badge-plain', name: '학술대회 명찰 (공통)', desc: '역할 구분 없음 · 일시·장소 · QR', papers: ps('A4 명찰 2×5 (90×55)', 'A4 명찰 2×4 (90×60)', 'A4 명찰 2×3 (100×70)', '명찰 단면 90×55', '명찰 100×70', '목걸이 명찰 A6 (105×148)'), make: plainBadge },
   { id: 'badge-simple', name: '심플 명찰', desc: '소속 · 이름 · 직함', papers: ps('A4 명찰 2×5 (90×55)', 'A4 명찰 2×4 (90×60)', 'A4 명찰 2×3 (100×70)', '명찰 단면 90×55', '명찰 100×70', 'A4 2×7 (99.1×38.1)', 'Letter 2×5 (101.6×50.8)'), make: simpleBadge },
   { id: 'tent', name: '테이블 네임텐트', desc: '반 접기 (위쪽 180° 회전)', papers: ps('테이블 네임텐트 (A4 가로)', '테이블 네임텐트 (Letter 가로)'), make: nameTent },
   { id: 'ticket', name: '입장권·티켓', desc: '일련번호 · 절취선 · QR', papers: ps('100×50', 'A4 명찰 2×5 (90×55)', 'Letter 2×5 (101.6×50.8)', 'A4 2×7 (99.1×38.1)'), make: ticket },
