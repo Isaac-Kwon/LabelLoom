@@ -1236,4 +1236,12 @@ export const fr: Record<Msg, string> = {
   "지금 상태 저장": "Enregistrer l'état actuel",
   "지금 상태를 버전 기록에 저장했습니다.": "État actuel enregistré dans l'historique des versions.",
   "직접 저장": "Enregistré manuellement",
+  "CMYK로 인쇄하면 탁해지기 쉬운 선명한 색:": "Couleurs vives qui ont tendance à ressortir plus ternes en CMJN :",
+  "뒷면도 넣기 (앞면 다음 쪽)": "Inclure les versos (page après chaque recto)",
+  "라벨마다 한 쪽, 재단 여백과 재단선 포함 (TrimBox·BleedBox 지정)": "Une page par étiquette, avec fond perdu et traits de coupe (TrimBox et BleedBox définis)",
+  "라벨마다 한 쪽씩, 재단 여백({bleed} mm)까지 넣은 {w}×{h} mm 쪽으로 만듭니다. PDF에 재단 크기(TrimBox)와 재단 여백(BleedBox)을 기록합니다.": "Crée une page de {w}×{h} mm par étiquette, fond perdu ({bleed} mm) compris. Le PDF indique le format fini (TrimBox) et le fond perdu (BleedBox).",
+  "색은 RGB로 저장됩니다. 인쇄소에서 CMYK로 바꿀 때 색이 조금 달라질 수 있으니 교정쇄로 확인하세요.": "Les couleurs sont enregistrées en RVB. Elles peuvent légèrement changer lors de la conversion en CMJN par l'imprimeur : vérifiez une épreuve.",
+  "인쇄소용 PDF": "PDF pour imprimeur",
+  "인쇄소용": "imprimeur",
+  "재단 여백이 0 mm입니다. 인쇄소는 보통 2~3 mm를 요구합니다. 용지 설정에서 정하세요.": "Le fond perdu est de 0 mm. Les imprimeurs demandent en général 2 à 3 mm. Réglez-le dans les paramètres du papier.",
 };

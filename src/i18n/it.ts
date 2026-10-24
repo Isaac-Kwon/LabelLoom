@@ -1236,4 +1236,12 @@ export const it: Record<Msg, string> = {
   "지금 상태 저장": "Salva lo stato attuale",
   "지금 상태를 버전 기록에 저장했습니다.": "Stato attuale salvato nella cronologia delle versioni.",
   "직접 저장": "Salvato a mano",
+  "CMYK로 인쇄하면 탁해지기 쉬운 선명한 색:": "Colori vivaci che in CMYK tendono a uscire più spenti:",
+  "뒷면도 넣기 (앞면 다음 쪽)": "Includi i retri (pagina dopo ogni fronte)",
+  "라벨마다 한 쪽, 재단 여백과 재단선 포함 (TrimBox·BleedBox 지정)": "Una pagina per etichetta, con abbondanza e crocini (TrimBox e BleedBox impostati)",
+  "라벨마다 한 쪽씩, 재단 여백({bleed} mm)까지 넣은 {w}×{h} mm 쪽으로 만듭니다. PDF에 재단 크기(TrimBox)와 재단 여백(BleedBox)을 기록합니다.": "Crea una pagina di {w}×{h} mm per etichetta, abbondanza ({bleed} mm) inclusa. Il PDF registra il formato rifilato (TrimBox) e l'abbondanza (BleedBox).",
+  "색은 RGB로 저장됩니다. 인쇄소에서 CMYK로 바꿀 때 색이 조금 달라질 수 있으니 교정쇄로 확인하세요.": "I colori sono salvati in RGB. Possono cambiare un po' quando la tipografia li converte in CMYK: controlla una prova di stampa.",
+  "인쇄소용 PDF": "PDF per tipografia",
+  "인쇄소용": "tipografia",
+  "재단 여백이 0 mm입니다. 인쇄소는 보통 2~3 mm를 요구합니다. 용지 설정에서 정하세요.": "L'abbondanza è 0 mm. Le tipografie di solito chiedono 2–3 mm. Impostala nelle impostazioni del foglio.",
 };

@@ -1280,3 +1280,12 @@ N번째 단어 (word:1, 끝에서는 word:-1)	Nth word (word:1, from the end wor
 지금 상태 저장	Save current state	Salva lo stato attuale	Enregistrer l'état actuel
 지금 상태를 버전 기록에 저장했습니다.	Saved the current state in the version history.	Stato attuale salvato nella cronologia delle versioni.	État actuel enregistré dans l'historique des versions.
 직접 저장	Saved by hand	Salvato a mano	Enregistré manuellement
+# print-shop PDF
+CMYK로 인쇄하면 탁해지기 쉬운 선명한 색:	Vivid colours that tend to print duller in CMYK:	Colori vivaci che in CMYK tendono a uscire più spenti:	Couleurs vives qui ont tendance à ressortir plus ternes en CMJN :
+뒷면도 넣기 (앞면 다음 쪽)	Include backs (page after each front)	Includi i retri (pagina dopo ogni fronte)	Inclure les versos (page après chaque recto)
+라벨마다 한 쪽, 재단 여백과 재단선 포함 (TrimBox·BleedBox 지정)	One page per label, with bleed and crop marks (TrimBox and BleedBox set)	Una pagina per etichetta, con abbondanza e crocini (TrimBox e BleedBox impostati)	Une page par étiquette, avec fond perdu et traits de coupe (TrimBox et BleedBox définis)
+라벨마다 한 쪽씩, 재단 여백({bleed} mm)까지 넣은 {w}×{h} mm 쪽으로 만듭니다. PDF에 재단 크기(TrimBox)와 재단 여백(BleedBox)을 기록합니다.	Makes one {w}×{h} mm page per label, bleed ({bleed} mm) included. The PDF records the trim size (TrimBox) and the bleed (BleedBox).	Crea una pagina di {w}×{h} mm per etichetta, abbondanza ({bleed} mm) inclusa. Il PDF registra il formato rifilato (TrimBox) e l'abbondanza (BleedBox).	Crée une page de {w}×{h} mm par étiquette, fond perdu ({bleed} mm) compris. Le PDF indique le format fini (TrimBox) et le fond perdu (BleedBox).
+색은 RGB로 저장됩니다. 인쇄소에서 CMYK로 바꿀 때 색이 조금 달라질 수 있으니 교정쇄로 확인하세요.	Colours are saved as RGB. They may shift a little when the print shop converts them to CMYK, so check a proof.	I colori sono salvati in RGB. Possono cambiare un po' quando la tipografia li converte in CMYK: controlla una prova di stampa.	Les couleurs sont enregistrées en RVB. Elles peuvent légèrement changer lors de la conversion en CMJN par l'imprimeur : vérifiez une épreuve.
+인쇄소용 PDF	Print-shop PDF	PDF per tipografia	PDF pour imprimeur
+인쇄소용	print-shop	tipografia	imprimeur
+재단 여백이 0 mm입니다. 인쇄소는 보통 2~3 mm를 요구합니다. 용지 설정에서 정하세요.	The bleed is 0 mm. Print shops usually ask for 2–3 mm. Set it in the paper settings.	L'abbondanza è 0 mm. Le tipografie di solito chiedono 2–3 mm. Impostala nelle impostazioni del foglio.	Le fond perdu est de 0 mm. Les imprimeurs demandent en général 2 à 3 mm. Réglez-le dans les paramètres du papier.

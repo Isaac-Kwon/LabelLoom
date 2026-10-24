@@ -1234,4 +1234,12 @@ export const en = {
   "지금 상태 저장": "Save current state",
   "지금 상태를 버전 기록에 저장했습니다.": "Saved the current state in the version history.",
   "직접 저장": "Saved by hand",
+  "CMYK로 인쇄하면 탁해지기 쉬운 선명한 색:": "Vivid colours that tend to print duller in CMYK:",
+  "뒷면도 넣기 (앞면 다음 쪽)": "Include backs (page after each front)",
+  "라벨마다 한 쪽, 재단 여백과 재단선 포함 (TrimBox·BleedBox 지정)": "One page per label, with bleed and crop marks (TrimBox and BleedBox set)",
+  "라벨마다 한 쪽씩, 재단 여백({bleed} mm)까지 넣은 {w}×{h} mm 쪽으로 만듭니다. PDF에 재단 크기(TrimBox)와 재단 여백(BleedBox)을 기록합니다.": "Makes one {w}×{h} mm page per label, bleed ({bleed} mm) included. The PDF records the trim size (TrimBox) and the bleed (BleedBox).",
+  "색은 RGB로 저장됩니다. 인쇄소에서 CMYK로 바꿀 때 색이 조금 달라질 수 있으니 교정쇄로 확인하세요.": "Colours are saved as RGB. They may shift a little when the print shop converts them to CMYK, so check a proof.",
+  "인쇄소용 PDF": "Print-shop PDF",
+  "인쇄소용": "print-shop",
+  "재단 여백이 0 mm입니다. 인쇄소는 보통 2~3 mm를 요구합니다. 용지 설정에서 정하세요.": "The bleed is 0 mm. Print shops usually ask for 2–3 mm. Set it in the paper settings.",
 };

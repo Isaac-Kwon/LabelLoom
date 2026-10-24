@@ -526,3 +526,4 @@ button.warn-btn { background: var(--warn-bg); color: var(--warn-text); border-co
 table.remap { border-collapse: collapse; width: 100%; }
 table.remap td { padding: 3px 6px; }
 table.remap tr.missing code { color: var(--warn-text); }
+.warn .swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; border: 1px solid var(--border-strong); vertical-align: middle; margin: 0 2px; }

@@ -1,17 +1,18 @@
 import { useMemo, useState } from 'react';
 import { t } from '../i18n';
-import { download, exportPdf, exportPngZip, exportSplitPdfZip, printPages, printTestPage, safeName } from '../io/export';
+import { download, exportPdf, exportPngZip, exportPressPdf, exportSplitPdfZip, pressLayout, pressPageSvg, printPages, printTestPage, safeName } from '../io/export';
 import { buildItems, DEFAULT_DUPLEX, groupItems, jobFold, paginate, projectDuplex, selectRows, type GroupOptions, type JobOptions, type Scope } from '../render/jobs';
 import { fetchPictures, pictureUrls } from '../render/images';
 import { preprintSheetMarkup } from '../render/preprint';
 import { ISSUE_LABEL, issueText, preflight, type Issue, type IssueKind } from '../render/preflight';
-import { sheetDocument, sheetLayout, testPointsFit, type TestPoints } from '../render/svg';
+import { cmykRisk, cmykText } from '../render/color';
+import { designColors, sheetDocument, sheetLayout, testPointsFit, type TestPoints } from '../render/svg';
 import type { Project } from '../model/types';
 import { useStore } from '../store';
 import { Check, Modal, Num, PrintSetupAlert, Progress, Row, Select, Seg } from './controls';
 import { filterRows } from './DataPanel';
 
-type Format = 'print' | 'pdf' | 'png' | 'split';
+type Format = 'print' | 'pdf' | 'png' | 'split' | 'press';
 
 const SETTINGS_KEY = 'labelloom.exportSettings';
 export const loadExportSettings = () => { try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}'); } catch { return {}; } };
@@ -57,13 +58,15 @@ export function ExportDialog() {
   const opts: JobOptions = { ...job, filteredIds, currentRow };
   const [group, setGroup] = useState<GroupOptions>({ column: '', newSheet: true, separator: false });
   const grouping = format === 'print' || format === 'pdf';
+  // laid out on the paper's sheets (the others put one label per file or page)
+  const sheet = format === 'print' || format === 'pdf' || format === 'split';
   const labels = useMemo(() => buildItems(project, opts), [project, job, filteredIds, currentRow]); // eslint-disable-line react-hooks/exhaustive-deps
   // with grouping, items also hold the divider labels; `labels` stays the data labels only
   const items = useMemo(() => (grouping ? groupItems(project, labels, group) : labels), [project, labels, group, grouping]);
-  const fold = hasBack && format !== 'png' ? jobFold(job) : null;
+  const fold = hasBack && sheet ? jobFold(job) : null;
   const layout = sheetLayout(project.paper, fold);
   const pages = useMemo(
-    () => paginate(project, items, { startCell: format === 'png' ? 1 : job.startCell, duplex: job.duplex && hasBack && !fold, fold }),
+    () => paginate(project, items, { startCell: sheet ? job.startCell : 1, duplex: job.duplex && hasBack && !fold, fold }),
     [project, items, job.startCell, job.duplex, hasBack, format, fold?.dir, fold?.rotate], // eslint-disable-line react-hooks/exhaustive-deps
   );
   const sheetCount = pages.filter((p) => !p.back).length;
@@ -86,13 +89,27 @@ export function ExportDialog() {
   const markOpts = { cropMarks, markLabels, testPoints };
   const setTp = (k: keyof TestPoints) => (v: boolean) => setTestPoints((t) => ({ ...t, [k]: v }));
   const [showPreprint, setShowPreprint] = useState(true);
+  // print-shop PDF: one page per label (and back)
+  const pressCells = useMemo(() => {
+    if (format !== 'press') return [];
+    const now = new Date();
+    return labels.flatMap((it) => {
+      const ctx = { row: it.row, rowIndex: it.rowIndex, seq: it.seq, copy: it.copy, page: 1, now };
+      return [{ objects: it.design.objects, ctx }, ...(job.duplex && it.design.back?.length ? [{ objects: it.design.back, ctx }] : [])];
+    });
+  }, [format, labels, job.duplex]);
+  const pageCount = format === 'press' ? pressCells.length : pages.length;
   const previewSvg = useMemo(() => {
+    if (format === 'press') {
+      const c = pressCells[Math.min(page, pressCells.length - 1)];
+      return c ? pressPageSvg(project, c, cropMarks) : '';
+    }
     const pg = pages[Math.min(page, pages.length - 1)];
     if (!pg) return '';
     const svg = sheetDocument(project, pg.cells, { ...sheetOpts, outlines: true, calibrate: false, mirror: pg.back ? job.mirror : 'none' }, 999);
     // the stock's own artwork (never printed) sits on the fronts of the label grid; fold layouts use plain paper
     return showPreprint && !pg.back && !fold ? svg.replace(/<\/svg>$/, preprintSheetMarkup(project.paper) + '</svg>') : svg;
-  }, [pages, page, project, cropMarks, markLabels, testPoints, job.mirror, fold?.dir, fold?.rotate, showPreprint]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pages, page, project, cropMarks, markLabels, testPoints, job.mirror, fold?.dir, fold?.rotate, showPreprint, format, pressCells]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const remember = () => {
     try {
@@ -134,11 +151,14 @@ export function ExportDialog() {
         close();
         return;
       }
-      setBusy({ done: 0, total: format === 'png' ? labels.length : pages.length });
+      setBusy({ done: 0, total: format === 'png' ? labels.length : pageCount });
       const onProgress = (done: number, total: number) => setBusy({ done, total });
       if (format === 'pdf') {
         const blob = await exportPdf(project, pages, { mode: pdfMode, dpi, sheet: sheetOpts, onProgress });
         download(blob, `${base}.pdf`);
+      } else if (format === 'press') {
+        const blob = await exportPressPdf(project, labels, { mode: pdfMode, dpi, marks: cropMarks, backs: job.duplex && hasBack, onProgress });
+        download(blob, `${base}-${t('인쇄소용')}.pdf`);
       } else if (format === 'png') {
         const blob = await exportPngZip(project, labels, { dpi, nameTpl, white, onProgress });
         download(blob, `${base}-png.zip`);
@@ -164,12 +184,12 @@ export function ExportDialog() {
     <Modal title={t('인쇄 · 내보내기')} onClose={close} wide="xl" footer={
       <>
         {busy ? <Progress done={busy.done} total={busy.total} label={t('처리 중')} />
-          : format !== 'png' && <PrintSetupAlert width={layout.width} height={layout.height} pdf={format !== 'print'} />}
+          : sheet && <PrintSetupAlert width={layout.width} height={layout.height} pdf={format !== 'print'} />}
         <span className="spacer" />
         <button onClick={() => printTestPage(project, markOpts)} title={t('라벨 테두리·중심 십자선이 있는 정렬 확인용 페이지 (재단선·테스트 포인트 설정도 함께 인쇄)')}>{t('정렬 테스트 페이지')}</button>
         <button onClick={close}>{t('취소')}</button>
         <button className="primary" disabled={!!busy || !labels.length} onClick={run}>
-          {format === 'print' ? t('인쇄') : t('내보내기')} ({t('{n}장', { n: labels.length })}{format !== 'png' ? ` · ${t('{n}쪽', { n: sheetCount })}` : ''})
+          {format === 'print' ? t('인쇄') : t('내보내기')} ({t('{n}장', { n: labels.length })}{sheet || format === 'press' ? ` · ${t('{n}쪽', { n: format === 'press' ? pageCount : sheetCount })}` : ''})
         </button>
       </>
     }>
@@ -179,6 +199,7 @@ export function ExportDialog() {
             <Seg value={format} onChange={setFormat} options={[
               { value: 'print', label: t('인쇄'), title: t('브라우저 인쇄 (벡터, 설치된 글꼴 사용 · "PDF로 저장"도 가능)') },
               { value: 'pdf', label: 'PDF' }, { value: 'png', label: 'PNG (ZIP)' }, { value: 'split', label: t('분할 PDF'), title: t('열 값별로 PDF를 나눠 ZIP으로') },
+              { value: 'press', label: t('인쇄소용 PDF'), title: t('라벨마다 한 쪽, 재단 여백과 재단선 포함 (TrimBox·BleedBox 지정)') },
             ]} />
           </Row>
           {hasRows ? (
@@ -218,13 +239,14 @@ export function ExportDialog() {
           ) : (
             <Row label={t('장 수')}><Num value={job.blankCount} step={1} min={1} onChange={(v) => set({ blankCount: Math.round(v) })} unit={t('장 (데이터 없음)')} /></Row>
           )}
-          {format !== 'png' && per > 1 && (
+          {sheet && per > 1 && (
             <>
               <Row label={t('시작 칸')}><Num value={job.startCell} step={1} min={1} max={per} onChange={(v) => set({ startCell: Math.round(v) })} unit={`/ ${per}`} /></Row>
               <StartCellPicker cols={layout.cols} rows={layout.rows} value={job.startCell} onChange={(v) => set({ startCell: v })} />
             </>
           )}
-          {hasBack && format !== 'png' && (
+          {format === 'press' && <PressOptions project={project} cropMarks={cropMarks} setCropMarks={setCropMarks} backs={hasBack ? job.duplex : null} setBacks={(v) => set({ duplex: v })} />}
+          {hasBack && sheet && (
             <>
               <Check label={t('양면')} checked={job.duplex} onChange={(v) => set({ duplex: v })} />
               {job.duplex && (
@@ -257,7 +279,7 @@ export function ExportDialog() {
               )}
             </>
           )}
-          {format !== 'png' && (
+          {sheet && (
             <>
               <Check label={pa.bleed > 0 ? t('재단선 표시 (재단선 + 재단 여백 {n} mm 기준선)', { n: pa.bleed }) : t('재단선 표시')} checked={cropMarks} onChange={setCropMarks} />
               {cropMarks && <Check label={t('기준선 이름 표시 (TRIM 재단선 · BLEED 재단 여백 · FOLD 접는 선)')} checked={markLabels} onChange={setMarkLabels} />}
@@ -276,7 +298,7 @@ export function ExportDialog() {
               <Check label={t('프린터 보정 적용 (X {x}, Y {y} mm)', { x: project.calibration.offsetX, y: project.calibration.offsetY })} checked={calibrate} onChange={setCalibrate} />
             </>
           )}
-          {(format === 'pdf' || format === 'split') && (
+          {(format === 'pdf' || format === 'split' || format === 'press') && (
             <>
               <Row label={t('PDF 방식')}>
                 <Seg value={pdfMode} onChange={setPdfMode} options={[{ value: 'vector', label: t('벡터') }, { value: 'raster', label: t('이미지') }]} />
@@ -317,14 +339,14 @@ export function ExportDialog() {
           </div>
         </div>
         <div className="export-preview">
-          {pages.length ? (
+          {pageCount ? (
             <>
               <div className="preview-sheet" dangerouslySetInnerHTML={{ __html: previewSvg }} />
-              {pa.preprint && !fold && <Check label={t('견출지 테두리 겹쳐 보기 (인쇄 안 됨)')} checked={showPreprint} onChange={setShowPreprint} />}
+              {pa.preprint && !fold && format !== 'press' && <Check label={t('견출지 테두리 겹쳐 보기 (인쇄 안 됨)')} checked={showPreprint} onChange={setShowPreprint} />}
               <div className="btn-row center">
                 <button disabled={page <= 0} onClick={() => setPage(page - 1)}>◀</button>
-                <span>{Math.min(page, pages.length - 1) + 1} / {pages.length}{pages[Math.min(page, pages.length - 1)]?.back ? ` (${t('뒷면')})` : ''}</span>
-                <button disabled={page >= pages.length - 1} onClick={() => setPage(page + 1)}>▶</button>
+                <span>{Math.min(page, pageCount - 1) + 1} / {pageCount}{format !== 'press' && pages[Math.min(page, pages.length - 1)]?.back ? ` (${t('뒷면')})` : ''}</span>
+                <button disabled={page >= pageCount - 1} onClick={() => setPage(page + 1)}>▶</button>
               </div>
             </>
           ) : <p className="muted">{t('출력할 라벨이 없습니다. 대상이나 인쇄 체크를 확인하세요.')}</p>}
@@ -342,5 +364,30 @@ function StartCellPicker({ cols, rows, value, onChange }: { cols: number; rows: 
         <button key={i} className={i + 1 < value ? 'used' : i + 1 === value ? 'start' : ''} onClick={() => onChange(i + 1)}>{i + 1}</button>
       ))}
     </div>
+  );
+}
+
+/** Print-shop PDF settings, with the design colours that CMYK printing may not match. */
+function PressOptions({ project, cropMarks, setCropMarks, backs, setBacks }: {
+  project: Project; cropMarks: boolean; setCropMarks: (v: boolean) => void; backs: boolean | null; setBacks: (v: boolean) => void;
+}) {
+  const L = pressLayout(project, cropMarks);
+  const risky = designColors(project, 64).filter(cmykRisk);
+  return (
+    <>
+      <p className="muted small">
+        {t('라벨마다 한 쪽씩, 재단 여백({bleed} mm)까지 넣은 {w}×{h} mm 쪽으로 만듭니다. PDF에 재단 크기(TrimBox)와 재단 여백(BleedBox)을 기록합니다.', { bleed: L.bleed, w: Math.round(L.width * 10) / 10, h: Math.round(L.height * 10) / 10 })}
+      </p>
+      {L.bleed <= 0 && <div className="warn small">{t('재단 여백이 0 mm입니다. 인쇄소는 보통 2~3 mm를 요구합니다. 용지 설정에서 정하세요.')}</div>}
+      <Check label={t('재단선 표시')} checked={cropMarks} onChange={setCropMarks} />
+      {backs !== null && <Check label={t('뒷면도 넣기 (앞면 다음 쪽)')} checked={backs} onChange={setBacks} />}
+      <p className="muted small">{t('색은 RGB로 저장됩니다. 인쇄소에서 CMYK로 바꿀 때 색이 조금 달라질 수 있으니 교정쇄로 확인하세요.')}</p>
+      {risky.length > 0 && (
+        <div className="warn small">
+          {t('CMYK로 인쇄하면 탁해지기 쉬운 선명한 색:')}{' '}
+          {risky.map((c) => <span key={c} className="swatch" style={{ background: c }} title={`${c} ≈ ${cmykText(c)}`} />)}
+        </div>
+      )}
+    </>
   );
 }

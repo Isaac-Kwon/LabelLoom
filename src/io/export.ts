@@ -191,6 +191,92 @@ export async function exportPdf(p: Project, pages: Page[], o: PdfOptions): Promi
   return doc.output('blob');
 }
 
+/* ---------- print-shop PDF: one label per page with bleed, crop marks and page boxes ---------- */
+
+export interface PressOptions { mode: 'vector' | 'raster'; dpi: number; marks: boolean; backs: boolean; onProgress?: (done: number, total: number) => void }
+
+/** room outside the bleed for the crop marks */
+const SLUG = 6;
+
+export function pressLayout(p: Project, marks: boolean) {
+  const bl = Math.max(0, p.paper.bleed);
+  const s = bl + (marks ? SLUG : 0);
+  return { bleed: bl, inset: s, width: p.paper.labelWidth + 2 * s, height: p.paper.labelHeight + 2 * s };
+}
+
+/** One page of the print-shop PDF: the label at the centre, cut to its bleed, and corner crop marks outside it. */
+export function pressPageSvg(p: Project, cell: SheetCell, marks: boolean, idp = 'pp'): string {
+  const { bleed: bl, inset: s, width: W, height: H } = pressLayout(p, marks);
+  const lw = p.paper.labelWidth, lh = p.paper.labelHeight;
+  const r = (v: number) => Math.round(v * 1000) / 1000;
+  let m = '';
+  if (marks) {
+    const g = bl + 1, len = SLUG - 1.5; // gap from the trim line, mark length
+    const d: string[] = [];
+    for (const [x, sx] of [[s, -1], [s + lw, 1]] as const) {
+      for (const [y, sy] of [[s, -1], [s + lh, 1]] as const) {
+        d.push(`M${r(x)} ${r(y + sy * g)}V${r(y + sy * (g + len))}`, `M${r(x + sx * g)} ${r(y)}H${r(x + sx * (g + len))}`);
+      }
+    }
+    m = `<path d="${d.join('')}" stroke="#000" stroke-width="0.15" fill="none"/>`;
+  }
+  const clip = `<clipPath id="${idp}c"><rect x="${r(-bl)}" y="${r(-bl)}" width="${r(lw + 2 * bl)}" height="${r(lh + 2 * bl)}"/></clipPath>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${r(W)}mm" height="${r(H)}mm" viewBox="0 0 ${r(W)} ${r(H)}">` +
+    `${clip}<g transform="translate(${r(s)} ${r(s)})"><g clip-path="url(#${idp}c)">${labelMarkup(p, cell.objects, cell.ctx, { idp: idp + '_', raster: cell.raster })}</g></g>${m}</svg>`;
+}
+
+/**
+ * For a print shop: every label (and back, with `backs`) on its own page the size of the label plus
+ * bleed (plus room for crop marks), with the PDF TrimBox and BleedBox set. Colours stay RGB.
+ */
+export async function exportPressPdf(p: Project, items: JobItem[], o: PressOptions): Promise<Blob> {
+  const { bleed: bl, inset: s, width: W, height: H } = pressLayout(p, o.marks);
+  const doc = new jsPDF({ unit: 'mm', format: [W, H], orientation: W > H ? 'landscape' : 'portrait', compress: true });
+  const ttf = ttfFamilies(p);
+  if (o.mode === 'vector') {
+    for (const f of p.fonts) {
+      if (!ttf.has(f.family)) continue;
+      doc.addFileToVFS(`${f.family}.ttf`, f.data);
+      doc.addFont(`${f.family}.ttf`, f.family, 'normal');
+    }
+  }
+  const now = new Date();
+  const cells: SheetCell[] = [];
+  for (const it of items) {
+    const ctx: ResolveCtx = { row: it.row, rowIndex: it.rowIndex, seq: it.seq, copy: it.copy, page: 1, now };
+    cells.push({ objects: it.design.objects, ctx });
+    if (o.backs && it.design.back?.length) cells.push({ objects: it.design.back, ctx });
+  }
+  const pt = 72 / 25.4;
+  const box = (a: number) => ({ bottomLeftX: a * pt, bottomLeftY: a * pt, topRightX: (W - a) * pt, topRightY: (H - a) * pt });
+  const host = document.createElement('div');
+  host.style.cssText = 'position:fixed;left:-99999px;top:0;width:10px;height:10px;overflow:hidden';
+  document.body.appendChild(host);
+  try {
+    for (let i = 0; i < cells.length; i++) {
+      if (i > 0) doc.addPage([W, H], W > H ? 'landscape' : 'portrait');
+      // jsPDF writes these page boxes when they are set; its typings leave them out
+      const ctxPage = doc.getCurrentPageInfo().pageContext as Record<string, unknown>;
+      ctxPage.trimBox = box(s);
+      ctxPage.bleedBox = box(s - bl);
+      if (o.mode === 'raster') {
+        const svg = pressPageSvg(p, cells[i], o.marks).replace('>', `><style>${fontFaceCss(p)}</style>`);
+        const c = await svgToCanvas(svg, mmToPx(W, o.dpi), mmToPx(H, o.dpi), true);
+        doc.addImage(c, 'PNG', 0, 0, W, H, undefined, 'FAST');
+      } else {
+        const cell = { ...cells[i], raster: await rasterPatches(p, cells[i].objects, cells[i].ctx, ttf, o.dpi) };
+        host.innerHTML = pressPageSvg(p, cell, o.marks, `pp${i}`);
+        await doc.svg(host.firstElementChild as SVGSVGElement, { x: 0, y: 0, width: W, height: H });
+      }
+      o.onProgress?.(i + 1, cells.length);
+      await new Promise((r) => setTimeout(r, 0));
+    }
+  } finally {
+    host.remove();
+  }
+  return doc.output('blob');
+}
+
 /* ---------- PNG per label ---------- */
 
 export async function exportPngZip(p: Project, items: JobItem[], o: { dpi: number; nameTpl: string; white: boolean; onProgress?: (d: number, t: number) => void }): Promise<Blob> {
