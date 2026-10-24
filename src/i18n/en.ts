@@ -1166,4 +1166,11 @@ export const en = {
   "접기": "Show less",
   "모두 보기 ({n})": "Show all ({n})",
   "문제를 찾지 못했습니다.": "No problems found.",
+  "묶음": "Group",
+  "열 값이 같은 라벨끼리 모아 가나다순으로 출력합니다": "Prints labels with the same column value together, groups in alphabetical order",
+  "묶지 않음": "No grouping",
+  "{col}별로 묶기": "Group by {col}",
+  "묶음마다 새 장": "New sheet for each group",
+  "묶음 앞에 구분 라벨": "Divider label before each group",
+  "묶음 이름과 장 수를 적은 라벨을 각 묶음 앞에 넣습니다 (나눠 줄 때 구분용)": "Adds a label with the group name and count before each group, to tell them apart when handing out",
 };

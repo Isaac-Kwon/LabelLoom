@@ -1,4 +1,6 @@
-import type { Design, DuplexSettings, Project, Row } from '../model/types';
+import { getLang, t } from '../i18n';
+import { newObject } from '../model/defaults';
+import type { Design, DuplexSettings, LabelObject, Project, Row } from '../model/types';
 import { pickDesign, type ResolveCtx } from './resolve';
 import { sheetLayout, type Fold, type SheetCell } from './svg';
 
@@ -54,6 +56,59 @@ export interface JobItem {
   copy: number;
   seq: number;
   design: Design;
+  /** start a new sheet with this item */
+  breakBefore?: boolean;
+  /** a divider label naming the group that follows (not a data row) */
+  separator?: string;
+}
+
+export interface GroupOptions {
+  /** '' = no grouping */
+  column: string;
+  newSheet: boolean;
+  separator: boolean;
+}
+
+/**
+ * Items sorted into groups by the value of `column` (natural order, empty values last), keeping
+ * the order inside each group. Serial numbers follow the new order. Each group can start on a
+ * new sheet and be preceded by a divider label with its name and count.
+ */
+export function groupItems(p: Project, items: JobItem[], g: GroupOptions): JobItem[] {
+  if (!g.column || !p.data.rows.length) return items;
+  const coll = new Intl.Collator(getLang(), { numeric: true, sensitivity: 'base' });
+  const groups = new Map<string, JobItem[]>();
+  for (const it of items) {
+    const k = (it.row?.values[g.column] ?? '').trim();
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k)!.push(it);
+  }
+  const keys = [...groups.keys()].sort((a, b) => (a === '' ? 1 : b === '' ? -1 : coll.compare(a, b)));
+  const out: JobItem[] = [];
+  let seq = p.seqStart;
+  keys.forEach((k, gi) => {
+    const list = groups.get(k)!;
+    const brk = g.newSheet && gi > 0;
+    if (g.separator) out.push(separatorItem(p, g.column, k, list.length, brk));
+    list.forEach((it, i) => out.push({ ...it, seq: seq++, breakBefore: !g.separator && brk && i === 0 }));
+  });
+  return out;
+}
+
+function separatorItem(p: Project, column: string, value: string, count: number, breakBefore: boolean): JobItem {
+  const { labelWidth: W, labelHeight: H } = p.paper;
+  const m = Math.min(W, H) * 0.08;
+  const text = (y: number, h: number, content: string, size: number, bold: boolean) =>
+    ({ ...newObject('text', m, y, W - 2 * m, h), content, fontSize: size, minFontSize: 4, bold, align: 'center', multiline: true }) as LabelObject;
+  const frame = { ...newObject('rect', m / 2, m / 2, W - m, H - m), fill: { type: 'none' }, dash: true, strokeWidth: 0.3 } as LabelObject;
+  const objects = [
+    frame,
+    text(m, H * 0.2, column, 9, false),
+    text(m + H * 0.2, H * 0.45, '{{__group}}', 28, true),
+    text(H * 0.68, H * 0.2, '{{__count}}', 10, false),
+  ];
+  const row: Row = { id: '', print: false, copies: 1, values: { __group: value || t('(빈 값)'), __count: t('{n}장', { n: count }) } };
+  return { row, rowIndex: -1, copy: 1, seq: 0, design: { id: `separator:${value}`, name: '', objects }, separator: value, breakBefore };
 }
 
 export function selectRows(p: Project, o: Pick<JobOptions, 'scope' | 'rangeFrom' | 'rangeTo' | 'filteredIds' | 'currentRow'>): { row: Row; index: number }[] {
@@ -109,6 +164,7 @@ export function paginate(p: Project, items: JobItem[], o: Pick<JobOptions, 'star
   };
   const cellItem = new Map<number, JobItem>();
   items.forEach((it) => {
+    if (it.breakBefore && cells.some(Boolean)) flush();
     const pageNo = pages.filter((x) => !x.back).length + 1;
     const ctx: ResolveCtx = { row: it.row, rowIndex: it.rowIndex, seq: it.seq, copy: it.copy, page: pageNo, now };
     cellItem.set(cells.length, it);
@@ -133,6 +189,7 @@ function paginateFold(p: Project, items: JobItem[], startCell: number, fold: Fol
     cells = []; pageItems = [];
   };
   for (const it of items) {
+    if (it.breakBefore && cells.some(Boolean)) flush();
     const ctx: ResolveCtx = { row: it.row, rowIndex: it.rowIndex, seq: it.seq, copy: it.copy, page: pages.length + 1, now };
     cells.push({ objects: it.design.objects, ctx, back: it.design.back?.length ? { objects: it.design.back, ctx } : null });
     pageItems.push(it);

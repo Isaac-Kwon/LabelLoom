@@ -1168,4 +1168,11 @@ export const it: Record<Msg, string> = {
   "접기": "Mostra meno",
   "모두 보기 ({n})": "Mostra tutti ({n})",
   "문제를 찾지 못했습니다.": "Nessun problema trovato.",
+  "묶음": "Gruppo",
+  "열 값이 같은 라벨끼리 모아 가나다순으로 출력합니다": "Stampa insieme le etichette con lo stesso valore di colonna, gruppi in ordine alfabetico",
+  "묶지 않음": "Nessun raggruppamento",
+  "{col}별로 묶기": "Raggruppa per {col}",
+  "묶음마다 새 장": "Nuovo foglio per ogni gruppo",
+  "묶음 앞에 구분 라벨": "Etichetta divisoria prima di ogni gruppo",
+  "묶음 이름과 장 수를 적은 라벨을 각 묶음 앞에 넣습니다 (나눠 줄 때 구분용)": "Aggiunge prima di ogni gruppo un'etichetta con il nome e il numero, per distinguerli quando si distribuiscono",
 };

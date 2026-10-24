@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { t } from '../i18n';
 import { download, exportPdf, exportPngZip, exportSplitPdfZip, printPages, printTestPage, safeName } from '../io/export';
-import { buildItems, DEFAULT_DUPLEX, jobFold, paginate, projectDuplex, selectRows, type JobOptions, type Scope } from '../render/jobs';
+import { buildItems, DEFAULT_DUPLEX, groupItems, jobFold, paginate, projectDuplex, selectRows, type GroupOptions, type JobOptions, type Scope } from '../render/jobs';
 import { fetchPictures, pictureUrls } from '../render/images';
 import { preprintSheetMarkup } from '../render/preprint';
 import { ISSUE_LABEL, issueText, preflight, type Issue, type IssueKind } from '../render/preflight';
@@ -55,7 +55,11 @@ export function ExportDialog() {
 
   const filteredIds = useMemo(() => filterRows(project, filter), [project, filter]);
   const opts: JobOptions = { ...job, filteredIds, currentRow };
-  const items = useMemo(() => buildItems(project, opts), [project, job, filteredIds, currentRow]); // eslint-disable-line react-hooks/exhaustive-deps
+  const [group, setGroup] = useState<GroupOptions>({ column: '', newSheet: true, separator: false });
+  const grouping = format === 'print' || format === 'pdf';
+  const labels = useMemo(() => buildItems(project, opts), [project, job, filteredIds, currentRow]); // eslint-disable-line react-hooks/exhaustive-deps
+  // with grouping, items also hold the divider labels; `labels` stays the data labels only
+  const items = useMemo(() => (grouping ? groupItems(project, labels, group) : labels), [project, labels, group, grouping]);
   const fold = hasBack && format !== 'png' ? jobFold(job) : null;
   const layout = sheetLayout(project.paper, fold);
   const pages = useMemo(
@@ -67,7 +71,7 @@ export function ExportDialog() {
   const pa = project.paper;
   const bleedClipped = pa.bleed > 0 && !fold && ((pa.cols > 1 && pa.gapX < 2 * pa.bleed) || (pa.rows > 1 && pa.gapY < 2 * pa.bleed));
 
-  const check = useMemo(() => preflight(project, items, { back: job.duplex && hasBack }), [project, items, job.duplex, hasBack]);
+  const check = useMemo(() => preflight(project, labels, { back: job.duplex && hasBack }), [project, labels, job.duplex, hasBack]);
   const [showAll, setShowAll] = useState(false);
   // go to the label and object an issue is about
   const jump = (x: Issue) => {
@@ -101,13 +105,13 @@ export function ExportDialog() {
 
   const markDone = () => {
     if (!markPrinted || !hasRows) return;
-    const ids = new Set(items.map((i) => i.row?.id).filter(Boolean) as string[]);
+    const ids = new Set(labels.map((i) => i.row?.id).filter(Boolean) as string[]);
     const now = new Date().toISOString();
     commit((p) => ({ ...p, data: { ...p.data, rows: p.data.rows.map((r) => (ids.has(r.id) ? { ...r, printed: now } : r)) } }));
   };
 
   const run = async () => {
-    if (!items.length) { notify(t('출력할 라벨이 없습니다.')); return; }
+    if (!labels.length) { notify(t('출력할 라벨이 없습니다.')); return; }
     remember();
     if (job.duplex && hasBack) {
       // keep the duplex layout in the project so quick print and shared templates follow it
@@ -118,7 +122,7 @@ export function ExportDialog() {
     const base = safeName(project.name);
     try {
       // pictures linked from the web go into the output as data, when their servers allow it
-      const urls = pictureUrls(project, items);
+      const urls = pictureUrls(project, labels);
       if (urls.length) {
         setBusy({ done: 0, total: urls.length });
         await fetchPictures(urls, (done, total) => setBusy({ done, total }));
@@ -130,21 +134,21 @@ export function ExportDialog() {
         close();
         return;
       }
-      setBusy({ done: 0, total: format === 'png' ? items.length : pages.length });
+      setBusy({ done: 0, total: format === 'png' ? labels.length : pages.length });
       const onProgress = (done: number, total: number) => setBusy({ done, total });
       if (format === 'pdf') {
         const blob = await exportPdf(project, pages, { mode: pdfMode, dpi, sheet: sheetOpts, onProgress });
         download(blob, `${base}.pdf`);
       } else if (format === 'png') {
-        const blob = await exportPngZip(project, items, { dpi, nameTpl, white, onProgress });
+        const blob = await exportPngZip(project, labels, { dpi, nameTpl, white, onProgress });
         download(blob, `${base}-png.zip`);
       } else {
         if (!splitCol) { notify(t('분할할 열을 고르세요.')); setBusy(null); return; }
-        const blob = await exportSplitPdfZip(project, items, splitCol, { mode: pdfMode, dpi, sheet: sheetOpts, onProgress, startCell: 1, duplex: job.duplex && hasBack && !fold });
+        const blob = await exportSplitPdfZip(project, labels, splitCol, { mode: pdfMode, dpi, sheet: sheetOpts, onProgress, startCell: 1, duplex: job.duplex && hasBack && !fold });
         download(blob, `${base}-${safeName(splitCol)}.zip`);
       }
       markDone();
-      notify(t('{n}장 내보내기 완료', { n: items.length }));
+      notify(t('{n}장 내보내기 완료', { n: labels.length }));
       close();
     } catch (e) {
       console.error(e);
@@ -164,8 +168,8 @@ export function ExportDialog() {
         <span className="spacer" />
         <button onClick={() => printTestPage(project, markOpts)} title={t('라벨 테두리·중심 십자선이 있는 정렬 확인용 페이지 (재단선·테스트 포인트 설정도 함께 인쇄)')}>{t('정렬 테스트 페이지')}</button>
         <button onClick={close}>{t('취소')}</button>
-        <button className="primary" disabled={!!busy || !items.length} onClick={run}>
-          {format === 'print' ? t('인쇄') : t('내보내기')} ({t('{n}장', { n: items.length })}{format !== 'png' ? ` · ${t('{n}쪽', { n: sheetCount })}` : ''})
+        <button className="primary" disabled={!!busy || !labels.length} onClick={run}>
+          {format === 'print' ? t('인쇄') : t('내보내기')} ({t('{n}장', { n: labels.length })}{format !== 'png' ? ` · ${t('{n}쪽', { n: sheetCount })}` : ''})
         </button>
       </>
     }>
@@ -194,6 +198,19 @@ export function ExportDialog() {
                   <Num value={job.rangeFrom} step={1} min={1} onChange={(v) => set({ rangeFrom: v })} width={80} />
                   <span>~</span>
                   <Num value={job.rangeTo} step={1} min={1} onChange={(v) => set({ rangeTo: v })} width={80} />
+                </Row>
+              )}
+              {grouping && (
+                <Row label={t('묶음')}>
+                  <Select value={group.column} onChange={(v) => setGroup({ ...group, column: v })} title={t('열 값이 같은 라벨끼리 모아 가나다순으로 출력합니다')}
+                    options={[{ value: '', label: t('묶지 않음') }, ...project.data.columns.map((c) => ({ value: c, label: t('{col}별로 묶기', { col: c }) }))]} />
+                </Row>
+              )}
+              {grouping && group.column && (
+                <Row>
+                  <Check label={t('묶음마다 새 장')} checked={group.newSheet} onChange={(v) => setGroup({ ...group, newSheet: v })} />
+                  <Check label={t('묶음 앞에 구분 라벨')} checked={group.separator} onChange={(v) => setGroup({ ...group, separator: v })}
+                    title={t('묶음 이름과 장 수를 적은 라벨을 각 묶음 앞에 넣습니다 (나눠 줄 때 구분용)')} />
                 </Row>
               )}
               <Row label={t('부수')}><Num value={job.copies} step={1} min={1} max={999} onChange={(v) => set({ copies: Math.round(v) })} unit={t('× 행별 매수')} /></Row>

@@ -46,6 +46,7 @@ export function preflight(p: Project, items: JobItem[], o: { back: boolean; max?
     if (issues.length < max) issues.push({ kind, rowIndex: it.rowIndex, designId: it.design.id, side, objId: obj.id, objName: obj.name, detail });
   };
   for (const it of items) {
+    if (it.separator !== undefined) continue;
     const key = `${it.row?.id ?? it.rowIndex}|${it.design.id}`;
     if (seen.has(key)) continue;
     seen.add(key);

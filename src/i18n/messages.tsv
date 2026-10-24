@@ -1207,3 +1207,11 @@ N번째 단어 (word:1, 끝에서는 word:-1)	Nth word (word:1, from the end wor
 접기	Show less	Mostra meno	Afficher moins
 모두 보기 ({n})	Show all ({n})	Mostra tutti ({n})	Tout afficher ({n})
 문제를 찾지 못했습니다.	No problems found.	Nessun problema trovato.	Aucun problème trouvé.
+# grouped printing
+묶음	Group	Gruppo	Groupe
+열 값이 같은 라벨끼리 모아 가나다순으로 출력합니다	Prints labels with the same column value together, groups in alphabetical order	Stampa insieme le etichette con lo stesso valore di colonna, gruppi in ordine alfabetico	Imprime ensemble les étiquettes ayant la même valeur de colonne, groupes par ordre alphabétique
+묶지 않음	No grouping	Nessun raggruppamento	Sans regroupement
+{col}별로 묶기	Group by {col}	Raggruppa per {col}	Regrouper par {col}
+묶음마다 새 장	New sheet for each group	Nuovo foglio per ogni gruppo	Nouvelle feuille par groupe
+묶음 앞에 구분 라벨	Divider label before each group	Etichetta divisoria prima di ogni gruppo	Étiquette de séparation avant chaque groupe
+묶음 이름과 장 수를 적은 라벨을 각 묶음 앞에 넣습니다 (나눠 줄 때 구분용)	Adds a label with the group name and count before each group, to tell them apart when handing out	Aggiunge prima di ogni gruppo un'etichetta con il nome e il numero, per distinguerli quando si distribuiscono	Ajoute avant chaque groupe une étiquette avec son nom et son nombre, pour les distinguer lors de la distribution
