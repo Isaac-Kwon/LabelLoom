@@ -52,6 +52,7 @@ export function Toolbar({ onOpen, onSave }: { onOpen: () => void; onSave: (saveA
           <hr />
           <LangMenu />
           <hr />
+          <button onClick={() => s.open('help')}>{t('튜토리얼·도움말')} <kbd>F1</kbd></button>
           <button onClick={() => s.open('shortcuts')}>{t('단축키')} <kbd>?</kbd></button>
           <button onClick={() => s.open('about')}>{t('프로그램 정보…')}</button>
           <button onClick={() => window.open(ISSUES_URL, '_blank', 'noopener')} title={t('GitHub 이슈 페이지에서 질문·버그 제보·기능 요청')}>{t('문의사항 (GitHub Issue)')} ↗</button>

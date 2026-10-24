@@ -5,6 +5,7 @@ import { preprintSheetMarkup } from '../render/preprint';
 import { pickDesign, previewCtx } from '../render/resolve';
 import { labelDocument, sheetDocument } from '../render/svg';
 import { useStore } from '../store';
+import { docUrl } from '../tutorial/lessons';
 import { loadExportSettings } from './ExportDialog';
 import { Seg } from './controls';
 import { LangSelect } from './Toolbar';
@@ -147,6 +148,7 @@ export function SmallScreen({ onEditor, onQuick }: { onEditor: () => void; onQui
       <main className="small-main">{view === 'label' || !multi ? <LabelView /> : <SheetView />}</main>
       <footer className="small-foot">
         <button onClick={onQuick} title={t('값을 입력해 바로 인쇄하는 화면 — 작은 화면에서도 쓸 수 있습니다')}>{t('빠른 출력')}</button>
+        <button onClick={() => window.open(docUrl(), '_blank', 'noopener')} title={t('사용법을 웹 문서로 봅니다')}>{t('튜토리얼')} ↗</button>
         <button onClick={() => { if (confirm(t('편집기는 작은 화면에 맞춰져 있지 않아 조작이 어렵습니다. 그래도 여시겠습니까?'))) { forceEditor(); onEditor(); } }}>{t('그래도 편집기 열기')}</button>
       </footer>
     </div>

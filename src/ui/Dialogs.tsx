@@ -664,6 +664,7 @@ const KEYS: [Msg | string, Msg][] = [
   ['Ctrl+S / Ctrl+Shift+S', m('저장 / 다른 이름으로 저장')],
   ['Ctrl+O', m('열기')],
   ['Ctrl+P', m('인쇄 · 내보내기')],
+  ['F1', m('튜토리얼·도움말')],
   [m('Ctrl+휠, Ctrl+= / Ctrl+-'), m('확대 / 축소')],
   ['Ctrl+0', m('화면에 맞추기')],
   ['Ctrl+Shift+0', m('폭에 맞추기')],

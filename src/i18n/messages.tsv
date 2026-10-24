@@ -873,6 +873,11 @@ QR / 2D 코드	QR / 2D code	Codice QR / 2D	Code QR / 2D
 (열 선택)	(choose column)	(scegli colonna)	(choisir une colonne)
 시작 번호	Start number	Numero iniziale	Numéro de départ
 {code}는 출력 순서대로 이 번호부터 1씩 증가합니다.	{code} counts up by 1 from this number in print order.	{code} aumenta di 1 a partire da questo numero, in ordine di stampa.	{code} augmente de 1 à partir de ce numéro, dans l'ordre d'impression.
+# ui/Help.tsx
+튜토리얼·도움말	Tutorial · Help	Tutorial · Guida	Tutoriel · Aide
+웹 문서 전체	All web pages	Tutte le pagine web	Toutes les pages web
+예제 열기	Open the example	Apri l'esempio	Ouvrir l'exemple
+웹에서 자세히 보기	Read more on the web	Approfondisci sul web	En savoir plus sur le web
 # ui/ops.ts
 3개 이상 선택하세요.	Select three or more objects.	Seleziona tre o più oggetti.	Sélectionnez au moins trois objets.
 먼저 용지 설정에서 재단 여백(블리드)을 정하세요.	Set a bleed in the paper settings first.	Imposta prima l'abbondanza nelle impostazioni della carta.	Définissez d'abord un fond perdu dans les réglages du papier.
@@ -929,6 +934,7 @@ QR / 2D 코드	QR / 2D code	Codice QR / 2D	Code QR / 2D
 그래도 편집기 열기	Open the editor anyway	Apri comunque l'editor	Ouvrir l'éditeur quand même
 보기 화면으로	Back to viewer	Torna alla visualizzazione	Retour à la visionneuse
 작은 화면용 보기 전용 화면으로 돌아갑니다	Go back to the view-only page for small screens	Torna alla pagina di sola visualizzazione per schermi piccoli	Revenir à la page en lecture seule pour petits écrans
+사용법을 웹 문서로 봅니다	Read how to use LabelLoom on the web	Leggi come usare LabelLoom sul web	Lire le mode d'emploi de LabelLoom sur le web
 # ui/TableCanvas.tsx
 위에 행 넣기	Insert row above	Inserisci riga sopra	Insérer une ligne au-dessus
 선택한 칸 위에 빈 행	An empty row above the selected cells	Una riga vuota sopra le celle selezionate	Une ligne vide au-dessus des cellules sélectionnées

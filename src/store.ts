@@ -8,7 +8,7 @@ export type Tool = 'select' | ObjType;
 export type Side = 'front' | 'back';
 export type Dialog =
   | null | 'export' | 'import' | 'serial' | 'share' | 'start' | 'designRules' | 'reprint'
-  | 'calibration' | 'shortcuts' | 'components' | 'fonts' | 'presets' | 'quick' | 'about' | 'preprint' | 'table';
+  | 'calibration' | 'shortcuts' | 'components' | 'fonts' | 'presets' | 'quick' | 'about' | 'preprint' | 'table' | 'help';
 
 /** Cells picked inside a table being edited on the canvas: the active cell and the other corner of the range. */
 export interface CellSel { id: string; r: number; c: number; ar: number; ac: number }

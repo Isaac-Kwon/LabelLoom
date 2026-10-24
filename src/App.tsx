@@ -14,6 +14,7 @@ import { DropOverlay } from './ui/controls';
 import { DataPanel } from './ui/DataPanel';
 import { AboutDialog, CalibrationDialog, FontsDialog, ReprintDialog, SerialDialog, ShareDialog, ShortcutsDialog, StartDialog } from './ui/Dialogs';
 import { ExportDialog } from './ui/ExportDialog';
+import { HelpDialog } from './ui/Help';
 import { ImportDialog } from './ui/ImportDialog';
 import { PreprintWizard } from './ui/PreprintWizard';
 import { QuickDialog } from './ui/QuickPrint';
@@ -126,6 +127,7 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
       if (mod && k === 's') { e.preventDefault(); void onSave(e.shiftKey); return; }
       if (mod && k === 'o') { e.preventDefault(); void onOpen(); return; }
       if (mod && k === 'p') { e.preventDefault(); s.open('export'); return; }
+      if (e.key === 'F1') { e.preventDefault(); s.open('help'); return; }
       if (s.dialog || isTyping()) return;
       if (mod && k === 'z') { e.preventDefault(); if (e.shiftKey) s.redo(); else s.undo(); return; }
       if (mod && k === 'y') { e.preventDefault(); s.redo(); return; }
@@ -208,6 +210,7 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
       {dialog === 'fonts' && <FontsDialog />}
       {dialog === 'shortcuts' && <ShortcutsDialog />}
       {dialog === 'about' && <AboutDialog />}
+      {dialog === 'help' && <HelpDialog onLoad={loadProject} />}
       {dialog === 'preprint' && <PreprintWizard />}
       {dialog === 'table' && <TableWizard />}
       {dropping && <DropOverlay title={t('여기에 놓으세요')} kinds={[t('.json · .zip 프로젝트'),t('xlsx · csv 데이터'), t('이미지 · SVG')]} />}

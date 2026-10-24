@@ -1,4 +1,4 @@
-import { m, t, type Msg } from '../i18n';
+import { getLang, m, t, type Msg } from '../i18n';
 import { pushRecent } from '../io/project';
 import { newObject, newProject, uid } from '../model/defaults';
 import { preset } from '../model/presets';
@@ -141,3 +141,7 @@ export function lessonProject(l: Lesson): Project {
   if (cur.data.rows.length || cur.designs.some((d) => d.objects.length || d.back?.length)) void pushRecent(cur);
   return l.make();
 }
+
+const DOCS = 'https://github.com/Isaac-Kwon/LabelLoom/blob/main/docs/tutorial/';
+/** Web page of a lesson (or the tutorial index): Korean, or English for every other language. */
+export const docUrl = (l?: Lesson) => DOCS + (getLang() === 'ko' ? '' : 'en/') + (l?.doc ?? 'README.md');
