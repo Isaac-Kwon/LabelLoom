@@ -485,15 +485,17 @@ function Rulers({ pan, zoom, size, selected }: { pan: { x: number; y: number }; 
     }
     return out;
   };
-  const tx = ticks(size.w, pan.x), ty = ticks(size.h, pan.y);
+  // the rulers start after the corner box, R px into the canvas, so shift by R to line up with it
+  const ox = pan.x - R, oy = pan.y - R;
+  const tx = ticks(size.w - R, ox), ty = ticks(size.h - R, oy);
   return (
     <>
-      <svg className="ruler ruler-x" width={size.w} height={R}>
-        {selected && <rect x={pan.x + selected.x * zoom} width={selected.w * zoom} height={R} fill="rgba(37,99,235,0.15)" />}
+      <svg className="ruler ruler-x" width={Math.max(0, size.w - R)} height={R}>
+        {selected && <rect x={ox + selected.x * zoom} width={selected.w * zoom} height={R} fill="rgba(37,99,235,0.15)" />}
         {tx.map((t) => <g key={t.v}><line x1={t.p} x2={t.p} y1={t.major ? 4 : 12} y2={R} />{t.major && <text x={t.p + 2} y={10}>{t.v}</text>}</g>)}
       </svg>
-      <svg className="ruler ruler-y" width={R} height={size.h}>
-        {selected && <rect y={pan.y + selected.y * zoom} height={selected.h * zoom} width={R} fill="rgba(37,99,235,0.15)" />}
+      <svg className="ruler ruler-y" width={R} height={Math.max(0, size.h - R)}>
+        {selected && <rect y={oy + selected.y * zoom} height={selected.h * zoom} width={R} fill="rgba(37,99,235,0.15)" />}
         {ty.map((t) => <g key={t.v}><line y1={t.p} y2={t.p} x1={t.major ? 4 : 12} x2={R} />{t.major && <text x={10} y={t.p + 2} transform={`rotate(-90 10 ${t.p + 2})`}>{t.v}</text>}</g>)}
       </svg>
       <div className="ruler-corner">mm</div>
