@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 import { printPages } from '../io/export';
+import { copyQuickLink } from '../io/share';
 import { newRow } from '../model/defaults';
 import type { Project, Row as DataRow } from '../model/types';
 import { buildItems, jobFold, labelSizeProject, paginate, projectDuplex, type JobOptions } from '../render/jobs';
@@ -195,6 +196,7 @@ export function QuickDialog({ onFullscreen }: { onFullscreen: () => void }) {
   return (
     <Modal title={`빠른 출력 — ${project.name}`} onClose={close} wide="xl"
       actions={<div className="btn-row">
+        <button onClick={async () => notify(await copyQuickLink(project))} title="이 템플릿으로 바로 빠른 출력 전체 화면을 여는 링크 (명단은 포함하지 않음)">🔗 링크 복사</button>
         <button onClick={() => { close(); onFullscreen(); }} title="편집기를 닫고 빠른 출력 전용 화면으로 전환합니다 (다시 돌아올 수 있습니다)">⛶ 전체 화면으로</button>
         <button onClick={close} title="대화상자를 닫고 디자인 편집으로 돌아갑니다">✎ 편집기에서 수정</button>
       </div>}

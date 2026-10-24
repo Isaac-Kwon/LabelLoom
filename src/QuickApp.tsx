@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { registerFonts } from './io/fonts';
 import { kvGet, kvSet, parseProject, pickFile } from './io/project';
-import { decodeShare, readShareHash } from './io/share';
+import { copyQuickLink, decodeShare, quickShareCode, readShareHash } from './io/share';
 import { migrateProject } from './model/defaults';
 import type { Project, Row } from './model/types';
 import { InstallButton } from './pwa';
@@ -46,8 +46,6 @@ export function QuickApp({ onEdit, start, onPrinted }: {
         use(start);
       } else if (share) {
         try { use(await decodeShare(share.code)); } catch (e) { notify('링크를 읽을 수 없습니다: ' + (e as Error).message); }
-        // the template is kept locally, so a refresh stays on this page without the long hash
-        history.replaceState(null, '', location.pathname + '?quick');
       } else {
         const prev = await kvGet<Project>(KEY);
         if (prev) { try { use(migrateProject(prev)); } catch { /* ignore broken entry */ } }
@@ -55,6 +53,17 @@ export function QuickApp({ onEdit, start, onPrinted }: {
       setReady(true);
     })();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // the address always carries the template, so copying it from the address bar shares this page
+  useEffect(() => {
+    if (!project) return;
+    let live = true;
+    quickShareCode(project).then((code) => {
+      if (!live) return;
+      try { history.replaceState(null, '', `${location.pathname}?quick#q=${code}`); } catch { history.replaceState(null, '', location.pathname + '?quick'); }
+    }).catch(() => { /* keep the current address */ });
+    return () => { live = false; };
+  }, [project]);
 
   const loadFile = async (f: File | null) => {
     if (!f) return;
@@ -75,6 +84,7 @@ export function QuickApp({ onEdit, start, onPrinted }: {
         <span className="spacer" />
         {fromEditor && <label className="check"><input type="checkbox" checked={record} onChange={(e) => setRecord(e.target.checked)} /><span>입력한 내용을 명단에 기록</span></label>}
         <InstallButton />
+        {project && <button onClick={async () => notify(await copyQuickLink(project))} title="이 템플릿으로 바로 빠른 출력 화면을 여는 링크 (명단은 포함하지 않음)">🔗 링크 복사</button>}
         {project && <button onClick={choose}>다른 템플릿</button>}
         <button onClick={() => onEdit(project)}
           title={project ? '이 템플릿을 편집기에서 수정합니다' : '편집기를 엽니다'}>{project ? '✎ 편집기에서 수정' : '편집기 열기'}</button>

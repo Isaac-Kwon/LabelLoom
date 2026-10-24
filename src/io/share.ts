@@ -46,7 +46,29 @@ export async function decodeShare(code: string): Promise<Project> {
 export type ShareKind = 'p' | 'q';
 
 export function shareUrl(code: string, kind: ShareKind = 'p') {
-  return `${location.origin === 'null' ? 'file://' : location.origin}${location.pathname}#${kind}=${code}`;
+  return `${location.origin === 'null' ? 'file://' : location.origin}${location.pathname}${kind === 'q' ? '?quick' : ''}#${kind}=${code}`;
+}
+
+/** Quick print links carry the design only, never the name list (fonts would make them too long). */
+export const quickShareCode = (p: Project) => encodeShare(p, { includeData: false, includeImages: true, includeFonts: false });
+
+export async function copyText(text: string): Promise<boolean> {
+  try { await navigator.clipboard.writeText(text); return true; } catch { /* file:// or no permission */ }
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  const ok = document.execCommand('copy');
+  ta.remove();
+  return ok;
+}
+
+/** Copy a direct link to the quick print page with this template; returns a message for the user. */
+export async function copyQuickLink(p: Project): Promise<string> {
+  const url = shareUrl(await quickShareCode(p), 'q');
+  const kb = new Blob([url]).size / 1024;
+  if (!(await copyText(url))) return '복사하지 못했습니다. 주소창의 주소를 직접 복사하세요.';
+  return kb > 32 ? `링크를 복사했습니다 (${kb.toFixed(0)} KB — 길어서 메신저에서 잘릴 수 있습니다. 이미지를 줄이거나 템플릿 파일로 공유하세요)` : '빠른 출력 링크를 복사했습니다.';
 }
 
 export function readShareHash(): { kind: ShareKind; code: string } | null {
