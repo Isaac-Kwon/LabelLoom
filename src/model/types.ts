@@ -216,6 +216,7 @@ export interface Row {
   print: boolean;
   copies: number;
   printed?: string; // ISO timestamp of last output
+  checkedIn?: string; // ISO timestamp of check-in at the desk
   values: Record<string, string>;
 }
 

@@ -132,7 +132,7 @@ export function guessKey(columns: string[]): string {
 }
 
 /** Columns exportTable adds in front of the data; read back in any UI language. */
-const META = { print: m('인쇄'), copies: m('매수'), printed: m('인쇄일시') };
+const META = { print: m('인쇄'), copies: m('매수'), printed: m('인쇄일시'), checkedIn: m('체크인 일시') };
 const metaKey = (v: Record<string, string>, k: keyof typeof META) => everyLang(META[k]).find((n) => n in v);
 export const isMetaColumn = (c: string) => Object.values(META).some((k) => everyLang(k).includes(c));
 
@@ -140,11 +140,14 @@ const pad2 = (n: number) => String(n).padStart(2, '0');
 const localStamp = (d: Date) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
 
 export function exportTable(tbl: DataTable, format: 'xlsx' | 'csv', name: string, withMeta = true) {
-  const head = withMeta ? [t(META.print), t(META.copies), t(META.printed), ...tbl.columns] : tbl.columns;
+  // the check-in column only appears once someone has checked in
+  const checkIn = withMeta && tbl.rows.some((r) => r.checkedIn);
+  const head = withMeta ? [t(META.print), t(META.copies), t(META.printed), ...(checkIn ? [t(META.checkedIn)] : []), ...tbl.columns] : tbl.columns;
   const body = tbl.rows.map((r) => {
     const vals = tbl.columns.map((c) => r.values[c] ?? '');
     // ISO-like local time, so it reads back the same whatever the language
-    return withMeta ? [r.print ? 'Y' : 'N', r.copies, r.printed ? localStamp(new Date(r.printed)) : '', ...vals] : vals;
+    const stamp = (s?: string) => (s ? localStamp(new Date(s)) : '');
+    return withMeta ? [r.print ? 'Y' : 'N', r.copies, stamp(r.printed), ...(checkIn ? [stamp(r.checkedIn)] : []), ...vals] : vals;
   });
   const ws = XLSX.utils.aoa_to_sheet([head, ...body]);
   if (format === 'csv') {
@@ -161,12 +164,14 @@ export function exportTable(tbl: DataTable, format: 'xlsx' | 'csv', name: string
 export function absorbMeta(rows: Row[]): Row[] {
   return rows.map((r) => {
     const v = { ...r.values };
-    let { print, copies, printed } = r;
-    const p = metaKey(v, 'print'), c = metaKey(v, 'copies'), d = metaKey(v, 'printed');
+    let { print, copies, printed, checkedIn } = r;
+    const p = metaKey(v, 'print'), c = metaKey(v, 'copies'), d = metaKey(v, 'printed'), k = metaKey(v, 'checkedIn');
+    const time = (s: string) => { const ms = Date.parse(s); return Number.isNaN(ms) ? undefined : new Date(ms).toISOString(); };
     if (p) { print = !/^(n|no|false|0|x)$/i.test(v[p].trim()); delete v[p]; }
     if (c) { copies = Math.max(0, parseInt(v[c], 10) || 1); delete v[c]; }
-    if (d) { const ms = Date.parse(v[d]); printed = Number.isNaN(ms) ? undefined : new Date(ms).toISOString(); delete v[d]; }
-    return { ...r, values: v, print, copies, printed };
+    if (d) { printed = time(v[d]); delete v[d]; }
+    if (k) { checkedIn = time(v[k]); delete v[k]; }
+    return { ...r, values: v, print, copies, printed, checkedIn };
   });
 }
 

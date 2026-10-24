@@ -40,6 +40,7 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
   const dups = useMemo(() => (dupKeys ? findDuplicates(rows, dupKeys) : new Set<string>()), [rows, dupKeys]);
   const multiDesign = project.designs.length > 1;
   const printedCount = rows.filter((r) => r.printed).length;
+  const checkedCount = rows.filter((r) => r.checkedIn).length;
   const totalLabels = rows.filter((r) => r.print).reduce((s, r) => s + r.copies, 0);
 
   const setTable = (fn: (rows: Row[], cols: string[]) => { rows?: Row[]; columns?: string[] }) =>
@@ -109,6 +110,10 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
     if (!confirm(t('모든 행의 인쇄 기록을 지울까요?'))) return;
     setTable((rs) => ({ rows: rs.map((r) => ({ ...r, printed: undefined })) }));
   };
+  const clearCheckIn = () => {
+    if (!confirm(t('모든 행의 체크인 기록을 지울까요?'))) return;
+    setTable((rs) => ({ rows: rs.map((r) => ({ ...r, checkedIn: undefined })) }));
+  };
 
   const start = Math.max(0, Math.floor(scroll / ROW_H) - 5);
   const end = Math.min(view.length, start + Math.ceil((height - 60) / ROW_H) + 12);
@@ -129,7 +134,7 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
       <div className="resize-handle" onPointerDown={startDrag} />
       <div className="data-toolbar">
         <strong>{t('데이터')}</strong>
-        <span className="muted small">{t('{rows}행 · 인쇄 {labels}장 · 출력됨 {printed}', { rows: rows.length, labels: totalLabels, printed: printedCount })}</span>
+        <span className="muted small">{t('{rows}행 · 인쇄 {labels}장 · 출력됨 {printed}', { rows: rows.length, labels: totalLabels, printed: printedCount })}{checkedCount ? ` · ${t('체크인 {n}', { n: checkedCount })}` : ''}</span>
         <button data-tour="import" onClick={() => open('import')}>{t('가져오기 (xlsx·csv)')}</button>
         {source && (
           <span className="sync-status" title={source.url}>
@@ -184,6 +189,7 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
             }}>{t('중복 검사…')}</button>
             {dupKeys && <button onClick={() => setDupKeys(null)}>{t('중복 표시 끄기')}</button>}
             <button onClick={clearPrinted}>{t('인쇄 기록 지우기')}</button>
+            {checkedCount > 0 && <button onClick={clearCheckIn}>{t('체크인 기록 지우기')}</button>}
             {source && <button onClick={() => { if (confirm(t('URL 연결을 끊을까요? 지금 데이터는 그대로 남습니다.'))) commit((p) => ({ ...p, dataSource: undefined })); }}>{t('URL 연결 끊기')}</button>}
             <button onClick={() => open('reprint')}>{t('현장 재발행 / 현장 등록')}</button>
           </div>
@@ -228,7 +234,8 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
                   <span><input type="checkbox" checked={r.print} onChange={(e) => setRow(r.id, { print: e.target.checked })} /></span>
                   <span><input className="copies" type="number" min={0} value={r.copies} onChange={(e) => setRow(r.id, { copies: Math.max(0, parseInt(e.target.value, 10) || 0) })} /></span>
                   {multiDesign && <span className="muted small ellipsis">{pickDesign(project, r).name}</span>}
-                  <span className={`status ${r.printed ? 'done' : ''}`} title={r.printed ? new Date(r.printed).toLocaleString(locale()) : t('미출력')}
+                  <span className={`status ${r.printed ? 'done' : ''}`} title={(r.printed ? new Date(r.printed).toLocaleString(locale()) : t('미출력')) + (r.checkedIn ? `
+${t('체크인 {time}', { time: new Date(r.checkedIn).toLocaleString(locale()) })}` : '')}
                     onClick={() => setRow(r.id, { printed: r.printed ? undefined : new Date().toISOString() })}>{r.printed ? '✓ ' + new Date(r.printed).toLocaleTimeString(locale(), { hour: '2-digit', minute: '2-digit' }) : '—'}</span>
                   {columns.map((c) => (
                     <input key={c + (r.values[c] ?? '')} className="cell" defaultValue={r.values[c] ?? ''}

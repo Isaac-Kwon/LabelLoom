@@ -1,5 +1,5 @@
 import bwipjs from 'bwip-js/browser';
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import ABOUT from '../about.json';
 import { OWN_LICENSE, THIRD_PARTY_LICENSES } from 'virtual:licenses';
 import { BUILD_DATE, BUILD_DETAIL, VERSION } from '../build';
@@ -7,12 +7,13 @@ import { getLang, loc, locale, m, t, tn, tx, type Msg } from '../i18n';
 import { printPages, printTestPage } from '../io/export';
 import { fontFromFile, localFontsSupported, queryLocalFonts, registerFonts } from '../io/fonts';
 import { loadRecent, openProjectFile, pickFile, type RecentEntry } from '../io/project';
+import { matchScan, startScanner, type Scanner } from '../io/scan';
 import { downloadShareFile, downloadShareZip, encodeShare, kbOf, LINK_LIMIT, mainCause, measureShare, partLabel, shareUrl, type ShareKind, type SharePart, type SharePartSize } from '../io/share';
 import { newProject, newRow } from '../model/defaults';
 import { customPaper, labelSize, loadUserPresets, PAPER_KIND_LABEL, paperKind, type PaperKind } from '../model/presets';
 import { soldIn, STOCK_VENDOR_LABEL, stockItems, stockMatches, type StockCountry, type StockVendor } from '../model/stock';
 import { TEMPLATES, type Template } from '../model/templates';
-import type { Paper, Project } from '../model/types';
+import type { Paper, Project, Row as DataRow } from '../model/types';
 import { buildItems, DEFAULT_DUPLEX, labelSizeProject, paginate } from '../render/jobs';
 import { pickDesign, previewCtx } from '../render/resolve';
 import { labelDocument } from '../render/svg';
@@ -382,6 +383,35 @@ export function StartDialog({ onLoad }: { onLoad: (p: Project, name?: string) =>
 
 /* ---------- on-site reprint / registration ---------- */
 
+const SCAN_KEY = 'labelloom.scan';
+interface ScanPrefs { after: 'print' | 'checkin' | 'both'; skipPrinted: boolean }
+const loadScanPrefs = (): ScanPrefs => {
+  try { return { after: 'print', skipPrinted: true, ...JSON.parse(localStorage.getItem(SCAN_KEY) || '{}') }; } catch { return { after: 'print', skipPrinted: true }; }
+};
+
+/** Camera preview that reads codes until it is closed. */
+function CameraScan({ onCode }: { onCode: (text: string) => void }) {
+  const video = useRef<HTMLVideoElement>(null);
+  const cb = useRef(onCode);
+  cb.current = onCode;
+  const [state, setState] = useState<{ engine?: Scanner['engine']; error?: string }>({});
+  useEffect(() => {
+    let sc: Scanner | null = null, live = true;
+    startScanner(video.current!, (c) => cb.current(c))
+      .then((s) => { if (live) { sc = s; setState({ engine: s.engine }); } else s.stop(); })
+      .catch((e: Error) => live && setState({ error: e.name === 'NotAllowedError' ? t('카메라 사용이 허용되지 않았습니다. 주소창의 카메라 권한을 확인하세요.') : t('카메라를 열 수 없습니다: {error}', { error: e.message }) }));
+    return () => { live = false; sc?.stop(); };
+  }, []);
+  return (
+    <div className="camera-scan">
+      <video ref={video} />
+      {state.error ? <div className="warn small">{state.error}</div>
+        : state.engine === 'qr' ? <p className="muted small">{t('이 브라우저에서는 QR 코드만 읽습니다 (Chrome·Edge는 바코드도 읽음).')}</p>
+          : <p className="muted small">{t('코드를 화면 가운데에 비추세요.')}</p>}
+    </div>
+  );
+}
+
 export function ReprintDialog() {
   const project = useStore((s) => s.project);
   const { close, commit, notify, setCurrentRow } = useStore.getState();
@@ -416,6 +446,50 @@ export function ReprintDialog() {
     setForm({});
   };
 
+  /* ----- scanning: a USB scanner types the code and Enter into the search field, or the camera reads it ----- */
+  const [scanPrefs, setScanPrefs] = useState<ScanPrefs>(loadScanPrefs);
+  const setPrefs = (p: Partial<ScanPrefs>) => { const n = { ...scanPrefs, ...p }; setScanPrefs(n); try { localStorage.setItem(SCAN_KEY, JSON.stringify(n)); } catch { /* ignore */ } };
+  const [last, setLast] = useState<{ text: string; kind: 'ok' | 'warn' | 'err'; row?: string } | null>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const hm = (iso: string) => new Date(iso).toLocaleTimeString(locale(), { hour: '2-digit', minute: '2-digit' });
+  const who = (r: DataRow) => cols.slice(0, 3).map((c) => r.values[c]).filter(Boolean).join(' · ') || t('{n}행', { n: project.data.rows.indexOf(r) + 1 });
+  const onScan = (code: string) => {
+    const p = useStore.getState().project;
+    const text = code.trim();
+    if (!text) return;
+    let found = matchScan(p.data.rows, text);
+    // typed by hand: a single row containing the words will do
+    if (!found.length) {
+      const low = text.toLowerCase();
+      found = p.data.rows.filter((r) => Object.values(r.values).some((v) => v.toLowerCase().includes(low)));
+      if (found.length !== 1) found = found.length ? found : [];
+    }
+    if (!found.length) { setLast({ text: t('"{code}": 명단에 없습니다.', { code: text.slice(0, 60) }), kind: 'err' }); return; }
+    if (found.length > 1) { setQ(text); setLast({ text: t('"{code}": {n}명이 해당합니다. 목록에서 고르세요.', { code: text.slice(0, 60), n: found.length }), kind: 'warn' }); return; }
+    const row = found[0];
+    const index = p.data.rows.indexOf(row);
+    setCurrentRow(index);
+    const notes: string[] = [];
+    let kind: 'ok' | 'warn' = 'ok';
+    let next = p;
+    if (scanPrefs.after !== 'print') {
+      if (row.checkedIn) { notes.push(t('이미 체크인 {time}', { time: hm(row.checkedIn) })); kind = 'warn'; }
+      else {
+        const now = new Date().toISOString();
+        next = { ...p, data: { ...p.data, rows: p.data.rows.map((r) => (r.id === row.id ? { ...r, checkedIn: now } : r)) } };
+        commit(() => next);
+        notes.push(t('체크인 {time}', { time: hm(now) }));
+      }
+    }
+    if (scanPrefs.after !== 'checkin') {
+      if (scanPrefs.skipPrinted && row.printed) { notes.push(t('이미 출력함 {time}: 다시 뽑으려면 목록의 인쇄를 누르세요', { time: hm(row.printed) })); kind = 'warn'; setQ(text); }
+      else { printOne(row.id, next); notes.push(t('인쇄함')); }
+    }
+    setLast({ text: `${who(row)} — ${notes.join(' · ')}`, kind, row: row.id });
+    if (kind === 'ok') setQ('');
+  };
+  const [camera, setCamera] = useState(false);
+
   return (
     <Modal title={t('현장 재발행 · 현장 등록')} onClose={close} wide>
       <Row label={t('출력#mode')}>
@@ -424,13 +498,27 @@ export function ReprintDialog() {
       </Row>
       <PrintSetupAlert width={labelPage ? project.paper.labelWidth : project.paper.width} height={labelPage ? project.paper.labelHeight : project.paper.height} />
       <h3>{t('재발행 — 이름·소속·ID로 찾기')}</h3>
-      <input type="search" autoFocus placeholder={t('검색어 입력…')} value={q} onChange={(e) => setQ(e.target.value)} className="wide-input" />
+      <Row label={t('스캔하면')}>
+        <Seg value={scanPrefs.after} onChange={(v) => setPrefs({ after: v })} options={[
+          { value: 'print', label: t('인쇄') }, { value: 'checkin', label: t('체크인만') }, { value: 'both', label: t('체크인 + 인쇄') },
+        ]} />
+        {scanPrefs.after !== 'checkin' && <Check label={t('이미 출력한 사람은 자동 인쇄 안 함')} checked={scanPrefs.skipPrinted} onChange={(v) => setPrefs({ skipPrinted: v })} />}
+      </Row>
+      <div className="scan-bar">
+        <input ref={searchRef} type="search" autoFocus placeholder={t('검색어 입력 또는 바코드·QR 스캔 후 Enter…')} value={q} onChange={(e) => setQ(e.target.value)} className="wide-input"
+          onKeyDown={(e) => { if (e.key === 'Enter' && !e.nativeEvent.isComposing) { e.preventDefault(); onScan(q); } }} />
+        <button className={camera ? 'on' : ''} onClick={() => setCamera(!camera)} title={t('카메라로 참가자의 QR·바코드를 읽습니다')}>📷 {camera ? t('카메라 끄기') : t('카메라로 스캔')}</button>
+      </div>
+      {camera && <CameraScan onCode={(c) => { onScan(c); searchRef.current?.focus(); }} />}
+      {last && <div className={`scan-result ${last.kind}`}>{last.kind === 'ok' ? '✓' : last.kind === 'warn' ? '⚠' : '✕'} {last.text}</div>}
       <ul className="hits">
         {hits.map(({ r, i }) => (
           <li key={r.id}>
             <span className="idx">{i + 1}</span>
             <span className="ellipsis">{cols.slice(0, 4).map((c) => r.values[c]).filter(Boolean).join(' · ')}</span>
+            {r.checkedIn && <span className="status done" title={new Date(r.checkedIn).toLocaleString(locale())}>{t('체크인 {time}', { time: hm(r.checkedIn) })}</span>}
             <span className={`status ${r.printed ? 'done' : ''}`}>{r.printed ? t('출력 {time}', { time: new Date(r.printed).toLocaleTimeString(locale(), { hour: '2-digit', minute: '2-digit' }) }) : t('미출력')}</span>
+            {!r.checkedIn && <button onClick={() => commit((x) => ({ ...x, data: { ...x.data, rows: x.data.rows.map((y) => (y.id === r.id ? { ...y, checkedIn: new Date().toISOString() } : y)) } }))}>{t('체크인')}</button>}
             <button className="primary" onClick={() => printOne(r.id)}>{t('인쇄')}</button>
           </li>
         ))}

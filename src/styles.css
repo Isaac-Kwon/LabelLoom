@@ -314,7 +314,14 @@ input.stock-search { flex: 1; min-width: 200px; max-width: 320px; }
 .share-qr { width: 180px; height: 180px; background: #fff; padding: 8px; border-radius: 8px; align-self: center; }
 .share-qr svg { width: 100%; height: 100%; }
 .hits { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 3px; max-height: 240px; overflow: auto; }
-.hits li { display: grid; grid-template-columns: 34px 1fr 90px 64px; gap: 8px; align-items: center; padding: 3px 6px; border-radius: 6px; background: var(--panel-2); }
+.hits li { display: grid; grid-template-columns: 34px 1fr; grid-auto-flow: column; grid-auto-columns: auto; gap: 8px; align-items: center; padding: 3px 6px; border-radius: 6px; background: var(--panel-2); }
+.scan-bar { display: flex; gap: 6px; align-items: center; }
+.scan-bar .wide-input { flex: 1; }
+.camera-scan video { display: block; width: 100%; max-width: 360px; max-height: 240px; border-radius: 8px; background: #000; margin: 6px 0 2px; object-fit: cover; }
+.scan-result { padding: 6px 10px; border-radius: 6px; margin: 6px 0; font-size: 13px; border: 1px solid var(--border); }
+.scan-result.ok { color: var(--ok); }
+.scan-result.warn { background: var(--warn-bg); color: var(--warn-text); }
+.scan-result.err { color: var(--danger, #dc2626); }
 .wide-input { width: 100%; font-size: 15px; padding: 8px; }
 .steps { padding-left: 20px; line-height: 1.7; margin: 0; }
 .cal-graphics { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; margin: 10px 0 4px; }

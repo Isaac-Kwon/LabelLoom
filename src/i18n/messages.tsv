@@ -474,7 +474,6 @@ Letter에 채우기	Fill a Letter sheet	Riempi un foglio Letter	Remplir une feui
 현재 용지의 칸 지정	A chosen label on the current sheet	Un'etichetta scelta sul foglio attuale	Une étiquette choisie sur la feuille actuelle
 번째 칸	(label position)	(posizione etichetta)	(position de l'étiquette)
 재발행 — 이름·소속·ID로 찾기	Reprint — find by name, affiliation or ID	Ristampa — cerca per nome, affiliazione o ID	Réimpression — rechercher par nom, affiliation ou ID
-검색어 입력…	Search…	Cerca…	Rechercher…
 출력 {time}	Printed {time}	Stampata {time}	Imprimée {time}
 찾는 사람이 없습니다. 아래에서 현장 등록하세요.	Nobody found. Register them on site below.	Nessun risultato. Registra la persona in loco qui sotto.	Personne trouvée. Inscrivez-la sur place ci-dessous.
 현장 등록 — 새 참가자 추가 후 바로 인쇄	On-site registration — add a new attendee and print	Registrazione in loco — aggiungi un nuovo partecipante e stampa	Inscription sur place — ajouter un participant et imprimer
@@ -1215,3 +1214,28 @@ N번째 단어 (word:1, 끝에서는 word:-1)	Nth word (word:1, from the end wor
 묶음마다 새 장	New sheet for each group	Nuovo foglio per ogni gruppo	Nouvelle feuille par groupe
 묶음 앞에 구분 라벨	Divider label before each group	Etichetta divisoria prima di ogni gruppo	Étiquette de séparation avant chaque groupe
 묶음 이름과 장 수를 적은 라벨을 각 묶음 앞에 넣습니다 (나눠 줄 때 구분용)	Adds a label with the group name and count before each group, to tell them apart when handing out	Aggiunge prima di ogni gruppo un'etichetta con il nome e il numero, per distinguerli quando si distribuiscono	Ajoute avant chaque groupe une étiquette avec son nom et son nombre, pour les distinguer lors de la distribution
+# scan check-in
+"{code}": {n}명이 해당합니다. 목록에서 고르세요.	"{code}": {n} people match. Pick one from the list.	"{code}": corrispondono {n} persone. Scegline una dall'elenco.	« {code} » : {n} personnes correspondent. Choisissez dans la liste.
+"{code}": 명단에 없습니다.	"{code}": not in the list.	"{code}": non è nell'elenco.	« {code} » : absent de la liste.
+검색어 입력 또는 바코드·QR 스캔 후 Enter…	Type a search or scan a barcode/QR, then Enter…	Digita una ricerca o scansiona un codice/QR, poi Invio…	Saisissez une recherche ou scannez un code/QR, puis Entrée…
+스캔하면	On scan	Alla scansione	À la lecture
+이 브라우저에서는 QR 코드만 읽습니다 (Chrome·Edge는 바코드도 읽음).	This browser reads QR codes only (Chrome and Edge read barcodes too).	Questo browser legge solo codici QR (Chrome ed Edge leggono anche i codici a barre).	Ce navigateur ne lit que les codes QR (Chrome et Edge lisent aussi les codes-barres).
+이미 체크인 {time}	Already checked in {time}	Già registrato {time}	Déjà enregistré {time}
+이미 출력한 사람은 자동 인쇄 안 함	Don't print automatically for people already printed	Non stampare automaticamente chi è già stato stampato	Ne pas imprimer automatiquement les personnes déjà imprimées
+이미 출력함 {time}: 다시 뽑으려면 목록의 인쇄를 누르세요	Already printed {time}: press Print in the list to print again	Già stampato {time}: premi Stampa nell'elenco per ristampare	Déjà imprimé {time} : appuyez sur Imprimer dans la liste pour réimprimer
+인쇄함	printed	stampato	imprimé
+체크인 + 인쇄	Check in + print	Registra + stampa	Enregistrer + imprimer
+체크인 {time}	Checked in {time}	Registrato {time}	Enregistré {time}
+체크인 일시	Checked in at	Registrato il	Enregistré le
+체크인	Check in	Registra	Enregistrer
+체크인만	Check in only	Solo registrazione	Enregistrer seulement
+카메라 끄기	Camera off	Spegni fotocamera	Éteindre la caméra
+카메라 사용이 허용되지 않았습니다. 주소창의 카메라 권한을 확인하세요.	Camera access was not allowed. Check the camera permission in the address bar.	L'accesso alla fotocamera non è stato consentito. Controlla il permesso della fotocamera nella barra degli indirizzi.	L'accès à la caméra n'a pas été autorisé. Vérifiez l'autorisation de la caméra dans la barre d'adresse.
+카메라로 스캔	Scan with camera	Scansiona con la fotocamera	Scanner avec la caméra
+카메라로 참가자의 QR·바코드를 읽습니다	Reads attendees' QR codes and barcodes with the camera	Legge con la fotocamera i QR e i codici a barre dei partecipanti	Lit avec la caméra les QR et codes-barres des participants
+카메라를 열 수 없습니다: {error}	Cannot open the camera: {error}	Impossibile aprire la fotocamera: {error}	Impossible d'ouvrir la caméra : {error}
+코드를 화면 가운데에 비추세요.	Hold the code in the middle of the picture.	Inquadra il codice al centro dell'immagine.	Placez le code au centre de l'image.
+# check-in in the data panel
+체크인 {n}	Checked in {n}	Registrati {n}	Enregistrés {n}
+모든 행의 체크인 기록을 지울까요?	Clear the check-in record of every row?	Cancellare la registrazione di tutte le righe?	Effacer l'enregistrement de toutes les lignes ?
+체크인 기록 지우기	Clear check-ins	Cancella registrazioni	Effacer les enregistrements
