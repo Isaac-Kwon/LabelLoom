@@ -183,7 +183,7 @@ export function QuickForm({ project, notify, onPrinted }: {
 }
 
 /** Editor dialog: same form over the current project, optionally recording what was printed in the data table. */
-export function QuickDialog() {
+export function QuickDialog({ onFullscreen }: { onFullscreen: () => void }) {
   const project = useStore((s) => s.project);
   const { close, commit, notify } = useStore.getState();
   const [record, setRecord] = useState(true);
@@ -194,7 +194,10 @@ export function QuickDialog() {
   };
   return (
     <Modal title={`빠른 출력 — ${project.name}`} onClose={close} wide="xl"
-      actions={<button onClick={close} title="대화상자를 닫고 디자인 편집으로 돌아갑니다">✎ 편집기에서 수정</button>}
+      actions={<div className="btn-row">
+        <button onClick={() => { close(); onFullscreen(); }} title="편집기를 닫고 빠른 출력 전용 화면으로 전환합니다 (다시 돌아올 수 있습니다)">⛶ 전체 화면으로</button>
+        <button onClick={close} title="대화상자를 닫고 디자인 편집으로 돌아갑니다">✎ 편집기에서 수정</button>
+      </div>}
       footer={<><Check label="입력한 내용을 명단에 기록" checked={record} onChange={setRecord} /><span className="spacer" /><button onClick={close}>닫기</button></>}>
       <QuickForm project={project} notify={notify} onPrinted={onPrinted} />
     </Modal>

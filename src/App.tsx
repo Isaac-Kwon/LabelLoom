@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { version } from '../package.json';
 import { registerFonts } from './io/fonts';
 import { forgetFileHandle, loadAutosave, openProjectFile, parseProject, pushRecent, saveAutosave, saveProjectFile } from './io/project';
@@ -28,14 +28,16 @@ const TOOL_KEYS: Record<string, Parameters<ReturnType<typeof useStore.getState>[
   v: 'select', t: 'text', r: 'rect', o: 'ellipse', l: 'line', b: 'barcode', q: 'qr', i: 'image',
 };
 
-export default function App({ initial }: { initial?: Project }) {
+/** Startup state for this page. App remounts when coming back from the quick print page, and StrictMode runs effects twice in dev. */
+const boot = { started: false, done: false, initial: undefined as Project | undefined };
+
+export default function App({ initial, onQuick }: { initial?: Project; onQuick: () => void }) {
   const dialog = useStore((s) => s.dialog);
   const toast = useStore((s) => s.toast);
   const project = useStore((s) => s.project);
   const [dataH, setDataH] = useState(() => Number(localStorage.getItem('labelloom.dataH')) || 220);
   const [ready, setReady] = useState(false);
   const [dropping, setDropping] = useState(false);
-  const started = useRef(false);
 
   const loadProject = useCallback((p: Project, name = '') => {
     const s = useStore.getState();
@@ -49,8 +51,14 @@ export default function App({ initial }: { initial?: Project }) {
 
   /* ---------- startup: template from quick print → share link → autosave → start screen ---------- */
   useEffect(() => {
-    if (started.current) return; // StrictMode runs effects twice in dev; ask only once
-    started.current = true;
+    const fresh = initial && initial !== boot.initial;
+    if (!fresh && boot.started) {
+      // back from quick print with the same work (still in the store), or StrictMode's second run
+      if (boot.done) setReady(true);
+      return;
+    }
+    boot.started = true;
+    boot.initial = initial;
     /** Open p in place of the autosaved work, which is kept in the recent list (after asking). */
     const adopt = async (p: Project, what: string, done: string) => {
       const prev = await loadAutosave();
@@ -78,6 +86,7 @@ export default function App({ initial }: { initial?: Project }) {
           try { loadProject(migrateProject(prev)); } catch { s.open('start'); }
         } else s.open('start');
       }
+      boot.done = true;
       setReady(true);
     })();
   }, [loadProject, initial]);
@@ -180,7 +189,7 @@ export default function App({ initial }: { initial?: Project }) {
       {dialog === 'share' && <ShareDialog />}
       {dialog === 'start' && <StartDialog onLoad={loadProject} />}
       {dialog === 'reprint' && <ReprintDialog />}
-      {dialog === 'quick' && <QuickDialog />}
+      {dialog === 'quick' && <QuickDialog onFullscreen={onQuick} />}
       {dialog === 'calibration' && <CalibrationDialog />}
       {dialog === 'fonts' && <FontsDialog />}
       {dialog === 'shortcuts' && <ShortcutsDialog />}
