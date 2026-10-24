@@ -1,0 +1,7430 @@
+{
+ "schema": "labelloom/label-stock-specs@1",
+ "generated": "2026-10-24",
+ "units": "mm",
+ "coordinateSystem": "원점 = 용지 좌상단, x 오른쪽, y 아래. grid.left/top = 첫 라벨(1열 1행)의 좌상단. pitch = 같은 축 이웃 라벨 좌상단 간 거리.",
+ "paperModelMapping": {
+  "width": "page.w",
+  "height": "page.h",
+  "labelWidth": "label.w",
+  "labelHeight": "label.h",
+  "cols": "grid.cols",
+  "rows": "grid.rows",
+  "marginLeft": "grid.left",
+  "marginTop": "grid.top",
+  "gapX": "grid.gapX",
+  "gapY": "grid.gapY",
+  "cornerRadius": "label.cornerRadius ?? (rect: 기본값 정책, 문서 참조)"
+ },
+ "sources": {
+  "word-builtin": "Microsoft Word 내장 라벨 DB(라벨 제조사가 MS에 등록한 정의). Word COM MailingLabel.CreateNewDocument로 추출",
+  "vendor-template": "제조사 홈페이지가 제품별로 배포하는 Word 서식(.doc)의 페이지 여백·표 셀 크기에서 추출"
+ },
+ "items": [
+  {
+   "id": "formtec-2308b",
+   "vendor": "Formtec",
+   "code": "2308B",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "이름표",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 90.0,
+    "h": 60.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 4,
+    "left": 7.5,
+    "top": 13.49,
+    "pitchX": 105.02,
+    "pitchY": 70.01,
+    "gapX": 15.02,
+    "gapY": 10.01,
+    "right": 7.48,
+    "bottom": 13.48
+   },
+   "count": 8,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "이름표(명찰) 라벨. 카탈로그 2308 8칸 90×60"
+   ]
+  },
+  {
+   "id": "formtec-3100",
+   "vendor": "Formtec",
+   "code": "3100",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "바코드용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 38.1,
+    "h": 21.2,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 5,
+    "rows": 13,
+    "left": 4.66,
+    "top": 10.69,
+    "pitchX": 40.62,
+    "pitchY": 21.2,
+    "gapX": 2.52,
+    "gapY": 0.0,
+    "right": 4.76,
+    "bottom": 10.71
+   },
+   "count": 65,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Avery L7651",
+    "Avery Zweckform 3666",
+    "Printec V3510",
+    "Printec V3940",
+    "Printec V8510"
+   ]
+  },
+  {
+   "id": "formtec-3101",
+   "vendor": "Formtec",
+   "code": "3101",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "바코드용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 38.1,
+    "h": 19.2,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 5,
+    "rows": 12,
+    "left": 6.0,
+    "top": 23.79,
+    "pitchX": 39.99,
+    "pitchY": 21.17,
+    "gapX": 1.89,
+    "gapY": 1.97,
+    "right": 5.94,
+    "bottom": 21.14
+   },
+   "count": 60,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "서식 셀 = 피치(40.0×21.17). 라벨은 셀 안에서 좌상단 기준으로 둠 — 세로 간격 1.97은 추정",
+    "상하 여백(상/하) 23.79/21.14"
+   ],
+   "equivalents": [
+    "Printec V3520"
+   ]
+  },
+  {
+   "id": "formtec-3102",
+   "vendor": "Formtec",
+   "code": "3102",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "바코드용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 47.0,
+    "h": 26.9,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 10,
+    "left": 7.25,
+    "top": 14.2,
+    "pitchX": 49.49,
+    "pitchY": 26.9,
+    "gapX": 2.49,
+    "gapY": 0.0,
+    "right": 7.28,
+    "bottom": 13.8
+   },
+   "count": 40,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Printec V3410",
+    "Printec V8410"
+   ]
+  },
+  {
+   "id": "formtec-3104",
+   "vendor": "Formtec",
+   "code": "3104",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "바코드용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 62.7,
+    "h": 30.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 9,
+    "left": 8.48,
+    "top": 10.99,
+    "pitchX": 65.16,
+    "pitchY": 30.1,
+    "gapX": 2.46,
+    "gapY": 0.0,
+    "right": 8.5,
+    "bottom": 15.11
+   },
+   "count": 27,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 10.99/15.11"
+   ],
+   "equivalents": [
+    "Printec V3350"
+   ]
+  },
+  {
+   "id": "formtec-3105",
+   "vendor": "Formtec",
+   "code": "3105",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "주소용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 7,
+    "left": 7.2,
+    "top": 15.79,
+    "pitchX": 66.02,
+    "pitchY": 38.1,
+    "gapX": 2.52,
+    "gapY": 0.0,
+    "right": 7.26,
+    "bottom": 14.51
+   },
+   "count": 21,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "A-ONE 72221",
+    "Avery L7160",
+    "Printec V3330",
+    "Printec V3970",
+    "Printec V3990",
+    "Printec V3995",
+    "Printec V8330"
+   ]
+  },
+  {
+   "id": "formtec-3106",
+   "vendor": "Formtec",
+   "code": "3106",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "주소용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 64.0,
+    "h": 34.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 8,
+    "left": 6.49,
+    "top": 12.49,
+    "pitchX": 66.5,
+    "pitchY": 34.0,
+    "gapX": 2.5,
+    "gapY": 0.0,
+    "right": 6.51,
+    "bottom": 12.51
+   },
+   "count": 24,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Avery L7159",
+    "Avery Zweckform 3658",
+    "Printec V3340",
+    "Printec V8340"
+   ]
+  },
+  {
+   "id": "formtec-3107",
+   "vendor": "Formtec",
+   "code": "3107",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "주소용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.1,
+    "h": 33.9,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 8,
+    "left": 4.69,
+    "top": 14.2,
+    "pitchX": 101.55,
+    "pitchY": 33.9,
+    "gapX": 2.45,
+    "gapY": 0.0,
+    "right": 4.66,
+    "bottom": 11.6
+   },
+   "count": 16,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 14.2/11.6"
+   ],
+   "equivalents": [
+    "Avery L7162",
+    "Printec V3240",
+    "Printec V3930",
+    "Printec V3980",
+    "Printec V3985",
+    "Printec V8240"
+   ]
+  },
+  {
+   "id": "formtec-3108",
+   "vendor": "Formtec",
+   "code": "3108",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "주소용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.1,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 7,
+    "left": 4.69,
+    "top": 13.79,
+    "pitchX": 101.55,
+    "pitchY": 38.1,
+    "gapX": 2.45,
+    "gapY": 0.0,
+    "right": 4.66,
+    "bottom": 16.51
+   },
+   "count": 14,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 13.79/16.51"
+   ],
+   "equivalents": [
+    "Avery L7163",
+    "Printec V3230",
+    "Printec V3810",
+    "Printec V3820",
+    "Printec V3830",
+    "Printec V3920",
+    "Printec V8230"
+   ]
+  },
+  {
+   "id": "formtec-3109",
+   "vendor": "Formtec",
+   "code": "3109",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "주소용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 100.0,
+    "h": 30.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 9,
+    "left": 3.7,
+    "top": 13.49,
+    "pitchX": 102.39,
+    "pitchY": 30.0,
+    "gapX": 2.39,
+    "gapY": 0.0,
+    "right": 3.91,
+    "bottom": 13.51
+   },
+   "count": 18,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Avery L7172",
+    "Printec V3260",
+    "Printec V8260"
+   ]
+  },
+  {
+   "id": "formtec-3110",
+   "vendor": "Formtec",
+   "code": "3110",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 26.0,
+    "h": 29.5,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 6,
+    "rows": 9,
+    "left": 18.49,
+    "top": 6.98,
+    "pitchX": 29.49,
+    "pitchY": 31.34,
+    "gapX": 3.49,
+    "gapY": 1.84,
+    "right": 18.06,
+    "bottom": 9.8
+   },
+   "count": 54,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 6.98/9.8"
+   ],
+   "equivalents": [
+    "Printec V3610"
+   ]
+  },
+  {
+   "id": "formtec-3111",
+   "vendor": "Formtec",
+   "code": "3111",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 20.0,
+    "h": 20.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 8,
+    "rows": 13,
+    "left": 14.5,
+    "top": 18.01,
+    "pitchX": 23.0,
+    "pitchY": 20.0,
+    "gapX": 3.0,
+    "gapY": 0.0,
+    "right": 14.5,
+    "bottom": 18.99
+   },
+   "count": 104,
+   "source": "vendor-template",
+   "confidence": "medium"
+  },
+  {
+   "id": "formtec-3112",
+   "vendor": "Formtec",
+   "code": "3112",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "물류관리용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 70.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 4,
+    "left": 6.98,
+    "top": 7.88,
+    "pitchX": 66.15,
+    "pitchY": 70.0,
+    "gapX": 2.65,
+    "gapY": 0.0,
+    "right": 7.22,
+    "bottom": 9.12
+   },
+   "count": 12,
+   "source": "vendor-template",
+   "confidence": "medium"
+  },
+  {
+   "id": "formtec-3114",
+   "vendor": "Formtec",
+   "code": "3114",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "물류관리용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.1,
+    "h": 67.7,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 4,
+    "left": 4.64,
+    "top": 13.0,
+    "pitchX": 101.6,
+    "pitchY": 67.7,
+    "gapX": 2.5,
+    "gapY": 0.0,
+    "right": 4.66,
+    "bottom": 13.2
+   },
+   "count": 8,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Avery L7165",
+    "Printec V3220",
+    "Printec V3910",
+    "Printec V8220"
+   ]
+  },
+  {
+   "id": "formtec-3116",
+   "vendor": "Formtec",
+   "code": "3116",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "물류관리용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.1,
+    "h": 93.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 3,
+    "left": 4.64,
+    "top": 6.98,
+    "pitchX": 101.6,
+    "pitchY": 93.1,
+    "gapX": 2.5,
+    "gapY": 0.0,
+    "right": 4.66,
+    "bottom": 10.72
+   },
+   "count": 6,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 6.98/10.72"
+   ],
+   "equivalents": [
+    "Avery L7166",
+    "Printec V3210"
+   ]
+  },
+  {
+   "id": "formtec-3118",
+   "vendor": "Formtec",
+   "code": "3118",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "물류관리용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.1,
+    "h": 140.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 2,
+    "left": 4.99,
+    "top": 6.98,
+    "pitchX": 100.98,
+    "pitchY": 139.79,
+    "gapX": 1.88,
+    "gapY": -0.21,
+    "right": 4.93,
+    "bottom": 10.23
+   },
+   "count": 4,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 6.98/10.23"
+   ]
+  },
+  {
+   "id": "formtec-3120",
+   "vendor": "Formtec",
+   "code": "3120",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "물류관리용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 200.0,
+    "h": 140.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 2,
+    "left": 4.99,
+    "top": 6.98,
+    "pitchX": 200.0,
+    "pitchY": 139.74,
+    "gapX": 0.0,
+    "gapY": -0.26,
+    "right": 5.01,
+    "bottom": 10.28
+   },
+   "count": 2,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 6.98/10.28"
+   ]
+  },
+  {
+   "id": "formtec-3130",
+   "vendor": "Formtec",
+   "code": "3130",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 210.0,
+    "h": 297.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 1,
+    "left": 0.0,
+    "top": 0.0,
+    "pitchX": 210.0,
+    "pitchY": 297.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 0.0
+   },
+   "count": 1,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "formtec-3136",
+   "vendor": "Formtec",
+   "code": "3136",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 46.0,
+    "h": 8.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 34,
+    "left": 8.48,
+    "top": 10.5,
+    "pitchX": 48.98,
+    "pitchY": 8.0,
+    "gapX": 2.98,
+    "gapY": 0.0,
+    "right": 8.58,
+    "bottom": 14.5
+   },
+   "count": 136,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 10.5/14.5"
+   ],
+   "equivalents": [
+    "Printec V3590"
+   ]
+  },
+  {
+   "id": "formtec-3142",
+   "vendor": "Formtec",
+   "code": "3142",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 72.0,
+    "h": 13.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 21,
+    "left": 28.01,
+    "top": 11.01,
+    "pitchX": 82.0,
+    "pitchY": 13.0,
+    "gapX": 10.0,
+    "gapY": 0.0,
+    "right": 27.99,
+    "bottom": 12.99
+   },
+   "count": 42,
+   "source": "vendor-template",
+   "confidence": "medium"
+  },
+  {
+   "id": "formtec-3145",
+   "vendor": "Formtec",
+   "code": "3145",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 30.0,
+    "h": 9.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 5,
+    "rows": 29,
+    "left": 19.98,
+    "top": 17.99,
+    "pitchX": 35.0,
+    "pitchY": 9.0,
+    "gapX": 5.0,
+    "gapY": 0.0,
+    "right": 20.02,
+    "bottom": 18.01
+   },
+   "count": 145,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Printec V3550"
+   ]
+  },
+  {
+   "id": "formtec-3154",
+   "vendor": "Formtec",
+   "code": "3154",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 62.7,
+    "h": 15.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 18,
+    "left": 7.99,
+    "top": 10.99,
+    "pitchX": 65.19,
+    "pitchY": 15.0,
+    "gapX": 2.49,
+    "gapY": 0.0,
+    "right": 8.93,
+    "bottom": 16.01
+   },
+   "count": 54,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 10.99/16.01"
+   ],
+   "equivalents": [
+    "Printec V3540"
+   ]
+  },
+  {
+   "id": "formtec-3181",
+   "vendor": "Formtec",
+   "code": "3181",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 53.0,
+    "h": 10.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 27,
+    "left": 15.49,
+    "top": 11.99,
+    "pitchX": 62.99,
+    "pitchY": 10.0,
+    "gapX": 9.99,
+    "gapY": 0.0,
+    "right": 15.53,
+    "bottom": 15.01
+   },
+   "count": 81,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 11.99/15.01"
+   ]
+  },
+  {
+   "id": "formtec-3189",
+   "vendor": "Formtec",
+   "code": "3189",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 25.4,
+    "h": 10.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 7,
+    "rows": 27,
+    "left": 8.18,
+    "top": 11.99,
+    "pitchX": 27.89,
+    "pitchY": 10.0,
+    "gapX": 2.49,
+    "gapY": 0.0,
+    "right": 9.08,
+    "bottom": 15.01
+   },
+   "count": 189,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 11.99/15.01"
+   ],
+   "equivalents": [
+    "Avery L7658",
+    "Printec V3560"
+   ]
+  },
+  {
+   "id": "formtec-3203",
+   "vendor": "Formtec",
+   "code": "3203",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "물류관리용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 200.0,
+    "h": 93.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 3,
+    "left": 4.99,
+    "top": 9.0,
+    "pitchX": 200.0,
+    "pitchY": 93.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 5.01,
+    "bottom": 9.0
+   },
+   "count": 3,
+   "source": "vendor-template",
+   "confidence": "medium"
+  },
+  {
+   "id": "formtec-3212",
+   "vendor": "Formtec",
+   "code": "3212",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "주소용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 100.0,
+    "h": 45.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 6,
+    "left": 3.7,
+    "top": 9.98,
+    "pitchX": 102.5,
+    "pitchY": 45.0,
+    "gapX": 2.5,
+    "gapY": 0.0,
+    "right": 3.8,
+    "bottom": 17.02
+   },
+   "count": 12,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 9.98/17.02"
+   ]
+  },
+  {
+   "id": "formtec-3216",
+   "vendor": "Formtec",
+   "code": "3216",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 20.0,
+    "h": 10.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 8,
+    "rows": 27,
+    "left": 14.5,
+    "top": 11.99,
+    "pitchX": 22.98,
+    "pitchY": 10.0,
+    "gapX": 2.98,
+    "gapY": 0.0,
+    "right": 14.64,
+    "bottom": 15.01
+   },
+   "count": 216,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 11.99/15.01"
+   ],
+   "equivalents": [
+    "Printec V3570"
+   ]
+  },
+  {
+   "id": "formtec-3218",
+   "vendor": "Formtec",
+   "code": "3218",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "주소용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 45.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 6,
+    "left": 7.25,
+    "top": 9.98,
+    "pitchX": 65.99,
+    "pitchY": 45.0,
+    "gapX": 2.49,
+    "gapY": 0.0,
+    "right": 7.27,
+    "bottom": 17.02
+   },
+   "count": 18,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 9.98/17.02"
+   ]
+  },
+  {
+   "id": "formtec-3219",
+   "vendor": "Formtec",
+   "code": "3219",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "주소용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 100.0,
+    "h": 24.5,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 11,
+    "left": 4.0,
+    "top": 13.0,
+    "pitchX": 102.01,
+    "pitchY": 24.5,
+    "gapX": 2.01,
+    "gapY": 0.0,
+    "right": 3.99,
+    "bottom": 14.5
+   },
+   "count": 22,
+   "source": "vendor-template",
+   "confidence": "medium"
+  },
+  {
+   "id": "formtec-3510",
+   "vendor": "Formtec",
+   "code": "3510",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 88.9,
+    "h": 52.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 5,
+    "left": 11.89,
+    "top": 17.5,
+    "pitchX": 97.35,
+    "pitchY": 52.0,
+    "gapX": 8.45,
+    "gapY": 0.0,
+    "right": 11.86,
+    "bottom": 19.5
+   },
+   "count": 10,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Printec V3250",
+    "Printec V8250"
+   ]
+  },
+  {
+   "id": "formtec-3610",
+   "vendor": "Formtec",
+   "code": "3610",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 69.8,
+    "h": 69.8,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 4,
+    "left": 31.19,
+    "top": 6.98,
+    "pitchX": 77.79,
+    "pitchY": 71.79,
+    "gapX": 7.99,
+    "gapY": 1.99,
+    "right": 31.22,
+    "bottom": 4.85
+   },
+   "count": 8,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 6.98/4.85"
+   ]
+  },
+  {
+   "id": "formtec-3615",
+   "vendor": "Formtec",
+   "code": "3615",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 69.8,
+    "h": 52.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 5,
+    "left": 31.19,
+    "top": 18.49,
+    "pitchX": 77.79,
+    "pitchY": 52.0,
+    "gapX": 7.99,
+    "gapY": 0.0,
+    "right": 31.22,
+    "bottom": 18.51
+   },
+   "count": 10,
+   "source": "vendor-template",
+   "confidence": "medium"
+  },
+  {
+   "id": "formtec-3620",
+   "vendor": "Formtec",
+   "code": "3620",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "주소용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 119.3,
+    "h": 42.8,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 6,
+    "left": 45.35,
+    "top": 19.0,
+    "pitchX": 119.3,
+    "pitchY": 42.8,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 45.35,
+    "bottom": 21.2
+   },
+   "count": 6,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 19.0/21.2"
+   ]
+  },
+  {
+   "id": "formtec-3621",
+   "vendor": "Formtec",
+   "code": "3621",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "화일인덱스용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 95.0,
+    "h": 14.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 18,
+    "left": 9.0,
+    "top": 22.49,
+    "pitchX": 97.0,
+    "pitchY": 14.0,
+    "gapX": 2.0,
+    "gapY": 0.0,
+    "right": 9.0,
+    "bottom": 22.51
+   },
+   "count": 36,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Printec V3460"
+   ]
+  },
+  {
+   "id": "formtec-3622",
+   "vendor": "Formtec",
+   "code": "3622",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 30.0,
+    "h": 14.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 6,
+    "rows": 16,
+    "left": 9.98,
+    "top": 21.48,
+    "pitchX": 32.0,
+    "pitchY": 15.95,
+    "gapX": 2.0,
+    "gapY": 1.95,
+    "right": 10.02,
+    "bottom": 22.27
+   },
+   "count": 96,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Printec V3530"
+   ]
+  },
+  {
+   "id": "formtec-3623",
+   "vendor": "Formtec",
+   "code": "3623",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 46.0,
+    "h": 11.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 21,
+    "left": 6.09,
+    "top": 16.49,
+    "pitchX": 50.58,
+    "pitchY": 12.56,
+    "gapX": 4.58,
+    "gapY": 1.56,
+    "right": 6.17,
+    "bottom": 18.31
+   },
+   "count": 84,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Printec V3420"
+   ]
+  },
+  {
+   "id": "formtec-3624",
+   "vendor": "Formtec",
+   "code": "3624",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "화일인덱스용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 150.0,
+    "h": 28.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 9,
+    "left": 29.99,
+    "top": 22.49,
+    "pitchX": 150.0,
+    "pitchY": 28.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 30.01,
+    "bottom": 22.51
+   },
+   "count": 9,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Printec V3190"
+   ]
+  },
+  {
+   "id": "formtec-3625",
+   "vendor": "Formtec",
+   "code": "3625",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "화일인덱스용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 160.0,
+    "h": 38.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 7,
+    "left": 24.99,
+    "top": 15.49,
+    "pitchX": 160.0,
+    "pitchY": 38.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 25.01,
+    "bottom": 15.51
+   },
+   "count": 7,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Printec V3170"
+   ]
+  },
+  {
+   "id": "formtec-3626",
+   "vendor": "Formtec",
+   "code": "3626",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "화일인덱스용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 160.0,
+    "h": 60.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 4,
+    "left": 24.99,
+    "top": 28.49,
+    "pitchX": 160.0,
+    "pitchY": 60.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 25.01,
+    "bottom": 28.51
+   },
+   "count": 4,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Printec V3040"
+   ]
+  },
+  {
+   "id": "formtec-3627",
+   "vendor": "Formtec",
+   "code": "3627",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "화일인덱스용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 48.0,
+    "h": 130.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 2,
+    "left": 9.0,
+    "top": 14.99,
+    "pitchX": 48.0,
+    "pitchY": 136.98,
+    "gapX": 0.0,
+    "gapY": 6.98,
+    "right": 9.0,
+    "bottom": 15.03
+   },
+   "count": 8,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Printec V3280"
+   ]
+  },
+  {
+   "id": "formtec-3628",
+   "vendor": "Formtec",
+   "code": "3628",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "화일인덱스용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 12.0,
+    "h": 130.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 15,
+    "rows": 2,
+    "left": 14.99,
+    "top": 14.99,
+    "pitchX": 12.0,
+    "pitchY": 136.98,
+    "gapX": 0.0,
+    "gapY": 6.98,
+    "right": 15.01,
+    "bottom": 15.03
+   },
+   "count": 30,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Printec V3290"
+   ]
+  },
+  {
+   "id": "formtec-3639",
+   "vendor": "Formtec",
+   "code": "3639",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 38.0,
+    "h": 38.0,
+    "shape": "circle",
+    "cornerRadius": 19.0
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 5,
+    "left": 22.31,
+    "top": 27.99,
+    "pitchX": 42.46,
+    "pitchY": 50.66,
+    "gapX": 4.46,
+    "gapY": 12.66,
+    "right": 22.31,
+    "bottom": 28.37
+   },
+   "count": 20,
+   "source": "vendor-template",
+   "confidence": "medium"
+  },
+  {
+   "id": "formtec-3640",
+   "vendor": "Formtec",
+   "code": "3640",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.0,
+    "h": 63.0,
+    "shape": "circle",
+    "cornerRadius": 31.5
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 4,
+    "left": 6.49,
+    "top": 14.99,
+    "pitchX": 66.94,
+    "pitchY": 67.61,
+    "gapX": 3.94,
+    "gapY": 4.61,
+    "right": 6.63,
+    "bottom": 16.18
+   },
+   "count": 12,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Avery L7670",
+    "Printec V3760",
+    "Printec V3850",
+    "Printec V3860",
+    "Printec V3870"
+   ]
+  },
+  {
+   "id": "formtec-3641",
+   "vendor": "Formtec",
+   "code": "3641",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 20.0,
+    "h": 20.0,
+    "shape": "circle",
+    "cornerRadius": 10.0
+   },
+   "grid": {
+    "cols": 9,
+    "rows": 12,
+    "left": 5.01,
+    "top": 14.01,
+    "pitchX": 22.51,
+    "pitchY": 22.51,
+    "gapX": 2.51,
+    "gapY": 2.51,
+    "right": 4.91,
+    "bottom": 15.38
+   },
+   "count": 108,
+   "source": "vendor-template",
+   "confidence": "medium"
+  },
+  {
+   "id": "formtec-3642",
+   "vendor": "Formtec",
+   "code": "3642",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "CD/DVD",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 117.8,
+    "h": 117.8,
+    "shape": "cd",
+    "cornerRadius": 58.9,
+    "holeDiameter": 41.0
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 2,
+    "left": 45.98,
+    "top": 14.99,
+    "pitchX": 117.8,
+    "pitchY": 147.28,
+    "gapX": 0.0,
+    "gapY": 29.48,
+    "right": 46.22,
+    "bottom": 16.93
+   },
+   "count": 2,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "3642P 내경 Ø41, 3642AP 내경 Ø17.5 (카탈로그 \"118(41)mm\" / \"118(17.5)mm\")"
+   ],
+   "equivalents": [
+    "Printec V3771",
+    "Printec V3771S",
+    "Printec V3773"
+   ]
+  },
+  {
+   "id": "formtec-3660",
+   "vendor": "Formtec",
+   "code": "3660",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "물류관리용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 124.0,
+    "h": 30.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 8,
+    "left": 42.99,
+    "top": 28.49,
+    "pitchX": 124.0,
+    "pitchY": 30.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 43.01,
+    "bottom": 28.51
+   },
+   "count": 8,
+   "source": "vendor-template",
+   "confidence": "medium"
+  },
+  {
+   "id": "formtec-3661",
+   "vendor": "Formtec",
+   "code": "3661",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "화일인덱스용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 114.0,
+    "h": 5.5,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 48,
+    "left": 48.0,
+    "top": 16.49,
+    "pitchX": 114.0,
+    "pitchY": 5.5,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 48.0,
+    "bottom": 16.51
+   },
+   "count": 48,
+   "source": "vendor-template",
+   "confidence": "medium"
+  },
+  {
+   "id": "formtec-3662",
+   "vendor": "Formtec",
+   "code": "3662",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "화일인덱스용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 146.0,
+    "h": 17.8,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 13,
+    "left": 32.0,
+    "top": 19.0,
+    "pitchX": 146.0,
+    "pitchY": 19.76,
+    "gapX": 0.0,
+    "gapY": 1.96,
+    "right": 32.0,
+    "bottom": 23.08
+   },
+   "count": 13,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 19.0/23.08"
+   ]
+  },
+  {
+   "id": "formtec-3667",
+   "vendor": "Formtec",
+   "code": "3667",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "주소용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 76.0,
+    "h": 44.4,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 6,
+    "left": 26.99,
+    "top": 9.98,
+    "pitchX": 79.99,
+    "pitchY": 46.39,
+    "gapX": 3.99,
+    "gapY": 1.99,
+    "right": 27.02,
+    "bottom": 10.67
+   },
+   "count": 12,
+   "source": "vendor-template",
+   "confidence": "medium"
+  },
+  {
+   "id": "formtec-3676",
+   "vendor": "Formtec",
+   "code": "3676",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 40.0,
+    "h": 14.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 19,
+    "left": 17.5,
+    "top": 14.01,
+    "pitchX": 45.02,
+    "pitchY": 14.0,
+    "gapX": 5.02,
+    "gapY": 0.0,
+    "right": 17.44,
+    "bottom": 16.99
+   },
+   "count": 76,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 14.01/16.99"
+   ]
+  },
+  {
+   "id": "formtec-3677",
+   "vendor": "Formtec",
+   "code": "3677",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "분류표기용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 30.0,
+    "h": 21.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 6,
+    "rows": 13,
+    "left": 8.75,
+    "top": 10.0,
+    "pitchX": 32.51,
+    "pitchY": 21.0,
+    "gapX": 2.51,
+    "gapY": 0.0,
+    "right": 8.7,
+    "bottom": 14.0
+   },
+   "count": 78,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 10.0/14.0"
+   ]
+  },
+  {
+   "id": "formtec-3990",
+   "vendor": "Formtec",
+   "code": "3990",
+   "series": "LS-/LQ- 등 접두어 + 4자리 (예: LS-3108)",
+   "category": "QR 전용",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 40.0,
+    "h": 40.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 7,
+    "left": 20.5,
+    "top": 7.0,
+    "pitchX": 43.01,
+    "pitchY": 40.0,
+    "gapX": 3.01,
+    "gapY": 0.0,
+    "right": 20.47,
+    "bottom": 10.0
+   },
+   "count": 28,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "notes": [
+    "상하 여백(상/하) 7.0/10.0"
+   ]
+  },
+  {
+   "id": "printec-v3240",
+   "vendor": "Printec",
+   "code": "V3240",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "우편발송라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.06,
+    "h": 33.85,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 8,
+    "left": 5.08,
+    "top": 13.78,
+    "pitchX": 101.6,
+    "pitchY": 33.85,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 12.42
+   },
+   "count": 16,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7162",
+    "Formtec 3107",
+    "Printec V3930",
+    "Printec V3980",
+    "Printec V3985",
+    "Printec V8240"
+   ]
+  },
+  {
+   "id": "printec-v8240",
+   "vendor": "Printec",
+   "code": "V8240",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "광택라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.06,
+    "h": 33.85,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 8,
+    "left": 5.08,
+    "top": 13.79,
+    "pitchX": 101.6,
+    "pitchY": 33.85,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 12.41
+   },
+   "count": 16,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7162",
+    "Formtec 3107",
+    "Printec V3240",
+    "Printec V3930",
+    "Printec V3980",
+    "Printec V3985"
+   ]
+  },
+  {
+   "id": "printec-v3930",
+   "vendor": "Printec",
+   "code": "V3930",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "반투명라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.06,
+    "h": 33.85,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 8,
+    "left": 5.08,
+    "top": 13.78,
+    "pitchX": 101.6,
+    "pitchY": 33.85,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 12.42
+   },
+   "count": 16,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7162",
+    "Formtec 3107",
+    "Printec V3240",
+    "Printec V3980",
+    "Printec V3985",
+    "Printec V8240"
+   ]
+  },
+  {
+   "id": "printec-v3980",
+   "vendor": "Printec",
+   "code": "V3980",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.06,
+    "h": 33.85,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 8,
+    "left": 5.08,
+    "top": 13.78,
+    "pitchX": 101.6,
+    "pitchY": 33.85,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 12.42
+   },
+   "count": 16,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7162",
+    "Formtec 3107",
+    "Printec V3240",
+    "Printec V3930",
+    "Printec V3985",
+    "Printec V8240"
+   ]
+  },
+  {
+   "id": "printec-v3985",
+   "vendor": "Printec",
+   "code": "V3985",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.06,
+    "h": 33.85,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 8,
+    "left": 5.08,
+    "top": 13.78,
+    "pitchX": 101.6,
+    "pitchY": 33.85,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 12.42
+   },
+   "count": 16,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Avery L7162",
+    "Formtec 3107",
+    "Printec V3240",
+    "Printec V3930",
+    "Printec V3980",
+    "Printec V8240"
+   ]
+  },
+  {
+   "id": "printec-v3230",
+   "vendor": "Printec",
+   "code": "V3230",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "우편발송라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.06,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 7,
+    "left": 5.08,
+    "top": 15.87,
+    "pitchX": 101.6,
+    "pitchY": 38.1,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 14.43
+   },
+   "count": 14,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 4.99,
+     "top": 15.49,
+     "pitchX": 101.55,
+     "pitchY": 38.1
+    }
+   ],
+   "equivalents": [
+    "Avery L7163",
+    "Formtec 3108",
+    "Printec V3810",
+    "Printec V3820",
+    "Printec V3830",
+    "Printec V3920",
+    "Printec V8230"
+   ]
+  },
+  {
+   "id": "printec-v8230",
+   "vendor": "Printec",
+   "code": "V8230",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "광택라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.06,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 7,
+    "left": 5.08,
+    "top": 15.87,
+    "pitchX": 101.6,
+    "pitchY": 38.1,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 14.43
+   },
+   "count": 14,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 4.99,
+     "top": 15.49,
+     "pitchX": 101.49,
+     "pitchY": 38.1
+    }
+   ],
+   "equivalents": [
+    "Avery L7163",
+    "Formtec 3108",
+    "Printec V3230",
+    "Printec V3810",
+    "Printec V3820",
+    "Printec V3830",
+    "Printec V3920"
+   ]
+  },
+  {
+   "id": "printec-v3920",
+   "vendor": "Printec",
+   "code": "V3920",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "반투명라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.06,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 7,
+    "left": 5.08,
+    "top": 15.87,
+    "pitchX": 101.6,
+    "pitchY": 38.1,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 14.43
+   },
+   "count": 14,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 4.99,
+     "top": 15.49,
+     "pitchX": 101.49,
+     "pitchY": 38.1
+    }
+   ],
+   "equivalents": [
+    "Avery L7163",
+    "Formtec 3108",
+    "Printec V3230",
+    "Printec V3810",
+    "Printec V3820",
+    "Printec V3830",
+    "Printec V8230"
+   ]
+  },
+  {
+   "id": "printec-v3810",
+   "vendor": "Printec",
+   "code": "V3810",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "형광컬러라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.06,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 7,
+    "left": 5.08,
+    "top": 15.87,
+    "pitchX": 101.6,
+    "pitchY": 38.1,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 14.43
+   },
+   "count": 14,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 4.99,
+     "top": 15.49,
+     "pitchX": 101.74,
+     "pitchY": 38.1
+    }
+   ],
+   "equivalents": [
+    "Avery L7163",
+    "Formtec 3108",
+    "Printec V3230",
+    "Printec V3820",
+    "Printec V3830",
+    "Printec V3920",
+    "Printec V8230"
+   ]
+  },
+  {
+   "id": "printec-v3820",
+   "vendor": "Printec",
+   "code": "V3820",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "형광컬러라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.06,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 7,
+    "left": 5.08,
+    "top": 15.87,
+    "pitchX": 101.6,
+    "pitchY": 38.1,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 14.43
+   },
+   "count": 14,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 4.99,
+     "top": 15.49,
+     "pitchX": 101.74,
+     "pitchY": 38.1
+    }
+   ],
+   "equivalents": [
+    "Avery L7163",
+    "Formtec 3108",
+    "Printec V3230",
+    "Printec V3810",
+    "Printec V3830",
+    "Printec V3920",
+    "Printec V8230"
+   ]
+  },
+  {
+   "id": "printec-v3830",
+   "vendor": "Printec",
+   "code": "V3830",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "형광컬러라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.06,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 7,
+    "left": 5.08,
+    "top": 15.87,
+    "pitchX": 101.6,
+    "pitchY": 38.1,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 14.43
+   },
+   "count": 14,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 4.99,
+     "top": 15.49,
+     "pitchX": 101.74,
+     "pitchY": 38.1
+    }
+   ],
+   "equivalents": [
+    "Avery L7163",
+    "Formtec 3108",
+    "Printec V3230",
+    "Printec V3810",
+    "Printec V3820",
+    "Printec V3920",
+    "Printec V8230"
+   ]
+  },
+  {
+   "id": "printec-v3260",
+   "vendor": "Printec",
+   "code": "V3260",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "우편발송라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 100,
+    "h": 30,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 9,
+    "left": 3.97,
+    "top": 13.0,
+    "pitchX": 102.97,
+    "pitchY": 30.0,
+    "gapX": 2.97,
+    "gapY": 0.0,
+    "right": 3.06,
+    "bottom": 14.0
+   },
+   "count": 18,
+   "source": "word-builtin",
+   "confidence": "medium",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 3.99,
+     "top": 14.2,
+     "pitchX": 102.99,
+     "pitchY": 30.0
+    }
+   ],
+   "equivalents": [
+    "Avery L7172",
+    "Formtec 3109",
+    "Printec V8260"
+   ]
+  },
+  {
+   "id": "printec-v8260",
+   "vendor": "Printec",
+   "code": "V8260",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "광택라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 100,
+    "h": 30,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 9,
+    "left": 3.97,
+    "top": 13.0,
+    "pitchX": 102.97,
+    "pitchY": 30.0,
+    "gapX": 2.97,
+    "gapY": 0.0,
+    "right": 3.06,
+    "bottom": 14.0
+   },
+   "count": 18,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7172",
+    "Formtec 3109",
+    "Printec V3260"
+   ]
+  },
+  {
+   "id": "printec-v3750",
+   "vendor": "Printec",
+   "code": "V3750",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "화일인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 72,
+    "h": 21.08,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 12,
+    "left": 22.38,
+    "top": 22.72,
+    "pitchX": 94.0,
+    "pitchY": 21.08,
+    "gapX": 22.0,
+    "gapY": 0.0,
+    "right": 21.62,
+    "bottom": 21.32
+   },
+   "count": 24,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "printec-v3270",
+   "vendor": "Printec",
+   "code": "V3270",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "우편발송라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 100,
+    "h": 46.4,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 6,
+    "left": 3.99,
+    "top": 7.5,
+    "pitchX": 102.53,
+    "pitchY": 46.4,
+    "gapX": 2.53,
+    "gapY": 0.0,
+    "right": 3.48,
+    "bottom": 11.1
+   },
+   "count": 12,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "상하 여백(상/하) 7.5/11.1"
+   ]
+  },
+  {
+   "id": "printec-v3480",
+   "vendor": "Printec",
+   "code": "V3480",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "바코드라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 45.7,
+    "h": 21.2,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 12,
+    "left": 9.74,
+    "top": 21.4,
+    "pitchX": 48.22,
+    "pitchY": 21.2,
+    "gapX": 2.52,
+    "gapY": 0.0,
+    "right": 9.9,
+    "bottom": 21.2
+   },
+   "count": 48,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 9.08,
+     "top": 21.29,
+     "pitchX": 48.68,
+     "pitchY": 21.2
+    }
+   ],
+   "equivalents": [
+    "Avery L4736"
+   ]
+  },
+  {
+   "id": "printec-v3740",
+   "vendor": "Printec",
+   "code": "V3740",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "물류관리라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 70,
+    "h": 71.88,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 4,
+    "left": 18.38,
+    "top": 5.45,
+    "pitchX": 104.03,
+    "pitchY": 71.88,
+    "gapX": 34.03,
+    "gapY": 0.0,
+    "right": 17.59,
+    "bottom": 4.03
+   },
+   "count": 8,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 18.4,
+     "top": 4.99,
+     "pitchX": 105.34,
+     "pitchY": 72.5
+    }
+   ]
+  },
+  {
+   "id": "printec-v3330",
+   "vendor": "Printec",
+   "code": "V3330",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "우편발송라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 7,
+    "left": 7.62,
+    "top": 15.87,
+    "pitchX": 66.04,
+    "pitchY": 38.1,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 6.8,
+    "bottom": 14.43
+   },
+   "count": 21,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "A-ONE 72221",
+    "Avery L7160",
+    "Formtec 3105",
+    "Printec V3970",
+    "Printec V3990",
+    "Printec V3995",
+    "Printec V8330"
+   ]
+  },
+  {
+   "id": "printec-v8330",
+   "vendor": "Printec",
+   "code": "V8330",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "광택라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 7,
+    "left": 7.62,
+    "top": 15.87,
+    "pitchX": 66.04,
+    "pitchY": 38.1,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 6.8,
+    "bottom": 14.43
+   },
+   "count": 21,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "A-ONE 72221",
+    "Avery L7160",
+    "Formtec 3105",
+    "Printec V3330",
+    "Printec V3970",
+    "Printec V3990",
+    "Printec V3995"
+   ]
+  },
+  {
+   "id": "printec-v3970",
+   "vendor": "Printec",
+   "code": "V3970",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "반투명라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 7,
+    "left": 7.62,
+    "top": 15.87,
+    "pitchX": 66.04,
+    "pitchY": 38.1,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 6.8,
+    "bottom": 14.43
+   },
+   "count": 21,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "A-ONE 72221",
+    "Avery L7160",
+    "Formtec 3105",
+    "Printec V3330",
+    "Printec V3990",
+    "Printec V3995",
+    "Printec V8330"
+   ]
+  },
+  {
+   "id": "printec-v3990",
+   "vendor": "Printec",
+   "code": "V3990",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 7,
+    "left": 7.62,
+    "top": 15.87,
+    "pitchX": 66.04,
+    "pitchY": 38.1,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 6.8,
+    "bottom": 14.43
+   },
+   "count": 21,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "A-ONE 72221",
+    "Avery L7160",
+    "Formtec 3105",
+    "Printec V3330",
+    "Printec V3970",
+    "Printec V3995",
+    "Printec V8330"
+   ]
+  },
+  {
+   "id": "printec-v3995",
+   "vendor": "Printec",
+   "code": "V3995",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 7,
+    "left": 7.62,
+    "top": 15.87,
+    "pitchX": 66.04,
+    "pitchY": 38.1,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 6.8,
+    "bottom": 14.43
+   },
+   "count": 21,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "A-ONE 72221",
+    "Avery L7160",
+    "Formtec 3105",
+    "Printec V3330",
+    "Printec V3970",
+    "Printec V3990",
+    "Printec V8330"
+   ]
+  },
+  {
+   "id": "printec-v3340",
+   "vendor": "Printec",
+   "code": "V3340",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "우편발송라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 64,
+    "h": 33.86,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 8,
+    "left": 6.49,
+    "top": 13.0,
+    "pitchX": 66.53,
+    "pitchY": 33.86,
+    "gapX": 2.53,
+    "gapY": 0.0,
+    "right": 6.45,
+    "bottom": 13.12
+   },
+   "count": 24,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7159",
+    "Avery Zweckform 3658",
+    "Formtec 3106",
+    "Printec V8340"
+   ]
+  },
+  {
+   "id": "printec-v8340",
+   "vendor": "Printec",
+   "code": "V8340",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "광택라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 64,
+    "h": 33.86,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 8,
+    "left": 6.49,
+    "top": 13.0,
+    "pitchX": 66.53,
+    "pitchY": 33.86,
+    "gapX": 2.53,
+    "gapY": 0.0,
+    "right": 6.45,
+    "bottom": 13.12
+   },
+   "count": 24,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7159",
+    "Avery Zweckform 3658",
+    "Formtec 3106",
+    "Printec V3340"
+   ]
+  },
+  {
+   "id": "printec-v3350",
+   "vendor": "Printec",
+   "code": "V3350",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "바코드라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 62.7,
+    "h": 30.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 9,
+    "left": 8.7,
+    "top": 10.8,
+    "pitchX": 64.98,
+    "pitchY": 30.1,
+    "gapX": 2.28,
+    "gapY": 0.0,
+    "right": 8.64,
+    "bottom": 15.3
+   },
+   "count": 27,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 9.68,
+     "top": 11.48,
+     "pitchX": 65.32,
+     "pitchY": 30.1
+    }
+   ],
+   "notes": [
+    "상하 여백(상/하) 10.8/15.3"
+   ],
+   "equivalents": [
+    "Formtec 3104"
+   ]
+  },
+  {
+   "id": "printec-v3410",
+   "vendor": "Printec",
+   "code": "V3410",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "바코드라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 47,
+    "h": 26.9,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 10,
+    "left": 7.5,
+    "top": 13.99,
+    "pitchX": 49.53,
+    "pitchY": 26.9,
+    "gapX": 2.53,
+    "gapY": 0.0,
+    "right": 6.91,
+    "bottom": 14.01
+   },
+   "count": 40,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3102",
+    "Printec V8410"
+   ]
+  },
+  {
+   "id": "printec-v8410",
+   "vendor": "Printec",
+   "code": "V8410",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "광택라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 47,
+    "h": 26.9,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 10,
+    "left": 7.5,
+    "top": 13.99,
+    "pitchX": 49.53,
+    "pitchY": 26.9,
+    "gapX": 2.53,
+    "gapY": 0.0,
+    "right": 6.91,
+    "bottom": 14.01
+   },
+   "count": 40,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3102",
+    "Printec V3410"
+   ]
+  },
+  {
+   "id": "printec-v3320",
+   "vendor": "Printec",
+   "code": "V3320",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "우편발송라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 46.5,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 6,
+    "left": 7.62,
+    "top": 9.95,
+    "pitchX": 65.86,
+    "pitchY": 46.5,
+    "gapX": 2.36,
+    "gapY": 0.0,
+    "right": 7.16,
+    "bottom": 8.05
+   },
+   "count": 18,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "A-ONE 72218",
+    "Avery L7161"
+   ]
+  },
+  {
+   "id": "printec-v3310",
+   "vendor": "Printec",
+   "code": "V3310",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "물류관리라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 71.98,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 4,
+    "left": 7.62,
+    "top": 5.26,
+    "pitchX": 66.04,
+    "pitchY": 71.98,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 6.8,
+    "bottom": 3.82
+   },
+   "count": 12,
+   "source": "word-builtin",
+   "confidence": "medium",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 7.58,
+     "top": 7.58,
+     "pitchX": 65.99,
+     "pitchY": 71.98
+    }
+   ],
+   "equivalents": [
+    "Avery L7164"
+   ]
+  },
+  {
+   "id": "printec-v3210",
+   "vendor": "Printec",
+   "code": "V3210",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "물류관리라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.06,
+    "h": 93.11,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 3,
+    "left": 5.08,
+    "top": 9.54,
+    "pitchX": 101.6,
+    "pitchY": 93.11,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 8.13
+   },
+   "count": 6,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7166",
+    "Formtec 3116"
+   ]
+  },
+  {
+   "id": "printec-v3730",
+   "vendor": "Printec",
+   "code": "V3730",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "우편발송라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 119.12,
+    "h": 33.75,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 8,
+    "left": 45.44,
+    "top": 12.65,
+    "pitchX": 119.12,
+    "pitchY": 33.75,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 45.44,
+    "bottom": 14.35
+   },
+   "count": 8,
+   "source": "word-builtin",
+   "confidence": "medium",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 45.83,
+     "top": 14.18,
+     "pitchX": 119.12,
+     "pitchY": 33.75
+    }
+   ]
+  },
+  {
+   "id": "printec-v3490",
+   "vendor": "Printec",
+   "code": "V3490",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 62,
+    "h": 24,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 11,
+    "left": 8.48,
+    "top": 14.99,
+    "pitchX": 65.0,
+    "pitchY": 24.0,
+    "gapX": 3.0,
+    "gapY": 0.0,
+    "right": 9.52,
+    "bottom": 18.01
+   },
+   "count": 33,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "상하 여백(상/하) 14.99/18.01"
+   ]
+  },
+  {
+   "id": "printec-v3610",
+   "vendor": "Printec",
+   "code": "V3610",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "바코드라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 26,
+    "h": 29.5,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 6,
+    "rows": 9,
+    "left": 17.99,
+    "top": 6.98,
+    "pitchX": 29.4,
+    "pitchY": 31.26,
+    "gapX": 3.4,
+    "gapY": 1.76,
+    "right": 19.01,
+    "bottom": 10.44
+   },
+   "count": 54,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "상하 여백(상/하) 6.98/10.44"
+   ],
+   "equivalents": [
+    "Formtec 3110"
+   ]
+  },
+  {
+   "id": "printec-v3250",
+   "vendor": "Printec",
+   "code": "V3250",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "우편발송라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 88.9,
+    "h": 52,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 5,
+    "left": 11.48,
+    "top": 20.5,
+    "pitchX": 98.04,
+    "pitchY": 52.0,
+    "gapX": 9.14,
+    "gapY": 0.0,
+    "right": 11.58,
+    "bottom": 16.5
+   },
+   "count": 10,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 11.48,
+     "top": 19.98,
+     "pitchX": 97.9,
+     "pitchY": 52.0
+    }
+   ],
+   "notes": [
+    "상하 여백(상/하) 20.5/16.5"
+   ],
+   "equivalents": [
+    "Formtec 3510",
+    "Printec V8250"
+   ]
+  },
+  {
+   "id": "printec-v8250",
+   "vendor": "Printec",
+   "code": "V8250",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "광택라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 88.9,
+    "h": 52,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 5,
+    "left": 11.48,
+    "top": 20.5,
+    "pitchX": 98.04,
+    "pitchY": 52.0,
+    "gapX": 9.14,
+    "gapY": 0.0,
+    "right": 11.58,
+    "bottom": 16.5
+   },
+   "count": 10,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 11.48,
+     "top": 19.98,
+     "pitchX": 97.9,
+     "pitchY": 52.0
+    }
+   ],
+   "notes": [
+    "상하 여백(상/하) 20.5/16.5"
+   ],
+   "equivalents": [
+    "Formtec 3510",
+    "Printec V3250"
+   ]
+  },
+  {
+   "id": "printec-v3220",
+   "vendor": "Printec",
+   "code": "V3220",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "우편발송라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.06,
+    "h": 67.71,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 4,
+    "left": 5.08,
+    "top": 13.78,
+    "pitchX": 101.6,
+    "pitchY": 67.71,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 12.38
+   },
+   "count": 8,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7165",
+    "Formtec 3114",
+    "Printec V3910",
+    "Printec V8220"
+   ]
+  },
+  {
+   "id": "printec-v8220",
+   "vendor": "Printec",
+   "code": "V8220",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "광택라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.06,
+    "h": 67.71,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 4,
+    "left": 5.08,
+    "top": 13.79,
+    "pitchX": 101.6,
+    "pitchY": 67.71,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 12.37
+   },
+   "count": 8,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7165",
+    "Formtec 3114",
+    "Printec V3220",
+    "Printec V3910"
+   ]
+  },
+  {
+   "id": "printec-v3910",
+   "vendor": "Printec",
+   "code": "V3910",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "반투명라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.06,
+    "h": 67.71,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 4,
+    "left": 5.08,
+    "top": 13.78,
+    "pitchX": 101.6,
+    "pitchY": 67.71,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 12.38
+   },
+   "count": 8,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 5.49,
+     "top": 13.49,
+     "pitchX": 101.49,
+     "pitchY": 67.71
+    }
+   ],
+   "equivalents": [
+    "Avery L7165",
+    "Formtec 3114",
+    "Printec V3220",
+    "Printec V8220"
+   ]
+  },
+  {
+   "id": "printec-v3290",
+   "vendor": "Printec",
+   "code": "V3290",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "화일인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 12,
+    "h": 130,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 15,
+    "rows": 2,
+    "left": 14.99,
+    "top": 14.99,
+    "pitchX": 12.0,
+    "pitchY": 136.98,
+    "gapX": 0.0,
+    "gapY": 6.98,
+    "right": 15.01,
+    "bottom": 15.03
+   },
+   "count": 30,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3628"
+   ]
+  },
+  {
+   "id": "printec-v3190",
+   "vendor": "Printec",
+   "code": "V3190",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "화일인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 150,
+    "h": 28,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 9,
+    "left": 29.99,
+    "top": 22.49,
+    "pitchX": 150.0,
+    "pitchY": 28.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 30.01,
+    "bottom": 22.51
+   },
+   "count": 9,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 29.99,
+     "top": 22.98,
+     "pitchX": 150.0,
+     "pitchY": 28.0
+    }
+   ],
+   "equivalents": [
+    "Formtec 3624"
+   ]
+  },
+  {
+   "id": "printec-v3510",
+   "vendor": "Printec",
+   "code": "V3510",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "바코드라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 38.1,
+    "h": 21.08,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 5,
+    "rows": 13,
+    "left": 5.08,
+    "top": 12.19,
+    "pitchX": 40.64,
+    "pitchY": 21.08,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 10.77
+   },
+   "count": 65,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7651",
+    "Avery Zweckform 3666",
+    "Formtec 3100",
+    "Printec V3940",
+    "Printec V8510"
+   ]
+  },
+  {
+   "id": "printec-v8510",
+   "vendor": "Printec",
+   "code": "V8510",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "광택라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 38.1,
+    "h": 21.08,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 5,
+    "rows": 13,
+    "left": 5.08,
+    "top": 12.19,
+    "pitchX": 40.64,
+    "pitchY": 21.08,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 10.77
+   },
+   "count": 65,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 5.49,
+     "top": 11.78,
+     "pitchX": 40.59,
+     "pitchY": 21.08
+    }
+   ],
+   "equivalents": [
+    "Avery L7651",
+    "Avery Zweckform 3666",
+    "Formtec 3100",
+    "Printec V3510",
+    "Printec V3940"
+   ]
+  },
+  {
+   "id": "printec-v3940",
+   "vendor": "Printec",
+   "code": "V3940",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "반투명라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 38.1,
+    "h": 21.08,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 5,
+    "rows": 13,
+    "left": 5.08,
+    "top": 12.19,
+    "pitchX": 40.64,
+    "pitchY": 21.08,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.26,
+    "bottom": 10.77
+   },
+   "count": 65,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7651",
+    "Avery Zweckform 3666",
+    "Formtec 3100",
+    "Printec V3510",
+    "Printec V8510"
+   ]
+  },
+  {
+   "id": "printec-v3460",
+   "vendor": "Printec",
+   "code": "V3460",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "화일인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 95,
+    "h": 14,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 18,
+    "left": 9.0,
+    "top": 22.49,
+    "pitchX": 97.0,
+    "pitchY": 14.0,
+    "gapX": 2.0,
+    "gapY": 0.0,
+    "right": 9.0,
+    "bottom": 22.51
+   },
+   "count": 36,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3621"
+   ]
+  },
+  {
+   "id": "printec-v3160",
+   "vendor": "Printec",
+   "code": "V3160",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "우편발송라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 120,
+    "h": 43,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 6,
+    "left": 45.0,
+    "top": 19.0,
+    "pitchX": 120.0,
+    "pitchY": 43.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 45.0,
+    "bottom": 20.0
+   },
+   "count": 6,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 45.0,
+     "top": 19.49,
+     "pitchX": 120.0,
+     "pitchY": 43.0
+    }
+   ]
+  },
+  {
+   "id": "printec-v3040",
+   "vendor": "Printec",
+   "code": "V3040",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "화일인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 160,
+    "h": 60,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 4,
+    "left": 24.99,
+    "top": 28.49,
+    "pitchX": 160.0,
+    "pitchY": 60.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 25.01,
+    "bottom": 28.51
+   },
+   "count": 4,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3626"
+   ]
+  },
+  {
+   "id": "printec-v3440",
+   "vendor": "Printec",
+   "code": "V3440",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "화일인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 134,
+    "h": 11,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 24,
+    "left": 38.4,
+    "top": 16.93,
+    "pitchX": 134.0,
+    "pitchY": 11.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 37.6,
+    "bottom": 16.07
+   },
+   "count": 24,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "printec-v3130",
+   "vendor": "Printec",
+   "code": "V3130",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "물류관리라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 191.5,
+    "h": 91,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 3,
+    "left": 9.24,
+    "top": 13.99,
+    "pitchX": 191.5,
+    "pitchY": 91.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 9.26,
+    "bottom": 10.01
+   },
+   "count": 3,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "상하 여백(상/하) 13.99/10.01"
+   ]
+  },
+  {
+   "id": "printec-v3470",
+   "vendor": "Printec",
+   "code": "V3470",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "화일인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 84,
+    "h": 28,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 10,
+    "left": 18.49,
+    "top": 7.99,
+    "pitchX": 88.99,
+    "pitchY": 28.0,
+    "gapX": 4.99,
+    "gapY": 0.0,
+    "right": 18.52,
+    "bottom": 9.01
+   },
+   "count": 20,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "printec-v3170",
+   "vendor": "Printec",
+   "code": "V3170",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "화일인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 160,
+    "h": 38,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 7,
+    "left": 24.99,
+    "top": 15.49,
+    "pitchX": 160.0,
+    "pitchY": 38.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 25.01,
+    "bottom": 15.51
+   },
+   "count": 7,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3625"
+   ]
+  },
+  {
+   "id": "printec-v3150",
+   "vendor": "Printec",
+   "code": "V3150",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "화일인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 190,
+    "h": 50,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 5,
+    "left": 9.98,
+    "top": 23.49,
+    "pitchX": 190.0,
+    "pitchY": 50.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 10.02,
+    "bottom": 23.51
+   },
+   "count": 5,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "printec-v3760",
+   "vendor": "Printec",
+   "code": "V3760",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 63.5,
+    "shape": "circle",
+    "cornerRadius": 31.75
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 4,
+    "left": 5.84,
+    "top": 15.73,
+    "pitchX": 67.8,
+    "pitchY": 67.8,
+    "gapX": 4.3,
+    "gapY": 4.3,
+    "right": 5.06,
+    "bottom": 14.37
+   },
+   "count": 12,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 5.49,
+     "top": 15.4,
+     "pitchX": 67.7,
+     "pitchY": 67.7
+    }
+   ],
+   "equivalents": [
+    "Avery L7670",
+    "Formtec 3640",
+    "Printec V3850",
+    "Printec V3860",
+    "Printec V3870"
+   ]
+  },
+  {
+   "id": "printec-v3850",
+   "vendor": "Printec",
+   "code": "V3850",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "형광컬러라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 63.5,
+    "shape": "circle",
+    "cornerRadius": 31.75
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 4,
+    "left": 5.84,
+    "top": 15.73,
+    "pitchX": 67.8,
+    "pitchY": 67.8,
+    "gapX": 4.3,
+    "gapY": 4.3,
+    "right": 5.06,
+    "bottom": 14.37
+   },
+   "count": 12,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7670",
+    "Formtec 3640",
+    "Printec V3760",
+    "Printec V3860",
+    "Printec V3870"
+   ]
+  },
+  {
+   "id": "printec-v3860",
+   "vendor": "Printec",
+   "code": "V3860",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "형광컬러라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 63.5,
+    "shape": "circle",
+    "cornerRadius": 31.75
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 4,
+    "left": 5.84,
+    "top": 15.73,
+    "pitchX": 67.8,
+    "pitchY": 67.8,
+    "gapX": 4.3,
+    "gapY": 4.3,
+    "right": 5.06,
+    "bottom": 14.37
+   },
+   "count": 12,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7670",
+    "Formtec 3640",
+    "Printec V3760",
+    "Printec V3850",
+    "Printec V3870"
+   ]
+  },
+  {
+   "id": "printec-v3870",
+   "vendor": "Printec",
+   "code": "V3870",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "형광컬러라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 63.5,
+    "shape": "circle",
+    "cornerRadius": 31.75
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 4,
+    "left": 5.84,
+    "top": 15.73,
+    "pitchX": 67.8,
+    "pitchY": 67.8,
+    "gapX": 4.3,
+    "gapY": 4.3,
+    "right": 5.06,
+    "bottom": 14.37
+   },
+   "count": 12,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7670",
+    "Formtec 3640",
+    "Printec V3760",
+    "Printec V3850",
+    "Printec V3860"
+   ]
+  },
+  {
+   "id": "printec-v3630",
+   "vendor": "Printec",
+   "code": "V3630",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 40,
+    "h": 40,
+    "shape": "circle",
+    "cornerRadius": 20.0
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 6,
+    "left": 16.0,
+    "top": 13.49,
+    "pitchX": 46.01,
+    "pitchY": 46.01,
+    "gapX": 6.01,
+    "gapY": 6.01,
+    "right": 15.97,
+    "bottom": 13.46
+   },
+   "count": 24,
+   "source": "vendor-template",
+   "confidence": "medium",
+   "equivalents": [
+    "Avery L7780"
+   ]
+  },
+  {
+   "id": "printec-v3620",
+   "vendor": "Printec",
+   "code": "V3620",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "견출라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 26,
+    "h": 34,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 7,
+    "rows": 8,
+    "left": 4.99,
+    "top": 9.98,
+    "pitchX": 28.98,
+    "pitchY": 34.0,
+    "gapX": 2.98,
+    "gapY": 0.0,
+    "right": 5.13,
+    "bottom": 15.02
+   },
+   "count": 56,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "상하 여백(상/하) 9.98/15.02"
+   ]
+  },
+  {
+   "id": "printec-v3520",
+   "vendor": "Printec",
+   "code": "V3520",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "바코드라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 38.1,
+    "h": 19.2,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 5,
+    "rows": 12,
+    "left": 6.0,
+    "top": 23.49,
+    "pitchX": 39.99,
+    "pitchY": 20.97,
+    "gapX": 1.89,
+    "gapY": 1.77,
+    "right": 5.94,
+    "bottom": 23.64
+   },
+   "count": 60,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3101"
+   ]
+  },
+  {
+   "id": "printec-v3530",
+   "vendor": "Printec",
+   "code": "V3530",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 30,
+    "h": 14,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 6,
+    "rows": 16,
+    "left": 9.98,
+    "top": 21.48,
+    "pitchX": 32.0,
+    "pitchY": 16.0,
+    "gapX": 2.0,
+    "gapY": 2.0,
+    "right": 10.02,
+    "bottom": 21.52
+   },
+   "count": 96,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3622"
+   ]
+  },
+  {
+   "id": "printec-v3540",
+   "vendor": "Printec",
+   "code": "V3540",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 62.7,
+    "h": 15,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 18,
+    "left": 8.4,
+    "top": 10.99,
+    "pitchX": 65.19,
+    "pitchY": 15.0,
+    "gapX": 2.49,
+    "gapY": 0.0,
+    "right": 8.52,
+    "bottom": 16.01
+   },
+   "count": 54,
+   "source": "word-builtin",
+   "confidence": "high",
+   "alternatives": [
+    {
+     "source": "vendor-template",
+     "left": 9.0,
+     "top": 10.99,
+     "pitchX": 65.19,
+     "pitchY": 15.0
+    }
+   ],
+   "notes": [
+    "상하 여백(상/하) 10.99/16.01"
+   ],
+   "equivalents": [
+    "Formtec 3154"
+   ]
+  },
+  {
+   "id": "printec-v3450",
+   "vendor": "Printec",
+   "code": "V3450",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "화일인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 87,
+    "h": 17,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 15,
+    "left": 11.25,
+    "top": 21.59,
+    "pitchX": 100.46,
+    "pitchY": 17.0,
+    "gapX": 13.46,
+    "gapY": 0.0,
+    "right": 11.29,
+    "bottom": 20.41
+   },
+   "count": 30,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "printec-v3140",
+   "vendor": "Printec",
+   "code": "V3140",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "물류관리라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 98.73,
+    "h": 138.94,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 2,
+    "left": 4.97,
+    "top": 9.88,
+    "pitchX": 101.26,
+    "pitchY": 138.94,
+    "gapX": 2.53,
+    "gapY": 0.0,
+    "right": 5.04,
+    "bottom": 9.24
+   },
+   "count": 4,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "printec-v3430",
+   "vendor": "Printec",
+   "code": "V3430",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 32,
+    "h": 8,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 5,
+    "rows": 24,
+    "left": 19.98,
+    "top": 17.48,
+    "pitchX": 34.75,
+    "pitchY": 10.78,
+    "gapX": 2.75,
+    "gapY": 2.78,
+    "right": 19.02,
+    "bottom": 23.58
+   },
+   "count": 120,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "상하 여백(상/하) 17.48/23.58"
+   ]
+  },
+  {
+   "id": "printec-v3570",
+   "vendor": "Printec",
+   "code": "V3570",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 20,
+    "h": 10,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 8,
+    "rows": 27,
+    "left": 14.5,
+    "top": 13.0,
+    "pitchX": 22.98,
+    "pitchY": 10.0,
+    "gapX": 2.98,
+    "gapY": 0.0,
+    "right": 14.64,
+    "bottom": 14.0
+   },
+   "count": 216,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3216"
+   ]
+  },
+  {
+   "id": "printec-v3550",
+   "vendor": "Printec",
+   "code": "V3550",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 30,
+    "h": 9,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 5,
+    "rows": 29,
+    "left": 19.98,
+    "top": 17.99,
+    "pitchX": 35.0,
+    "pitchY": 9.0,
+    "gapX": 5.0,
+    "gapY": 0.0,
+    "right": 20.02,
+    "bottom": 18.01
+   },
+   "count": 145,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3145"
+   ]
+  },
+  {
+   "id": "printec-v3560",
+   "vendor": "Printec",
+   "code": "V3560",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 25.4,
+    "h": 10,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 7,
+    "rows": 27,
+    "left": 8.18,
+    "top": 11.99,
+    "pitchX": 27.89,
+    "pitchY": 10.0,
+    "gapX": 2.49,
+    "gapY": 0.0,
+    "right": 9.08,
+    "bottom": 15.01
+   },
+   "count": 189,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "상하 여백(상/하) 11.99/15.01"
+   ],
+   "equivalents": [
+    "Avery L7658",
+    "Formtec 3189"
+   ]
+  },
+  {
+   "id": "printec-v3280",
+   "vendor": "Printec",
+   "code": "V3280",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "화일인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 48,
+    "h": 130,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 2,
+    "left": 9.0,
+    "top": 14.99,
+    "pitchX": 48.0,
+    "pitchY": 136.98,
+    "gapX": 0.0,
+    "gapY": 6.98,
+    "right": 9.0,
+    "bottom": 15.03
+   },
+   "count": 8,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3627"
+   ]
+  },
+  {
+   "id": "printec-v3590",
+   "vendor": "Printec",
+   "code": "V3590",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 46,
+    "h": 8,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 34,
+    "left": 8.48,
+    "top": 9.98,
+    "pitchX": 48.98,
+    "pitchY": 8.0,
+    "gapX": 2.98,
+    "gapY": 0.0,
+    "right": 8.58,
+    "bottom": 15.02
+   },
+   "count": 136,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "상하 여백(상/하) 9.98/15.02"
+   ],
+   "equivalents": [
+    "Formtec 3136"
+   ]
+  },
+  {
+   "id": "printec-v3420",
+   "vendor": "Printec",
+   "code": "V3420",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 46,
+    "h": 11,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 21,
+    "left": 6.0,
+    "top": 16.0,
+    "pitchX": 50.67,
+    "pitchY": 12.61,
+    "gapX": 4.67,
+    "gapY": 1.61,
+    "right": 5.99,
+    "bottom": 17.8
+   },
+   "count": 84,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3623"
+   ]
+  },
+  {
+   "id": "printec-v3580",
+   "vendor": "Printec",
+   "code": "V3580",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "인덱스라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 55,
+    "h": 10,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 27,
+    "left": 14.99,
+    "top": 11.99,
+    "pitchX": 62.99,
+    "pitchY": 10.0,
+    "gapX": 7.99,
+    "gapY": 0.0,
+    "right": 14.03,
+    "bottom": 15.01
+   },
+   "count": 81,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "상하 여백(상/하) 11.99/15.01"
+   ]
+  },
+  {
+   "id": "printec-v3771",
+   "vendor": "Printec",
+   "code": "V3771",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "무광CD라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 118,
+    "h": 118,
+    "shape": "cd",
+    "cornerRadius": 59.0,
+    "holeDiameter": 41.0
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 2,
+    "left": 55.99,
+    "top": 14.99,
+    "pitchX": 118.0,
+    "pitchY": 149.0,
+    "gapX": 0.0,
+    "gapY": 31.0,
+    "right": 36.01,
+    "bottom": 15.01
+   },
+   "count": 2,
+   "source": "word-builtin",
+   "confidence": "low",
+   "notes": [
+    "CD 라벨 외경 Ø118 / 내경 Ø41. Word·서식 모두 좌측 55.99로 오른쪽에 치우침 — 실제 시트는 가로 중앙(좌 46.0)일 가능성 높음, 실측 필요",
+    "좌우 여백(좌/우) 55.99/36.01"
+   ],
+   "equivalents": [
+    "Formtec 3642",
+    "Printec V3771S",
+    "Printec V3773"
+   ]
+  },
+  {
+   "id": "printec-v3773",
+   "vendor": "Printec",
+   "code": "V3773",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "광택CD라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 118,
+    "h": 118,
+    "shape": "cd",
+    "cornerRadius": 59.0,
+    "holeDiameter": 41.0
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 2,
+    "left": 55.99,
+    "top": 14.99,
+    "pitchX": 118.0,
+    "pitchY": 149.0,
+    "gapX": 0.0,
+    "gapY": 31.0,
+    "right": 36.01,
+    "bottom": 15.01
+   },
+   "count": 2,
+   "source": "word-builtin",
+   "confidence": "low",
+   "notes": [
+    "CD 라벨 외경 Ø118 / 내경 Ø41. Word·서식 모두 좌측 55.99로 오른쪽에 치우침 — 실제 시트는 가로 중앙(좌 46.0)일 가능성 높음, 실측 필요",
+    "좌우 여백(좌/우) 55.99/36.01"
+   ],
+   "equivalents": [
+    "Formtec 3642",
+    "Printec V3771",
+    "Printec V3771S"
+   ]
+  },
+  {
+   "id": "printec-v3771s",
+   "vendor": "Printec",
+   "code": "V3771S",
+   "series": "애니라벨 V(일반)/E(재생지)/Q(친환경)/R(재점착) + 4자리, -20/-100은 매수",
+   "category": "무광CD라벨",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 118,
+    "h": 118,
+    "shape": "cd",
+    "cornerRadius": 59.0,
+    "holeDiameter": 41.0
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 2,
+    "left": 55.99,
+    "top": 14.99,
+    "pitchX": 118.0,
+    "pitchY": 149.0,
+    "gapX": 0.0,
+    "gapY": 31.0,
+    "right": 36.01,
+    "bottom": 15.01
+   },
+   "count": 2,
+   "source": "word-builtin",
+   "confidence": "low",
+   "notes": [
+    "CD 라벨 외경 Ø118 / 내경 Ø41. Word·서식 모두 좌측 55.99로 오른쪽에 치우침 — 실제 시트는 가로 중앙(좌 46.0)일 가능성 높음, 실측 필요",
+    "좌우 여백(좌/우) 55.99/36.01"
+   ],
+   "equivalents": [
+    "Formtec 3642",
+    "Printec V3771",
+    "Printec V3773"
+   ]
+  },
+  {
+   "id": "avery-l7159",
+   "vendor": "Avery",
+   "code": "L7159",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 33.9,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 8,
+    "left": 7.2,
+    "top": 13.05,
+    "pitchX": 66.04,
+    "pitchY": 33.9,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 7.22,
+    "bottom": 12.75
+   },
+   "count": 24,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3106",
+    "Printec V3340",
+    "Printec V8340"
+   ]
+  },
+  {
+   "id": "avery-l7160",
+   "vendor": "Avery",
+   "code": "L7160",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 7,
+    "left": 7.2,
+    "top": 15.13,
+    "pitchX": 66.04,
+    "pitchY": 38.1,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 7.22,
+    "bottom": 15.17
+   },
+   "count": 21,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "A-ONE 72221",
+    "Formtec 3105",
+    "Printec V3330",
+    "Printec V3970",
+    "Printec V3990",
+    "Printec V3995",
+    "Printec V8330"
+   ]
+  },
+  {
+   "id": "avery-l7161",
+   "vendor": "Avery",
+   "code": "L7161",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 46.5,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 6,
+    "left": 7.2,
+    "top": 8.82,
+    "pitchX": 66.04,
+    "pitchY": 46.5,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 7.22,
+    "bottom": 9.18
+   },
+   "count": 18,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "A-ONE 72218",
+    "Printec V3320"
+   ]
+  },
+  {
+   "id": "avery-l7162",
+   "vendor": "Avery",
+   "code": "L7162",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.1,
+    "h": 33.9,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 8,
+    "left": 4.66,
+    "top": 13.02,
+    "pitchX": 101.6,
+    "pitchY": 33.9,
+    "gapX": 2.5,
+    "gapY": 0.0,
+    "right": 4.64,
+    "bottom": 12.78
+   },
+   "count": 16,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3107",
+    "Printec V3240",
+    "Printec V3930",
+    "Printec V3980",
+    "Printec V3985",
+    "Printec V8240"
+   ]
+  },
+  {
+   "id": "avery-l7163",
+   "vendor": "Avery",
+   "code": "L7163",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.1,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 7,
+    "left": 4.66,
+    "top": 15.13,
+    "pitchX": 101.6,
+    "pitchY": 38.1,
+    "gapX": 2.5,
+    "gapY": 0.0,
+    "right": 4.64,
+    "bottom": 15.17
+   },
+   "count": 14,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3108",
+    "Printec V3230",
+    "Printec V3810",
+    "Printec V3820",
+    "Printec V3830",
+    "Printec V3920",
+    "Printec V8230"
+   ]
+  },
+  {
+   "id": "avery-l7164",
+   "vendor": "Avery",
+   "code": "L7164",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 72.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 4,
+    "left": 7.2,
+    "top": 4.55,
+    "pitchX": 66.04,
+    "pitchY": 72.0,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 7.22,
+    "bottom": 4.45
+   },
+   "count": 12,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Printec V3310"
+   ]
+  },
+  {
+   "id": "avery-l7165",
+   "vendor": "Avery",
+   "code": "L7165",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.1,
+    "h": 67.7,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 4,
+    "left": 4.66,
+    "top": 12.96,
+    "pitchX": 101.6,
+    "pitchY": 67.7,
+    "gapX": 2.5,
+    "gapY": 0.0,
+    "right": 4.64,
+    "bottom": 13.24
+   },
+   "count": 8,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3114",
+    "Printec V3220",
+    "Printec V3910",
+    "Printec V8220"
+   ]
+  },
+  {
+   "id": "avery-l7166",
+   "vendor": "Avery",
+   "code": "L7166",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.1,
+    "h": 93.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 3,
+    "left": 4.66,
+    "top": 8.8,
+    "pitchX": 101.6,
+    "pitchY": 93.1,
+    "gapX": 2.5,
+    "gapY": 0.0,
+    "right": 4.64,
+    "bottom": 8.9
+   },
+   "count": 6,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3116",
+    "Printec V3210"
+   ]
+  },
+  {
+   "id": "avery-l7167",
+   "vendor": "Avery",
+   "code": "L7167",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 199.6,
+    "h": 289.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 1,
+    "left": 5.19,
+    "top": 3.97,
+    "pitchX": 199.6,
+    "pitchY": 289.1,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 5.21,
+    "bottom": 3.93
+   },
+   "count": 1,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-l7168",
+   "vendor": "Avery",
+   "code": "L7168",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 199.6,
+    "h": 143.5,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 2,
+    "left": 5.19,
+    "top": 4.97,
+    "pitchX": 199.6,
+    "pitchY": 143.5,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 5.21,
+    "bottom": 5.03
+   },
+   "count": 2,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-l7169",
+   "vendor": "Avery",
+   "code": "L7169",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 297.0,
+    "h": 210.0
+   },
+   "label": {
+    "w": 139.0,
+    "h": 99.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 2,
+    "left": 9.49,
+    "top": 4.62,
+    "pitchX": 139.0,
+    "pitchY": 101.64,
+    "gapX": 0.0,
+    "gapY": 2.54,
+    "right": 9.51,
+    "bottom": 4.64
+   },
+   "count": 4,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-l7172",
+   "vendor": "Avery",
+   "code": "L7172",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 100.0,
+    "h": 30.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 9,
+    "left": 3.72,
+    "top": 13.49,
+    "pitchX": 102.53,
+    "pitchY": 30.0,
+    "gapX": 2.53,
+    "gapY": 0.0,
+    "right": 3.75,
+    "bottom": 13.51
+   },
+   "count": 18,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3109",
+    "Printec V3260",
+    "Printec V8260"
+   ]
+  },
+  {
+   "id": "avery-l7173",
+   "vendor": "Avery",
+   "code": "L7173",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.1,
+    "h": 57.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 5,
+    "left": 4.66,
+    "top": 6.0,
+    "pitchX": 101.6,
+    "pitchY": 57.0,
+    "gapX": 2.5,
+    "gapY": 0.0,
+    "right": 4.64,
+    "bottom": 6.0
+   },
+   "count": 10,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-l7177",
+   "vendor": "Avery",
+   "code": "L7177",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 99.1,
+    "h": 42.3,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 6,
+    "left": 4.66,
+    "top": 21.43,
+    "pitchX": 101.6,
+    "pitchY": 42.3,
+    "gapX": 2.5,
+    "gapY": 0.0,
+    "right": 4.64,
+    "bottom": 21.77
+   },
+   "count": 12,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-l7651",
+   "vendor": "Avery",
+   "code": "L7651",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 38.1,
+    "h": 21.2,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 5,
+    "rows": 13,
+    "left": 4.66,
+    "top": 10.88,
+    "pitchX": 40.64,
+    "pitchY": 21.2,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 4.68,
+    "bottom": 10.52
+   },
+   "count": 65,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery Zweckform 3666",
+    "Formtec 3100",
+    "Printec V3510",
+    "Printec V3940",
+    "Printec V8510"
+   ]
+  },
+  {
+   "id": "avery-l7654",
+   "vendor": "Avery",
+   "code": "L7654",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 45.7,
+    "h": 25.4,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 10,
+    "left": 9.74,
+    "top": 21.41,
+    "pitchX": 48.26,
+    "pitchY": 25.4,
+    "gapX": 2.56,
+    "gapY": 0.0,
+    "right": 9.78,
+    "bottom": 21.59
+   },
+   "count": 40,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-l7656",
+   "vendor": "Avery",
+   "code": "L7656",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 46.0,
+    "h": 12.7,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 21,
+    "left": 5.98,
+    "top": 15.93,
+    "pitchX": 50.65,
+    "pitchY": 12.7,
+    "gapX": 4.65,
+    "gapY": 0.0,
+    "right": 6.07,
+    "bottom": 14.37
+   },
+   "count": 84,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-l7657",
+   "vendor": "Avery",
+   "code": "L7657",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 17.8,
+    "h": 10.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 10,
+    "rows": 27,
+    "left": 4.66,
+    "top": 13.49,
+    "pitchX": 20.32,
+    "pitchY": 10.0,
+    "gapX": 2.52,
+    "gapY": 0.0,
+    "right": 4.66,
+    "bottom": 13.51
+   },
+   "count": 270,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-l7658",
+   "vendor": "Avery",
+   "code": "L7658",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 25.4,
+    "h": 10.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 7,
+    "rows": 27,
+    "left": 8.47,
+    "top": 13.49,
+    "pitchX": 27.94,
+    "pitchY": 10.0,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 8.49,
+    "bottom": 13.51
+   },
+   "count": 189,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3189",
+    "Printec V3560"
+   ]
+  },
+  {
+   "id": "avery-l4732",
+   "vendor": "Avery",
+   "code": "L4732",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 35.6,
+    "h": 16.9,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 5,
+    "rows": 16,
+    "left": 11.01,
+    "top": 13.05,
+    "pitchX": 38.1,
+    "pitchY": 16.9,
+    "gapX": 2.5,
+    "gapY": 0.0,
+    "right": 10.99,
+    "bottom": 13.55
+   },
+   "count": 80,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-l4736",
+   "vendor": "Avery",
+   "code": "L4736",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 45.7,
+    "h": 21.2,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 12,
+    "left": 9.74,
+    "top": 21.47,
+    "pitchX": 48.26,
+    "pitchY": 21.2,
+    "gapX": 2.56,
+    "gapY": 0.0,
+    "right": 9.78,
+    "bottom": 21.13
+   },
+   "count": 48,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Printec V3480"
+   ]
+  },
+  {
+   "id": "avery-l4737",
+   "vendor": "Avery",
+   "code": "L4737",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 29.6,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 9,
+    "left": 7.2,
+    "top": 15.1,
+    "pitchX": 66.04,
+    "pitchY": 29.6,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 7.22,
+    "bottom": 15.5
+   },
+   "count": 27,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-l7780",
+   "vendor": "Avery",
+   "code": "L7780",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 40.0,
+    "h": 40.0,
+    "shape": "circle",
+    "cornerRadius": 20.0
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 6,
+    "left": 16.0,
+    "top": 13.49,
+    "pitchX": 45.99,
+    "pitchY": 45.99,
+    "gapX": 5.99,
+    "gapY": 5.99,
+    "right": 16.03,
+    "bottom": 13.56
+   },
+   "count": 24,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Printec V3630"
+   ]
+  },
+  {
+   "id": "avery-l7670",
+   "vendor": "Avery",
+   "code": "L7670",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 63.5,
+    "shape": "circle",
+    "cornerRadius": 31.75
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 4,
+    "left": 4.45,
+    "top": 15.12,
+    "pitchX": 68.0,
+    "pitchY": 67.15,
+    "gapX": 4.5,
+    "gapY": 3.65,
+    "right": 6.05,
+    "bottom": 16.93
+   },
+   "count": 12,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3640",
+    "Printec V3760",
+    "Printec V3850",
+    "Printec V3860",
+    "Printec V3870"
+   ]
+  },
+  {
+   "id": "avery-l7121",
+   "vendor": "Avery",
+   "code": "L7121",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 45,
+    "h": 45,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 5,
+    "left": 7.5,
+    "top": 26.0,
+    "pitchX": 49.99,
+    "pitchY": 49.99,
+    "gapX": 4.99,
+    "gapY": 4.99,
+    "right": 7.53,
+    "bottom": 26.04
+   },
+   "count": 20,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-l7676",
+   "vendor": "Avery",
+   "code": "L7676",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 117,
+    "h": 117,
+    "shape": "cd",
+    "cornerRadius": 58.5,
+    "holeDiameter": 41.0
+   },
+   "grid": {
+    "cols": 1,
+    "rows": 2,
+    "left": 46.5,
+    "top": 21.48,
+    "pitchX": 117.0,
+    "pitchY": 136.98,
+    "gapX": 0.0,
+    "gapY": 19.98,
+    "right": 46.5,
+    "bottom": 21.54
+   },
+   "count": 2,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "Avery CD 라벨, 외경 Ø117 / 내경 Ø41 (내경은 제품군 일반값, Word DB에는 없음)"
+   ]
+  },
+  {
+   "id": "avery-5160",
+   "vendor": "Avery",
+   "code": "5160",
+   "series": "",
+   "category": "Address Labels",
+   "kind": "sheet",
+   "page": {
+    "w": 215.9,
+    "h": 279.4
+   },
+   "label": {
+    "w": 66.68,
+    "h": 25.4,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 10,
+    "left": 4.76,
+    "top": 12.7,
+    "pitchX": 69.85,
+    "pitchY": 25.4,
+    "gapX": 3.17,
+    "gapY": 0.0,
+    "right": 4.76,
+    "bottom": 12.7
+   },
+   "count": 30,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-5161",
+   "vendor": "Avery",
+   "code": "5161",
+   "series": "",
+   "category": "Address Labels",
+   "kind": "sheet",
+   "page": {
+    "w": 215.9,
+    "h": 279.4
+   },
+   "label": {
+    "w": 101.6,
+    "h": 25.4,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 10,
+    "left": 4.23,
+    "top": 12.7,
+    "pitchX": 106.36,
+    "pitchY": 25.4,
+    "gapX": 4.76,
+    "gapY": 0.0,
+    "right": 3.71,
+    "bottom": 12.7
+   },
+   "count": 20,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-5162",
+   "vendor": "Avery",
+   "code": "5162",
+   "series": "",
+   "category": "Address Labels",
+   "kind": "sheet",
+   "page": {
+    "w": 215.9,
+    "h": 279.4
+   },
+   "label": {
+    "w": 101.6,
+    "h": 33.87,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 7,
+    "left": 3.95,
+    "top": 21.15,
+    "pitchX": 106.36,
+    "pitchY": 33.87,
+    "gapX": 4.76,
+    "gapY": 0.0,
+    "right": 3.99,
+    "bottom": 21.16
+   },
+   "count": 14,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-5163",
+   "vendor": "Avery",
+   "code": "5163",
+   "series": "",
+   "category": "Shipping Labels",
+   "kind": "sheet",
+   "page": {
+    "w": 215.9,
+    "h": 279.4
+   },
+   "label": {
+    "w": 101.6,
+    "h": 50.8,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 5,
+    "left": 3.95,
+    "top": 12.7,
+    "pitchX": 106.36,
+    "pitchY": 50.8,
+    "gapX": 4.76,
+    "gapY": 0.0,
+    "right": 3.99,
+    "bottom": 12.7
+   },
+   "count": 10,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-5164",
+   "vendor": "Avery",
+   "code": "5164",
+   "series": "",
+   "category": "Shipping Labels",
+   "kind": "sheet",
+   "page": {
+    "w": 215.9,
+    "h": 279.4
+   },
+   "label": {
+    "w": 101.6,
+    "h": 84.67,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 3,
+    "left": 3.95,
+    "top": 12.7,
+    "pitchX": 106.36,
+    "pitchY": 84.67,
+    "gapX": 4.76,
+    "gapY": 0.0,
+    "right": 3.99,
+    "bottom": 12.69
+   },
+   "count": 6,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-5167",
+   "vendor": "Avery",
+   "code": "5167",
+   "series": "",
+   "category": "Return Address Labels",
+   "kind": "sheet",
+   "page": {
+    "w": 215.9,
+    "h": 279.4
+   },
+   "label": {
+    "w": 44.45,
+    "h": 12.7,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 20,
+    "left": 7.62,
+    "top": 12.7,
+    "pitchX": 52.07,
+    "pitchY": 12.7,
+    "gapX": 7.62,
+    "gapY": 0.0,
+    "right": 7.62,
+    "bottom": 12.7
+   },
+   "count": 80,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-5168",
+   "vendor": "Avery",
+   "code": "5168",
+   "series": "",
+   "category": "Shipping Labels",
+   "kind": "sheet",
+   "page": {
+    "w": 215.9,
+    "h": 279.4
+   },
+   "label": {
+    "w": 88.9,
+    "h": 127.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 2,
+    "left": 12.7,
+    "top": 12.7,
+    "pitchX": 101.6,
+    "pitchY": 127.0,
+    "gapX": 12.7,
+    "gapY": 0.0,
+    "right": 12.7,
+    "bottom": 12.7
+   },
+   "count": 4,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-5195",
+   "vendor": "Avery",
+   "code": "5195",
+   "series": "",
+   "category": "Return Address Labels",
+   "kind": "sheet",
+   "page": {
+    "w": 215.9,
+    "h": 279.4
+   },
+   "label": {
+    "w": 44.45,
+    "h": 16.93,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 15,
+    "left": 7.62,
+    "top": 13.97,
+    "pitchX": 52.07,
+    "pitchY": 16.93,
+    "gapX": 7.62,
+    "gapY": 0.0,
+    "right": 7.62,
+    "bottom": 11.48
+   },
+   "count": 60,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "상하 여백(상/하) 13.97/11.48"
+   ]
+  },
+  {
+   "id": "avery-5159",
+   "vendor": "Avery",
+   "code": "5159",
+   "series": "",
+   "category": "Address Labels",
+   "kind": "sheet",
+   "page": {
+    "w": 215.9,
+    "h": 279.4
+   },
+   "label": {
+    "w": 101.6,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 7,
+    "left": 3.95,
+    "top": 6.35,
+    "pitchX": 106.36,
+    "pitchY": 38.1,
+    "gapX": 4.76,
+    "gapY": 0.0,
+    "right": 3.99,
+    "bottom": 6.35
+   },
+   "count": 14,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-5266",
+   "vendor": "Avery",
+   "code": "5266",
+   "series": "",
+   "category": "File Folder Labels",
+   "kind": "sheet",
+   "page": {
+    "w": 215.9,
+    "h": 279.4
+   },
+   "label": {
+    "w": 87.31,
+    "h": 16.93,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 15,
+    "left": 13.48,
+    "top": 12.7,
+    "pitchX": 101.6,
+    "pitchY": 16.93,
+    "gapX": 14.29,
+    "gapY": 0.0,
+    "right": 13.51,
+    "bottom": 12.75
+   },
+   "count": 30,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-5371",
+   "vendor": "Avery",
+   "code": "5371",
+   "series": "",
+   "category": "Business Cards",
+   "kind": "sheet",
+   "page": {
+    "w": 215.9,
+    "h": 279.4
+   },
+   "label": {
+    "w": 88.9,
+    "h": 50.8,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 5,
+    "left": 19.05,
+    "top": 12.7,
+    "pitchX": 88.9,
+    "pitchY": 50.8,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 19.05,
+    "bottom": 12.7
+   },
+   "count": 10,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-zweckform-3474",
+   "vendor": "Avery Zweckform",
+   "code": "3474",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 70.0,
+    "h": 37.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 8,
+    "left": 0.0,
+    "top": 0.0,
+    "pitchX": 70.0,
+    "pitchY": 37.1,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 0.2
+   },
+   "count": 24,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3475",
+   "vendor": "Avery Zweckform",
+   "code": "3475",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 70.0,
+    "h": 36.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 8,
+    "left": 0.0,
+    "top": 4.5,
+    "pitchX": 70.0,
+    "pitchY": 36.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 4.5
+   },
+   "count": 24,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ],
+   "equivalents": [
+    "Avery Zweckform 3490"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3477",
+   "vendor": "Avery Zweckform",
+   "code": "3477",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 105.0,
+    "h": 41.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 7,
+    "left": 0.0,
+    "top": 4.99,
+    "pitchX": 105.0,
+    "pitchY": 41.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 5.01
+   },
+   "count": 14,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3479",
+   "vendor": "Avery Zweckform",
+   "code": "3479",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 70.0,
+    "h": 32,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 9,
+    "left": 0.0,
+    "top": 4.5,
+    "pitchX": 70.0,
+    "pitchY": 32.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 4.5
+   },
+   "count": 27,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3481",
+   "vendor": "Avery Zweckform",
+   "code": "3481",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 70.0,
+    "h": 41.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 7,
+    "left": 0.0,
+    "top": 4.99,
+    "pitchX": 70.0,
+    "pitchY": 41.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 5.01
+   },
+   "count": 21,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3484",
+   "vendor": "Avery Zweckform",
+   "code": "3484",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 105.0,
+    "h": 37.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 8,
+    "left": 0.0,
+    "top": 0.0,
+    "pitchX": 105.0,
+    "pitchY": 37.1,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 0.2
+   },
+   "count": 16,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3489",
+   "vendor": "Avery Zweckform",
+   "code": "3489",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 70.0,
+    "h": 29.7,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 10,
+    "left": 0.0,
+    "top": 0.0,
+    "pitchX": 70.0,
+    "pitchY": 29.7,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": -0.0
+   },
+   "count": 30,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3490",
+   "vendor": "Avery Zweckform",
+   "code": "3490",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 70.0,
+    "h": 36.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 8,
+    "left": 0.0,
+    "top": 4.5,
+    "pitchX": 70.0,
+    "pitchY": 36.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 4.5
+   },
+   "count": 24,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ],
+   "equivalents": [
+    "Avery Zweckform 3475"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3421",
+   "vendor": "Avery Zweckform",
+   "code": "3421",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 70.0,
+    "h": 25.4,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 11,
+    "left": 0.0,
+    "top": 8.78,
+    "pitchX": 70.0,
+    "pitchY": 25.4,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 8.82
+   },
+   "count": 33,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3422",
+   "vendor": "Avery Zweckform",
+   "code": "3422",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 70.0,
+    "h": 35,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 8,
+    "left": 0.0,
+    "top": 8.48,
+    "pitchX": 70.0,
+    "pitchY": 35.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 8.52
+   },
+   "count": 24,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3423",
+   "vendor": "Avery Zweckform",
+   "code": "3423",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 105.0,
+    "h": 35,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 8,
+    "left": 0.0,
+    "top": 8.48,
+    "pitchX": 105.0,
+    "pitchY": 35.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 8.52
+   },
+   "count": 16,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3424",
+   "vendor": "Avery Zweckform",
+   "code": "3424",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 105.0,
+    "h": 48,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 6,
+    "left": 0.0,
+    "top": 4.5,
+    "pitchX": 105.0,
+    "pitchY": 48.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 4.5
+   },
+   "count": 12,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3425",
+   "vendor": "Avery Zweckform",
+   "code": "3425",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 105.0,
+    "h": 57.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 5,
+    "left": 0.0,
+    "top": 6.0,
+    "pitchX": 105.0,
+    "pitchY": 57.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 6.0
+   },
+   "count": 10,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3426",
+   "vendor": "Avery Zweckform",
+   "code": "3426",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 105.0,
+    "h": 70.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 4,
+    "left": 0.0,
+    "top": 8.48,
+    "pitchX": 105.0,
+    "pitchY": 70.0,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 8.52
+   },
+   "count": 8,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3427",
+   "vendor": "Avery Zweckform",
+   "code": "3427",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 105.0,
+    "h": 74.2,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 4,
+    "left": 0.0,
+    "top": 0.0,
+    "pitchX": 105.0,
+    "pitchY": 74.2,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 0.2
+   },
+   "count": 8,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3651",
+   "vendor": "Avery Zweckform",
+   "code": "3651",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 52.5,
+    "h": 29.7,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 10,
+    "left": 0.0,
+    "top": 0.0,
+    "pitchX": 52.5,
+    "pitchY": 29.7,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": -0.0
+   },
+   "count": 40,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3652",
+   "vendor": "Avery Zweckform",
+   "code": "3652",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 70.0,
+    "h": 42.4,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 7,
+    "left": 0.0,
+    "top": 0.0,
+    "pitchX": 70.0,
+    "pitchY": 42.4,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 0.2
+   },
+   "count": 21,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3653",
+   "vendor": "Avery Zweckform",
+   "code": "3653",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 105.0,
+    "h": 42.4,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 7,
+    "left": 0.0,
+    "top": 0.0,
+    "pitchX": 105.0,
+    "pitchY": 42.4,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 0.2
+   },
+   "count": 14,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3657",
+   "vendor": "Avery Zweckform",
+   "code": "3657",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 48.5,
+    "h": 25.4,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 10,
+    "left": 7.99,
+    "top": 21.48,
+    "pitchX": 48.5,
+    "pitchY": 25.4,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 8.01,
+    "bottom": 21.52
+   },
+   "count": 40,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-zweckform-3658",
+   "vendor": "Avery Zweckform",
+   "code": "3658",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 64.6,
+    "h": 33.8,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 8,
+    "left": 8.1,
+    "top": 13.3,
+    "pitchX": 64.6,
+    "pitchY": 33.8,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 8.1,
+    "bottom": 13.3
+   },
+   "count": 24,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Formtec 3106",
+    "Printec V3340",
+    "Printec V8340"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3659",
+   "vendor": "Avery Zweckform",
+   "code": "3659",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 97,
+    "h": 42.3,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 6,
+    "left": 7.99,
+    "top": 21.59,
+    "pitchX": 97.0,
+    "pitchY": 42.3,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 8.01,
+    "bottom": 21.61
+   },
+   "count": 12,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-zweckform-3660",
+   "vendor": "Avery Zweckform",
+   "code": "3660",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 97,
+    "h": 67.7,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 4,
+    "left": 7.99,
+    "top": 13.09,
+    "pitchX": 97.0,
+    "pitchY": 67.7,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 8.01,
+    "bottom": 13.11
+   },
+   "count": 8,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-zweckform-3664",
+   "vendor": "Avery Zweckform",
+   "code": "3664",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 70.0,
+    "h": 33.8,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 8,
+    "left": 0.0,
+    "top": 13.3,
+    "pitchX": 70.0,
+    "pitchY": 33.8,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 13.3
+   },
+   "count": 24,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3665",
+   "vendor": "Avery Zweckform",
+   "code": "3665",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 105.0,
+    "h": 33.8,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 8,
+    "left": 0.0,
+    "top": 13.3,
+    "pitchX": 105.0,
+    "pitchY": 33.8,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 13.3
+   },
+   "count": 16,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3666",
+   "vendor": "Avery Zweckform",
+   "code": "3666",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 38.1,
+    "h": 21.2,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 5,
+    "rows": 13,
+    "left": 9.74,
+    "top": 10.69,
+    "pitchX": 38.1,
+    "pitchY": 21.2,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 9.76,
+    "bottom": 10.71
+   },
+   "count": 65,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7651",
+    "Formtec 3100",
+    "Printec V3510",
+    "Printec V3940",
+    "Printec V8510"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3667",
+   "vendor": "Avery Zweckform",
+   "code": "3667",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 48.5,
+    "h": 16.9,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 16,
+    "left": 7.99,
+    "top": 13.3,
+    "pitchX": 48.5,
+    "pitchY": 16.9,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 8.01,
+    "bottom": 13.3
+   },
+   "count": 64,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "avery-zweckform-3668",
+   "vendor": "Avery Zweckform",
+   "code": "3668",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 52.5,
+    "h": 21.2,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 14,
+    "left": 0.0,
+    "top": 0.0,
+    "pitchX": 52.5,
+    "pitchY": 21.2,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 0.2
+   },
+   "count": 56,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "avery-zweckform-3669",
+   "vendor": "Avery Zweckform",
+   "code": "3669",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 70.0,
+    "h": 50.8,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 5,
+    "left": 0.0,
+    "top": 21.48,
+    "pitchX": 70.0,
+    "pitchY": 50.8,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 0.0,
+    "bottom": 21.52
+   },
+   "count": 15,
+   "source": "word-builtin",
+   "confidence": "high",
+   "notes": [
+    "용지 가장자리 3mm 이내에 라벨 있음: 프린터 비인쇄 영역 주의"
+   ]
+  },
+  {
+   "id": "a-one-72212",
+   "vendor": "A-ONE",
+   "code": "72212",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 86.4,
+    "h": 42.3,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 2,
+    "rows": 6,
+    "left": 18.59,
+    "top": 21.18,
+    "pitchX": 86.4,
+    "pitchY": 42.3,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 18.61,
+    "bottom": 22.02
+   },
+   "count": 12,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "a-one-72218",
+   "vendor": "A-ONE",
+   "code": "72218",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 46.5,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 6,
+    "left": 7.2,
+    "top": 9.0,
+    "pitchX": 66.04,
+    "pitchY": 46.5,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 7.22,
+    "bottom": 9.0
+   },
+   "count": 18,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7161",
+    "Printec V3320"
+   ]
+  },
+  {
+   "id": "a-one-72221",
+   "vendor": "A-ONE",
+   "code": "72221",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 63.5,
+    "h": 38.1,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 7,
+    "left": 7.2,
+    "top": 15.13,
+    "pitchX": 66.04,
+    "pitchY": 38.1,
+    "gapX": 2.54,
+    "gapY": 0.0,
+    "right": 7.22,
+    "bottom": 15.17
+   },
+   "count": 21,
+   "source": "word-builtin",
+   "confidence": "high",
+   "equivalents": [
+    "Avery L7160",
+    "Formtec 3105",
+    "Printec V3330",
+    "Printec V3970",
+    "Printec V3990",
+    "Printec V3995",
+    "Printec V8330"
+   ]
+  },
+  {
+   "id": "a-one-72224",
+   "vendor": "A-ONE",
+   "code": "72224",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 66.0,
+    "h": 33.9,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 8,
+    "left": 6.0,
+    "top": 12.89,
+    "pitchX": 66.0,
+    "pitchY": 33.9,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 6.0,
+    "bottom": 12.91
+   },
+   "count": 24,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "a-one-72244",
+   "vendor": "A-ONE",
+   "code": "72244",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 48.3,
+    "h": 25.4,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 4,
+    "rows": 11,
+    "left": 8.4,
+    "top": 8.78,
+    "pitchX": 48.3,
+    "pitchY": 25.4,
+    "gapX": 0.0,
+    "gapY": 0.0,
+    "right": 8.4,
+    "bottom": 8.82
+   },
+   "count": 44,
+   "source": "word-builtin",
+   "confidence": "high"
+  },
+  {
+   "id": "a-one-28396",
+   "vendor": "A-ONE",
+   "code": "28396",
+   "series": "",
+   "category": "",
+   "kind": "sheet",
+   "page": {
+    "w": 210.0,
+    "h": 297.0
+   },
+   "label": {
+    "w": 60.0,
+    "h": 60.0,
+    "shape": "rect",
+    "cornerRadius": null
+   },
+   "grid": {
+    "cols": 3,
+    "rows": 4,
+    "left": 7.99,
+    "top": 17.99,
+    "pitchX": 66.99,
+    "pitchY": 66.99,
+    "gapX": 6.99,
+    "gapY": 6.99,
+    "right": 8.03,
+    "bottom": 18.04
+   },
+   "count": 12,
+   "source": "word-builtin",
+   "confidence": "high"
+  }
+ ]
+}

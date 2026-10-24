@@ -9,7 +9,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "i18n": "node scripts/i18n.mjs"
+    "i18n": "node scripts/i18n.mjs",
+    "stock": "node scripts/stock.mjs"
   },
   "dependencies": {
     "bwip-js": "^4.5.1",

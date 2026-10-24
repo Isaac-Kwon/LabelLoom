@@ -106,6 +106,19 @@ A4 명찰 2×3 (100×70)	A4 badges 2×3 (100×70)	A4 badge 2×3 (100×70)	A4 bad
 A4 시트	A4 sheet	Foglio A4	Feuille A4
 Letter 시트	Letter sheet	Foglio Letter	Feuille Letter
 롤·낱장	Roll · single	Rotolo · singola	Rouleau · unité
+# model/stock.ts
+폼텍	Formtec	Formtec	Formtec
+프린텍 애니라벨	Printec AnyLabel	Printec AnyLabel	Printec AnyLabel
+Avery	Avery	Avery	Avery
+Avery Zweckform	Avery Zweckform	Avery Zweckform	Avery Zweckform
+A-ONE (일본)	A-ONE (Japan)	A-ONE (Giappone)	A-ONE (Japon)
+롤·라벨 프린터	Rolls · label printers	Rotoli · stampanti di etichette	Rouleaux · imprimantes d'étiquettes
+CD 홀 Ø{d}	CD hole Ø{d}	foro CD Ø{d}	trou CD Ø{d}
+폼텍 롤	Formtec roll	Rotolo Formtec	Rouleau Formtec
+롯데택배 표준라벨 D	Lotte Express standard label D	Lotte Express etichetta standard D	Lotte Express étiquette standard D
+롯데택배 표준라벨 E	Lotte Express standard label E	Lotte Express etichetta standard E	Lotte Express étiquette standard E
+롯데택배 의류표준 B	Lotte Express apparel label B	Lotte Express etichetta abbigliamento B	Lotte Express étiquette vêtements B
+배송 라벨 4×6"	Shipping label 4×6"	Etichetta di spedizione 4×6"	Étiquette d'expédition 4×6"
 # model/tableLayouts.ts
 월	Mon	Lun	Lun
 화	Tue	Mar	Mar
@@ -389,6 +402,22 @@ xlsx (데이터만)	xlsx (data only)	xlsx (solo dati)	xlsx (données seules)
 라벨 크기	Label size	Formato etichetta	Format d'étiquette
 전체 크기	All sizes	Tutti i formati	Tous les formats
 현재 용지 · {name} ({size})	Current paper · {name} ({size})	Carta attuale · {name} ({size})	Papier actuel · {name} ({size})
+기성 라벨 용지	Ready-made label stock	Etichette in commercio	Étiquettes du commerce
+기성 용지 · {name}	Stock · {name}	In commercio · {name}	Du commerce · {name}
+사용 국가	Sold in	Venduto in	Vendu en
+모든 국가	All countries	Tutti i paesi	Tous les pays
+유럽 전체	All of Europe	Tutta Europa	Toute l'Europe
+여러 나라에서 판매	Sold in many countries	Venduto in molti paesi	Vendu dans de nombreux pays
+전 세계	Worldwide	In tutto il mondo	Monde entier
+기성품 규격은 참고값입니다.	Stock sizes are for reference.	Le misure delle etichette in commercio sono indicative.	Les formats du commerce sont donnés à titre indicatif.
+각 제조사가 배포한 서식과 Word 라벨 정의에서 옮긴 값으로, 같은 제품도 생산 시기에 따라 조금씩 다를 수 있고 프린터마다 1~2 mm 급지 오차가 있습니다. 많이 인쇄하기 전에 일반 용지에 한 장 시험 출력해 라벨지와 겹쳐 보고, 어긋나면 인쇄 보정을 하세요.	They are taken from the makers' templates and Word's label definitions. The same product can vary a little between batches, and every printer feeds paper 1–2 mm off. Before printing many, print one page on plain paper, hold it against the label sheet and, if it is off, use print calibration.	Sono ricavate dai modelli dei produttori e dalle definizioni di etichette di Word. Lo stesso prodotto può variare leggermente da un lotto all'altro e ogni stampante trascina la carta con 1–2 mm di scarto. Prima di stampare molte copie, stampa una pagina su carta normale, sovrapponila al foglio di etichette e, se non coincide, usa la calibrazione di stampa.	Elles proviennent des modèles des fabricants et des définitions d'étiquettes de Word. Un même produit peut varier un peu d'un lot à l'autre et chaque imprimante entraîne le papier avec 1 à 2 mm d'écart. Avant d'imprimer en nombre, imprimez une page sur papier ordinaire, superposez-la à la planche et, si elle est décalée, utilisez l'étalonnage d'impression.
+제품명과 상표는 각 소유자의 것이며 LabelLoom은 제조사와 관계가 없습니다.	Product names and trademarks belong to their owners; LabelLoom is not affiliated with any maker.	I nomi dei prodotti e i marchi appartengono ai rispettivi proprietari; LabelLoom non è affiliato ad alcun produttore.	Les noms de produits et les marques appartiennent à leurs propriétaires ; LabelLoom n'est affilié à aucun fabricant.
+코드·크기 검색 (예: 3108, V3230, 99.1x38.1)	Search code or size (e.g. 3108, L7163, 99.1x38.1)	Cerca codice o formato (es. 3108, L7163, 99.1x38.1)	Chercher un code ou un format (ex. 3108, L7163, 99.1x38.1)
+{n}종	{n} items	{n} articoli	{n} articles
+이 용지로 빈 라벨을 만듭니다	Start a blank label on this stock	Crea un'etichetta vuota su questo foglio	Créer une étiquette vierge sur ce support
+제조사 서식에서만 확인했거나 자료끼리 값이 달라 실측이 필요합니다	Only found in the maker's template, or the sources disagree: measure before relying on it	Trovato solo nel modello del produttore, oppure le fonti non concordano: verifica con una prova	Trouvé seulement dans le modèle du fabricant, ou les sources divergent : vérifiez par un essai
+시험 출력 권장	Test print first	Fai prima una prova	Faites d'abord un essai
+템플릿 적용…	Use with a template…	Usa con un modello…	Utiliser avec un modèle…
 내 용지 · {name} ({size})	My paper · {name} ({size})	Mia carta · {name} ({size})	Mon papier · {name} ({size})
 크기 직접 입력…	Custom size…	Formato personalizzato…	Format personnalisé…
 {n}개 템플릿	{n} templates	{n} modelli	{n} modèles

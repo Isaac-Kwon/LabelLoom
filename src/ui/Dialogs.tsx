@@ -8,8 +8,9 @@ import { printPages } from '../io/export';
 import { fontFromFile, localFontsSupported, queryLocalFonts, registerFonts } from '../io/fonts';
 import { loadRecent, openProjectFile, pickFile, type RecentEntry } from '../io/project';
 import { encodeShare, shareUrl, type ShareKind } from '../io/share';
-import { newRow } from '../model/defaults';
+import { newProject, newRow } from '../model/defaults';
 import { customPaper, labelSize, loadUserPresets, PAPER_KIND_LABEL, paperKind, type PaperKind } from '../model/presets';
+import { soldIn, STOCK_VENDOR_LABEL, stockItems, stockMatches, type StockCountry, type StockVendor } from '../model/stock';
 import { TEMPLATES, type Template } from '../model/templates';
 import type { Paper, Project } from '../model/types';
 import { buildItems, DEFAULT_DUPLEX, labelSizeProject, paginate } from '../render/jobs';
@@ -148,12 +149,91 @@ function TemplateCard({ t: tpl, papers, onPick }: { t: Template; papers: Paper[]
   );
 }
 
+/** The label layout of a sheet (or a single roll label), without any design. */
+function SheetThumb({ p }: { p: Paper }) {
+  const cells = [];
+  for (let r = 0; r < p.rows; r++) {
+    for (let c = 0; c < p.cols; c++) {
+      cells.push(<rect key={`${r}-${c}`} x={p.marginLeft + c * (p.labelWidth + p.gapX)} y={p.marginTop + r * (p.labelHeight + p.gapY)}
+        width={p.labelWidth} height={p.labelHeight} rx={p.cornerRadius} fill="#eef2ff" stroke="#6366f1" strokeWidth={Math.max(p.width, p.height) / 300} />);
+    }
+  }
+  return (
+    <div className="thumb">
+      <svg viewBox={`0 0 ${p.width} ${p.height}`} width={p.width * 2} height={p.height * 2}>
+        <rect width={p.width} height={p.height} fill="#fff" />
+        {cells}
+      </svg>
+    </div>
+  );
+}
+
+const STOCK_VENDORS = Object.keys(STOCK_VENDOR_LABEL) as StockVendor[];
+type CountryFilter = StockCountry | 'EU' | 'all';
+const COUNTRY_FILTERS: CountryFilter[] = ['all', 'KR', 'US', 'EU', 'IT', 'FR', 'DE', 'GB', 'ES', 'JP'];
+/** The stock sold where the UI language is spoken comes first; English is spoken too widely to guess. */
+const LANG_COUNTRY: Record<string, CountryFilter> = { ko: 'KR', it: 'IT', fr: 'FR', en: 'all' };
+
+function regionName(code: string) {
+  try { return new Intl.DisplayNames([locale()], { type: 'region' }).of(code) ?? code; } catch { return code; }
+}
+const countryLabel = (c: CountryFilter) => (c === 'all' ? t('모든 국가') : c === 'EU' ? t('유럽 전체') : regionName(c));
+
+function StockPane({ onBlank, onTemplates }: { onBlank: (p: Paper) => void; onTemplates: (p: Paper) => void }) {
+  const [vendor, setVendor] = useState<StockVendor | 'all'>('all');
+  const [country, setCountry] = useState<CountryFilter>(() => LANG_COUNTRY[getLang()] ?? 'all');
+  const [q, setQ] = useState('');
+  const all = useMemo(() => stockItems().map((item) => ({ item, paper: item.paper() })), []);
+  const shown = all.filter(({ item, paper }) => (vendor === 'all' || item.vendor === vendor) && soldIn(item, country) && stockMatches(item, paper, q));
+  return (
+    <>
+      <div className="warn stock-disclaimer">
+        <b>{t('기성품 규격은 참고값입니다.')}</b>{' '}
+        {t('각 제조사가 배포한 서식과 Word 라벨 정의에서 옮긴 값으로, 같은 제품도 생산 시기에 따라 조금씩 다를 수 있고 프린터마다 1~2 mm 급지 오차가 있습니다. 많이 인쇄하기 전에 일반 용지에 한 장 시험 출력해 라벨지와 겹쳐 보고, 어긋나면 인쇄 보정을 하세요.')}{' '}
+        {t('제품명과 상표는 각 소유자의 것이며 LabelLoom은 제조사와 관계가 없습니다.')}
+      </div>
+      <div className="tpl-filter">
+        <span className="muted small">{t('사용 국가')}</span>
+        <Select value={country} onChange={(v) => setCountry(v as CountryFilter)} options={COUNTRY_FILTERS.map((c) => ({ value: c, label: countryLabel(c) }))} />
+        <Seg value={vendor} onChange={setVendor} options={[
+          { value: 'all', label: t('전체') },
+          ...STOCK_VENDORS.map((v) => ({ value: v, label: t(STOCK_VENDOR_LABEL[v]) })),
+        ]} />
+        <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('코드·크기 검색 (예: 3108, V3230, 99.1x38.1)')} className="stock-search" />
+        <span className="muted small">{t('{n}종', { n: shown.length })}</span>
+      </div>
+      <div className="gallery">
+        {shown.map(({ item, paper }) => (
+          <div key={item.id} className="card" role="button" tabIndex={0} title={t('이 용지로 빈 라벨을 만듭니다')}
+            onClick={() => onBlank(paper)} onKeyDown={(e) => { if (e.key === 'Enter') onBlank(paper); }}>
+            <SheetThumb p={paper} />
+            <strong>{item.vendor === 'roll' ? item.code : `${t(STOCK_VENDOR_LABEL[item.vendor])} ${item.code}`}</strong>
+            <span className="muted small">
+              {labelSize(paper)} mm{paper.cols * paper.rows > 1 ? ` · ${t('{n}칸', { n: paper.cols * paper.rows })}` : ''}
+              {paper.width !== paper.labelWidth || paper.height !== paper.labelHeight ? ` · ${paperKind(paper) === 'roll' ? `${paper.width}×${paper.height}` : t(PAPER_KIND_LABEL[paperKind(paper)])}` : ''}
+            </span>
+            <span className="muted small" title={item.countries.map((c) => (c === '*' ? t('여러 나라에서 판매') : regionName(c))).join(', ')}>
+              {item.countries.includes('*') ? t('전 세계') : item.countries.join(' · ')}
+            </span>
+            {item.confidence !== 'high' && <span className="stock-check small" title={t('제조사 서식에서만 확인했거나 자료끼리 값이 달라 실측이 필요합니다')}>{t('시험 출력 권장')}</span>}
+            <span className="card-paper" onClick={(e) => e.stopPropagation()}>
+              <button className="small" onClick={() => onTemplates(paper)}>{t('템플릿 적용…')}</button>
+            </span>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
 export function StartDialog({ onLoad }: { onLoad: (p: Project, name?: string) => void }) {
   const { close, notify } = useStore.getState();
   const [recent, setRecent] = useState<RecentEntry[]>([]);
   const [kind, setKind] = useState<PaperKind | 'all'>('all');
   const [size, setSize] = useState('all');
   const [custom, setCustom] = useState({ w: 50, h: 30, page: 'roll' as 'roll' | 'A4' | 'Letter', gap: 2 });
+  const [tab, setTab] = useState<'templates' | 'stock'>('templates');
+  const [stock, setStock] = useState<Paper | null>(null);
   const current = useStore((s) => s.project.paper);
   const userPapers = useMemo(loadUserPresets, []);
   useEffect(() => { loadRecent().then(setRecent); }, []);
@@ -165,6 +245,7 @@ export function StartDialog({ onLoad }: { onLoad: (p: Project, name?: string) =>
   // papers outside the template lists: every template is built for them (scaled to fit)
   const own: Record<string, Paper> = {
     cur: current,
+    ...(stock ? { stock } : {}),
     ...Object.fromEntries(userPapers.map((p, i) => [`u${i}`, p])),
     custom: customPaper(custom.w, custom.h, custom.page, custom.gap),
   };
@@ -183,7 +264,16 @@ export function StartDialog({ onLoad }: { onLoad: (p: Project, name?: string) =>
         <button onClick={async () => { try { const r = await openProjectFile(); if (r) { onLoad(r.project, r.name); close(); } } catch (e) { notify((e as Error).message); } }}>📂 {t('프로젝트 열기 (.json)')}</button>
         <button onClick={close}>{t('현재 작업 계속')}</button>
       </div>
-      <h3>{t('템플릿')}</h3>
+      <div className="tabs start-tabs">
+        <button className={tab === 'templates' ? 'on' : ''} onClick={() => setTab('templates')}>{t('템플릿')}</button>
+        <button className={tab === 'stock' ? 'on' : ''} onClick={() => setTab('stock')}>{t('기성 라벨 용지')}</button>
+      </div>
+      {tab === 'stock' && (
+        <StockPane
+          onBlank={(p) => pick(newProject({ ...p }))}
+          onTemplates={(p) => { setStock(p); setSize('stock'); setKind('all'); setTab('templates'); }} />
+      )}
+      {tab === 'templates' && <>
       <div className="tpl-filter">
         <span className="muted small">{t('용지')}</span>
         <Seg value={kind} onChange={setKind} options={[
@@ -195,6 +285,7 @@ export function StartDialog({ onLoad }: { onLoad: (p: Project, name?: string) =>
           { value: 'all', label: t('전체 크기') },
           ...sizes.map((k) => ({ value: k, label: `${k} mm` })),
           { value: 'cur', label: t('현재 용지 · {name} ({size})', { name: tx(current.name), size: labelSize(current) }) },
+          ...(stock ? [{ value: 'stock', label: t('기성 용지 · {name}', { name: stock.name }) }] : []),
           ...userPapers.map((p, i) => ({ value: `u${i}`, label: t('내 용지 · {name} ({size})', { name: p.name, size: labelSize(p) }) })),
           { value: 'custom', label: t('크기 직접 입력…') },
         ]} />
@@ -219,6 +310,7 @@ export function StartDialog({ onLoad }: { onLoad: (p: Project, name?: string) =>
           <TemplateCard key={`${t.id}|${kind}|${sizeOk}|${overrideKey}`} t={t} papers={papers} onPick={pick} />
         ))}
       </div>
+      </>}
       {recent.length > 0 && (
         <>
           <h3>{t('최근 저장한 작업')}</h3>
