@@ -131,12 +131,12 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
   const template = `44px 34px 52px ${multiDesign ? '96px ' : ''}64px ${columns.map(() => colW).join(' ')} 34px`;
 
   return (
-    <section className="data-panel" style={{ height }}>
+    <section className="data-panel" data-tour="data" style={{ height }}>
       <div className="resize-handle" onPointerDown={startDrag} />
       <div className="data-toolbar">
         <strong>{t('데이터')}</strong>
         <span className="muted small">{t('{rows}행 · 인쇄 {labels}장 · 출력됨 {printed}', { rows: rows.length, labels: totalLabels, printed: printedCount })}</span>
-        <button onClick={() => open('import')}>{t('가져오기 (xlsx·csv)')}</button>
+        <button data-tour="import" onClick={() => open('import')}>{t('가져오기 (xlsx·csv)')}</button>
         {source && (
           <span className="sync-status" title={source.url}>
             <button onClick={() => void refreshSource(true)} disabled={sync.busy}>⟳ {t('URL 새로고침')}</button>
@@ -157,7 +157,7 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
             <button onClick={() => exportTable(project.data, 'xlsx', project.name, false)}>{t('xlsx (데이터만)')}</button>
           </div>
         </div>
-        <button onClick={() => open('serial')}>{t('일련번호 생성')}</button>
+        <button data-tour="serial" onClick={() => open('serial')}>{t('일련번호 생성')}</button>
         <button onClick={addRow}>＋ {t('행')}</button>
         <button onClick={addColumn}>＋ {t('열')}</button>
         <button className={armed ? 'danger' : ''} onClick={deleteRows} onBlur={() => setArmed(false)} disabled={!sel.size && !curRow}

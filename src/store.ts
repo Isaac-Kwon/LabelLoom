@@ -33,6 +33,8 @@ interface State {
   cellSel: CellSel | null;
   /** state of the last fetch from project.dataSource */
   sync: SyncState;
+  /** guided tour in progress: lesson id and step index */
+  tour: { lesson: string; step: number } | null;
 }
 
 export interface SyncState { busy: boolean; at?: string; error?: string }
@@ -60,6 +62,7 @@ interface Actions {
   setClipboard(objs: LabelObject[]): void;
   setCellSel(c: CellSel | null): void;
   setSync(s: Partial<SyncState>): void;
+  setTour(t: State['tour']): void;
 }
 
 const HISTORY = 100;
@@ -85,6 +88,7 @@ export const useStore = create<State & Actions>((set, get) => {
     clipboard: [],
     cellSel: null,
     sync: { busy: false },
+    tour: null,
 
     setProject(p, opts) {
       const s = get();
@@ -146,6 +150,7 @@ export const useStore = create<State & Actions>((set, get) => {
     setClipboard: (objs) => set({ clipboard: objs }),
     setCellSel: (c) => set({ cellSel: c }),
     setSync: (x) => set({ sync: { ...get().sync, ...x } }),
+    setTour: (x) => set({ tour: x }),
   };
 
   function fixView() {

@@ -4,6 +4,7 @@ import type { Project } from '../model/types';
 import { useStore } from '../store';
 import { docUrl, LESSONS, lessonProject, stepText } from '../tutorial/lessons';
 import { Modal } from './controls';
+import { startTour } from './Tour';
 
 /** 튜토리얼·도움말: the lessons' steps to read, with their example and web page. */
 export function HelpDialog({ onLoad }: { onLoad: (p: Project) => void }) {
@@ -30,7 +31,8 @@ export function HelpDialog({ onLoad }: { onLoad: (p: Project) => void }) {
             {lesson.steps.map((st, i) => <li key={i}>{stepText(st)}</li>)}
           </ol>
           <div className="btn-row">
-            <button className="primary" onClick={() => { onLoad(lessonProject(lesson)); close(); }}>{t('예제 열기')}</button>
+            <button className="primary" onClick={() => startTour(lesson, onLoad)}>{t('따라하기 시작')}</button>
+            <button onClick={() => { onLoad(lessonProject(lesson)); close(); }}>{t('예제만 열기')}</button>
             <a href={docUrl(lesson)} target="_blank" rel="noreferrer">{t('웹에서 자세히 보기')} ↗</a>
           </div>
         </div>

@@ -180,7 +180,7 @@ function ContentSection({ o }: { o: TextObj | BarcodeObj | QrObj }) {
   const row = project.data.rows[currentRow];
   const resolved = resolveObject(o, previewCtx(row, currentRow, project.seqStart)).content;
   return (
-    <Section title={t('내용 · 데이터 연결')}>
+    <Section title={t('내용 · 데이터 연결')} tour="content">
       <textarea ref={ref} className="content" rows={o.type === 'text' && o.multiline ? 4 : 2} value={o.content}
         onChange={(e) => act.update([o.id], { content: e.target.value } as Partial<LabelObject>)} spellCheck={false} />
       <div className="btn-row">
@@ -318,7 +318,7 @@ function BarcodeSection({ o }: { o: BarcodeObj }) {
   const all = SYMBOLOGIES.flatMap((g) => g.items);
   const cur = all.find((s) => s.id === o.symbology);
   return (
-    <Section title={t('바코드')}>
+    <Section title={t('바코드')} tour="barcode">
       <Row label={t('종류')}>
         <select value={o.symbology} onChange={(e) => up({ symbology: e.target.value })}>
           {SYMBOLOGIES.map((g) => <optgroup key={g.group} label={g.group}>{g.items.map((s) => <option key={s.id} value={s.id}>{tx(s.label)}</option>)}</optgroup>)}
@@ -426,7 +426,7 @@ function RulesSection({ o }: { o: LabelObject }) {
   const patch = (i: number, p: Partial<StyleRule>) => set(rules.map((r, j) => (j === i ? { ...r, ...p, set: { ...r.set, ...(p.set ?? {}) } } : r)));
   const hasContent = 'content' in o;
   return (
-    <Section title={`${t('조건부 스타일')}${rules.length ? ` (${rules.length})` : ''}`} defaultOpen={rules.length > 0}
+    <Section title={`${t('조건부 스타일')}${rules.length ? ` (${rules.length})` : ''}`} defaultOpen={rules.length > 0} tour="rules"
       actions={<button className="icon small" title={t('규칙 추가')} onClick={() => set([...rules, { column: columns[0] ?? '', op: 'eq', value: '', set: {} }])}>＋</button>}>
       {!rules.length && <p className="muted small">{t('예: 참가구분 = 연사 → 빨간색 / 영문 이름 → 글자 크기 20pt')}</p>}
       {rules.map((r, i) => {

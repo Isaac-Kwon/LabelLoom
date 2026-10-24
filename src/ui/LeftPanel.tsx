@@ -17,8 +17,8 @@ export function LeftPanel() {
     <aside className="left-panel">
       <div className="tabs">
         <button className={tab === 'layers' ? 'on' : ''} onClick={() => setTab('layers')}>{t('레이어')}</button>
-        <button className={tab === 'paper' ? 'on' : ''} onClick={() => setTab('paper')}>{t('용지')}</button>
-        <button className={tab === 'designs' ? 'on' : ''} onClick={() => setTab('designs')}>{t('디자인')}</button>
+        <button data-tour="tab-paper" className={tab === 'paper' ? 'on' : ''} onClick={() => setTab('paper')}>{t('용지')}</button>
+        <button data-tour="tab-designs" className={tab === 'designs' ? 'on' : ''} onClick={() => setTab('designs')}>{t('디자인')}</button>
       </div>
       <div className="panel-scroll">
         {tab === 'layers' && <><Layers /><Components /></>}
@@ -204,7 +204,7 @@ function PaperPanel() {
         </div>
         <div className="btn-row">
           <button onClick={() => up({ width: paper.height, height: paper.width })} title={t('가로/세로 바꾸기')}>⟲ {t('방향 바꾸기')}</button>
-          <button onClick={() => up({ width: paper.labelWidth, height: paper.labelHeight, cols: 1, rows: 1, marginLeft: 0, marginTop: 0, gapX: 0, gapY: 0 })} title={t('롤 라벨 프린터용')}>{t('용지 = 라벨')}</button>
+          <button onClick={() => up({ width: paper.labelWidth, height: paper.labelHeight, cols: 1, rows: 1, marginLeft: 0, marginTop: 0, gapX: 0, gapY: 0 })} title={t('롤 라벨 프린터용')}>{t('용지를 라벨 크기로 맞추기')}</button>
         </div>
         <p className="sub">{t('라벨 (디자인 영역)')}</p>
         <div className="grid2">

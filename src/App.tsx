@@ -19,6 +19,7 @@ import { ImportDialog } from './ui/ImportDialog';
 import { PreprintWizard } from './ui/PreprintWizard';
 import { QuickDialog } from './ui/QuickPrint';
 import { TableWizard } from './ui/TableWizard';
+import { Tour } from './ui/Tour';
 import { Inspector } from './ui/Inspector';
 import { LeftPanel } from './ui/LeftPanel';
 import { loadMediaInto } from './ui/media';
@@ -196,7 +197,7 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
           <CanvasBar />
           <Canvas />
         </div>
-        <aside className="right-panel"><div className="panel-scroll"><Inspector /></div></aside>
+        <aside className="right-panel" data-tour="inspector"><div className="panel-scroll"><Inspector /></div></aside>
       </div>
       <DataPanel height={dataH} onResize={setDataH} />
       {dialog === 'export' && <ExportDialog />}
@@ -213,6 +214,7 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
       {dialog === 'help' && <HelpDialog onLoad={loadProject} />}
       {dialog === 'preprint' && <PreprintWizard />}
       {dialog === 'table' && <TableWizard />}
+      <Tour />
       {dropping && <DropOverlay title={t('여기에 놓으세요')} kinds={[t('.json · .zip 프로젝트'),t('xlsx · csv 데이터'), t('이미지 · SVG')]} />}
       {small && <button className="small-back" title={t('작은 화면용 보기 전용 화면으로 돌아갑니다')} onClick={() => { unforceEditor(); setForced(false); }}>← {t('보기 화면으로')}</button>}
       {toast && <div className="toast">{toast}</div>}

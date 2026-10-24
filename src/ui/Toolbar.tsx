@@ -35,7 +35,7 @@ export function Toolbar({ onOpen, onSave }: { onOpen: () => void; onSave: (saveA
   return (
     <header className="topbar">
       <div className="brand" title={`LabelLoom — ${t('라벨·명찰 디자이너')}`}><span className="logo">◧</span> LabelLoom</div>
-      <div className="dropdown">
+      <div className="dropdown" data-tour="file-menu">
         <button>{t('파일')} ▾</button>
         <div className="menu">
           <button onClick={() => s.open('start')}>{t('새로 만들기 · 템플릿…')}</button>
@@ -60,13 +60,13 @@ export function Toolbar({ onOpen, onSave }: { onOpen: () => void; onSave: (saveA
       </div>
       <input className="project-name" value={project.name} title={fileName || t('저장되지 않음')}
         onChange={(e) => s.live((p) => ({ ...p, name: e.target.value }))} onFocus={() => s.checkpoint()} />
-      <div className="tool-group">
+      <div className="tool-group" data-tour="undo">
         <button className="icon" disabled={!canUndo} onClick={s.undo} title={`${t('실행 취소')} (Ctrl+Z)`}>↶</button>
         <button className="icon" disabled={!canRedo} onClick={s.redo} title={`${t('다시 실행')} (Ctrl+Shift+Z)`}>↷</button>
       </div>
       <div className="tool-group tools">
         {TOOLS.map((x) => (
-          <button key={x.t} className={`tool ${tool === x.t ? 'on' : ''}`} title={`${t(x.label)}${x.key ? ` (${x.key})` : ''}`}
+          <button key={x.t} data-tour={`tool-${x.t}`} className={`tool ${tool === x.t ? 'on' : ''}`} title={`${t(x.label)}${x.key ? ` (${x.key})` : ''}`}
             onClick={() => (x.t === 'select' ? s.setTool('select') : s.setTool(x.t as ObjType))}>
             <span className="tool-icon">{x.icon}</span><span className="tool-label">{t(x.label)}</span>
           </button>
@@ -81,9 +81,9 @@ export function Toolbar({ onOpen, onSave }: { onOpen: () => void; onSave: (saveA
       </div>
       <button onClick={() => s.open('share')} title={t('디자인을 링크로 공유 (서버에 저장되지 않음)')}>{t('링크 공유')}</button>
       <InstallButton />
-      <button onClick={() => s.open('quick')} title={t('필요한 값만 입력하고 미리보기를 보며 바로 인쇄')}>{t('빠른 출력')}</button>
-      <button onClick={() => s.open('reprint')} title={t('이름 검색 후 1장 바로 인쇄, 현장 등록')}>{t('현장 재발행')}</button>
-      <button className="primary" onClick={() => s.open('export')} title="Ctrl+P">{t('인쇄 · 내보내기')}</button>
+      <button data-tour="quick" onClick={() => s.open('quick')} title={t('필요한 값만 입력하고 미리보기를 보며 바로 인쇄')}>{t('빠른 출력')}</button>
+      <button data-tour="reprint" onClick={() => s.open('reprint')} title={t('이름 검색 후 1장 바로 인쇄, 현장 등록')}>{t('현장 재발행')}</button>
+      <button className="primary" data-tour="export" onClick={() => s.open('export')} title="Ctrl+P">{t('인쇄 · 내보내기')}</button>
     </header>
   );
 }
@@ -133,7 +133,7 @@ export function CanvasBar() {
       </div>
       <span className="spacer" />
       {rows.length > 0 ? (
-        <div className="row-nav" title={t('미리볼 데이터 행 (PageUp/PageDown)')}>
+        <div className="row-nav" data-tour="row-nav" title={t('미리볼 데이터 행 (PageUp/PageDown)')}>
           <span className="muted small">{t('미리보기')}</span>
           <button className="icon small" disabled={currentRow <= 0} onClick={() => s.setCurrentRow(currentRow - 1)}>◀</button>
           <input type="number" min={1} max={rows.length} value={currentRow + 1} onChange={(e) => s.setCurrentRow(Math.max(0, Math.min(rows.length - 1, (parseInt(e.target.value, 10) || 1) - 1)))} />

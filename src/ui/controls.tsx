@@ -86,10 +86,11 @@ export function Seg<T extends string>({ value, onChange, options }: { value: T; 
   );
 }
 
-export function Section({ title, children, actions, defaultOpen = true }: { title: string; children: ReactNode; actions?: ReactNode; defaultOpen?: boolean }) {
+/** `tour` names the element for the guided tour (data-tour). */
+export function Section({ title, children, actions, defaultOpen = true, tour }: { title: string; children: ReactNode; actions?: ReactNode; defaultOpen?: boolean; tour?: string }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <section className="section">
+    <section className="section" data-tour={tour}>
       <header onClick={() => setOpen(!open)}>
         <span className={`caret ${open ? 'open' : ''}`}>▸</span>
         <span className="section-title">{title}</span>
@@ -100,8 +101,8 @@ export function Section({ title, children, actions, defaultOpen = true }: { titl
   );
 }
 
-export function Row({ children, label }: { children: ReactNode; label?: string }) {
-  return <div className="row">{label && <span className="row-label">{label}</span>}{children}</div>;
+export function Row({ children, label, tour }: { children: ReactNode; label?: string; tour?: string }) {
+  return <div className="row" data-tour={tour}>{label && <span className="row-label">{label}</span>}{children}</div>;
 }
 
 export function Modal({ title, onClose, children, footer, wide, actions }: { title: string; onClose: () => void; children: ReactNode; footer?: ReactNode; wide?: boolean | 'xl'; actions?: ReactNode }) {

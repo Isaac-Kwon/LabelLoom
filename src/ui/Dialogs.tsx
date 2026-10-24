@@ -4,7 +4,7 @@ import ABOUT from '../about.json';
 import { OWN_LICENSE, THIRD_PARTY_LICENSES } from 'virtual:licenses';
 import { BUILD_DATE, BUILD_DETAIL, VERSION } from '../build';
 import { getLang, loc, locale, m, t, tn, tx, type Msg } from '../i18n';
-import { printPages } from '../io/export';
+import { printPages, printTestPage } from '../io/export';
 import { fontFromFile, localFontsSupported, queryLocalFonts, registerFonts } from '../io/fonts';
 import { loadRecent, openProjectFile, pickFile, type RecentEntry } from '../io/project';
 import { downloadShareFile, downloadShareZip, encodeShare, kbOf, LINK_LIMIT, mainCause, measureShare, partLabel, shareUrl, type ShareKind, type SharePart, type SharePartSize } from '../io/share';
@@ -19,6 +19,7 @@ import { labelDocument } from '../render/svg';
 import { useStore } from '../store';
 import { LESSONS, lessonProject, type Lesson } from '../tutorial/lessons';
 import { Check, Modal, Num, Row, Seg, Select } from './controls';
+import { startTour } from './Tour';
 
 /* ---------- serial numbers ---------- */
 
@@ -189,6 +190,7 @@ function LessonCard({ lesson, n, onPick }: { lesson: Lesson; n: number; onPick: 
       <Thumb p={preview} />
       <strong>{n}. {t(lesson.title)}</strong>
       <span className="muted small">{t(lesson.summary)}</span>
+      <button className="primary card-paper" onClick={(e) => { e.stopPropagation(); startTour(lesson, onPick); }}>{t('따라하기 시작')}</button>
     </div>
   );
 }
@@ -314,7 +316,7 @@ export function StartDialog({ onLoad }: { onLoad: (p: Project, name?: string) =>
         <button className={tab === 'tutorial' ? 'on' : ''} onClick={() => setTab('tutorial')}>{t('튜토리얼')}</button>
       </div>
       {tab === 'tutorial' && <>
-        <p className="muted small">{t('처음이라면 예제를 열어 따라 해 보세요. 예제를 열어도 지금 작업은 최근 저장한 작업에 남습니다.')}</p>
+        <p className="muted small">{t('처음이라면 따라하기를 시작해 보세요. 카드를 누르면 예제만 엽니다. 예제를 열어도 지금 작업은 최근 저장한 작업에 남습니다.')}</p>
         <div className="gallery">
           {LESSONS.map((l, i) => <LessonCard key={l.id} lesson={l} n={i + 1} onPick={pick} />)}
         </div>
@@ -340,10 +342,7 @@ export function StartDialog({ onLoad }: { onLoad: (p: Project, name?: string) =>
           ...userPapers.map((p, i) => ({ value: `u${i}`, label: t('내 용지 · {name} ({size})', { name: p.name, size: labelSize(p) }) })),
           { value: 'custom', label: t('크기 직접 입력…') },
         ]} />
-        <span className="muted small">{t('{n}개 템플릿', { n: shown.length })}</span>
-      </div>
-      {sizeOk === 'custom' && (
-        <div className="tpl-filter">
+        {sizeOk === 'custom' && <>
           <Num label={t('폭')} value={custom.w} step={0.5} min={5} max={1000} unit="mm" width={64} onChange={(w) => setCustom({ ...custom, w })} />
           <Num label={t('높이')} value={custom.h} step={0.5} min={5} max={1000} unit="mm" width={64} onChange={(h) => setCustom({ ...custom, h })} />
           <Seg value={custom.page} onChange={(page) => setCustom({ ...custom, page })} options={[
@@ -353,8 +352,9 @@ export function StartDialog({ onLoad }: { onLoad: (p: Project, name?: string) =>
           ]} />
           {custom.page !== 'roll' && <Num label={t('간격')} value={custom.gap} step={0.5} min={0} unit="mm" width={56} onChange={(gap) => setCustom({ ...custom, gap })} />}
           <span className="muted small">{override.name}{override.cols * override.rows > 1 ? ` · ${t('{n}칸', { n: override.cols * override.rows })}` : ''}</span>
-        </div>
-      )}
+        </>}
+        <span className="muted small">{t('{n}개 템플릿', { n: shown.length })}</span>
+      </div>
       {override && <p className="muted small">{override.preprint ? t('모든 템플릿을 이 크기에 맞춰 늘이거나 줄여 만듭니다 (견출지는 입력 영역 안에 배치). 비율이 많이 다르면 배치를 다듬어 주세요.') : t('모든 템플릿을 이 크기에 맞춰 늘이거나 줄여 만듭니다. 비율이 많이 다르면 배치를 다듬어 주세요.')}</p>}
       <div className="gallery">
         {shown.map(({ t, papers }) => (
@@ -455,7 +455,7 @@ export function CalibrationDialog() {
   return (
     <Modal title={t('프린터 정렬 보정')} onClose={close} footer={<><button onClick={() => up({ offsetX: 0, offsetY: 0, scaleX: 1, scaleY: 1 })}>{t('초기화')}</button><span className="spacer" /><button className="primary" onClick={close}>{t('완료')}</button></>}>
       <ol className="steps">
-        <li>{tn('인쇄 · 내보내기 창의 {page}를 일반 용지에 인쇄합니다 (배율 100%, "실제 크기").', { page: <b>{t('정렬 테스트 페이지')}</b> })}</li>
+        <li>{tn('인쇄 · 내보내기 창의 {page}를 일반 용지에 인쇄합니다 (배율 100%, "실제 크기").', { page: <button onClick={() => printTestPage(useStore.getState().project)}>🖨 {t('정렬 테스트 페이지')}</button> })}</li>
         <li>{t('라벨지 위에 겹쳐 보거나 자로 재어 테두리가 어긋난 만큼 아래에 입력합니다.')}</li>
         <li>{t('오른쪽/아래로 밀려 나오면 음수, 왼쪽/위로 치우치면 양수를 넣습니다. 50 mm 눈금이 실제와 다르면 배율을 고칩니다.')}</li>
       </ol>

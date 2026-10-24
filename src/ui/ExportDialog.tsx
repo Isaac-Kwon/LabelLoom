@@ -171,7 +171,7 @@ export function ExportDialog() {
     }>
       <div className="export-grid">
         <div className="export-opts">
-          <Row label={t('형식')}>
+          <Row label={t('형식')} tour="export-format">
             <Seg value={format} onChange={setFormat} options={[
               { value: 'print', label: t('인쇄'), title: t('브라우저 인쇄 (벡터, 설치된 글꼴 사용 · "PDF로 저장"도 가능)') },
               { value: 'pdf', label: 'PDF' }, { value: 'png', label: 'PNG (ZIP)' }, { value: 'split', label: t('분할 PDF'), title: t('열 값별로 PDF를 나눠 ZIP으로') },
@@ -179,7 +179,7 @@ export function ExportDialog() {
           </Row>
           {hasRows ? (
             <>
-              <Row label={t('대상')}>
+              <Row label={t('대상')} tour="export-scope">
                 <Select value={job.scope} onChange={(v) => set({ scope: v })} options={[
                   { value: 'checked', label: `${t('인쇄 체크된 행')} (${scopeCount('checked')})` },
                   { value: 'unprinted', label: `${t('아직 출력 안 한 행')} (${scopeCount('unprinted')})` },

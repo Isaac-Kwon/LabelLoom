@@ -374,7 +374,7 @@ export function Canvas() {
   const cursor = drag?.kind === 'pan' || space ? 'grabbing' : tool !== 'select' ? 'crosshair' : 'default';
 
   return (
-    <div className="canvas-wrap" ref={wrap} onWheel={onWheel} style={{ cursor }}>
+    <div className="canvas-wrap" data-tour="canvas" ref={wrap} onWheel={onWheel} style={{ cursor }}>
       <svg className="canvas-svg" width={size.w} height={size.h} onPointerDown={onBackgroundDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onContextMenu={(e) => onMenu(e)}>
         <defs>
           <filter id="paper-shadow" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy={0.6 * px * 2} stdDeviation={3 * px} floodOpacity="0.18" /></filter>
