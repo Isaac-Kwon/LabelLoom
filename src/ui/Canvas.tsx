@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import type { LabelObject } from '../model/types';
-import { previewCtx } from '../render/resolve';
+import { newRow } from '../model/defaults';
+import type { BarcodeObj, LabelObject, QrObj, TextObj } from '../model/types';
+import { previewCtx, templateColumns } from '../render/resolve';
 import { labelMarkup, objTransform } from '../render/svg';
 import { act, currentObjects, expandGroups, useStore } from '../store';
 import { pickImageInto } from './media';
@@ -45,8 +46,25 @@ export function Canvas() {
   const [drag, setDrag] = useState<Drag | null>(null);
   const [guides, setGuides] = useState<{ x: number[]; y: number[] }>({ x: [], y: [] });
   const [space, setSpace] = useState(false);
+  const [editing, setEditing] = useState<string | null>(null);
   const dragRef = useRef<Drag | null>(null);
   dragRef.current = drag;
+  const editObj = editing ? objects.find((o): o is ContentObj => o.id === editing && 'content' in o) : undefined;
+
+  // the inline editor follows the selection: selecting something else closes it
+  useEffect(() => { if (editing && !(selection.length === 1 && selection[0] === editing)) setEditing(null); }, [selection, editing]);
+
+  // Enter / F2 edits the selected object in place
+  useEffect(() => {
+    const h = (e: KeyboardEvent) => {
+      if ((e.key !== 'Enter' && e.key !== 'F2') || isTyping() || useStore.getState().dialog) return;
+      const s = useStore.getState();
+      const o = currentObjects(s).find((x) => s.selection.length === 1 && x.id === s.selection[0]);
+      if (o && 'content' in o && !o.locked) { e.preventDefault(); setEditing(o.id); }
+    };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, []);
 
   const row = project.data.rows[currentRow];
   const markup = useMemo(
@@ -267,13 +285,13 @@ export function Canvas() {
       const small = w * zoom < 6 && h * zoom < 6;
       const o = act.add(tool, round(x), round(y), small ? undefined : round(Math.max(1, w)), small ? undefined : round(Math.max(tool === 'line' ? 0.5 : 1, h)));
       if (tool === 'image' || tool === 'svg') pickImageInto(o.id, tool);
-      if (tool === 'text') setTimeout(() => window.dispatchEvent(new Event('labelloom:focus-content')), 30);
+      if (tool === 'text') setEditing(o.id);
     }
   };
 
   const onDouble = (o: LabelObject) => {
     if (o.type === 'image' || o.type === 'svg') pickImageInto(o.id, o.type);
-    else if ('content' in o) window.dispatchEvent(new Event('labelloom:focus-content'));
+    else if ('content' in o && !o.locked) { useStore.getState().select([o.id]); setEditing(o.id); }
   };
 
   /* ---------- drawing helpers ---------- */
@@ -335,6 +353,11 @@ export function Canvas() {
         </g>
       </svg>
       <Rulers pan={pan} zoom={zoom} size={size} selected={single} />
+      {editObj && !drag && (
+        <InlineEditor key={editObj.id} o={editObj} onClose={() => setEditing(null)}
+          left={Math.min(Math.max(8, pan.x + editObj.x * zoom), Math.max(8, size.w - 288))}
+          top={Math.min(pan.y + (editObj.y + editObj.h) * zoom + 10, Math.max(8, size.h - 200))} />
+      )}
       {single && drag && drag.kind !== 'pan' && drag.kind !== 'marquee' && (
         <div className="measure">{single.x.toFixed(1)}, {single.y.toFixed(1)} · {single.w.toFixed(1)}×{single.h.toFixed(1)} mm{single.rotation ? ` · ${single.rotation}°` : ''}</div>
       )}
@@ -343,6 +366,75 @@ export function Canvas() {
 }
 
 const round = (v: number) => Math.round(v * 100) / 100;
+
+type ContentObj = TextObj | BarcodeObj | QrObj;
+
+/**
+ * Edits an object's content right on the canvas. Columns bound with {{열 이름}} are edited
+ * as values of the current data row, so the table below changes with them; the design
+ * template itself (shared by every label) is edited in the last field.
+ */
+function InlineEditor({ o, left, top, onClose }: { o: ContentObj; left: number; top: number; onClose: () => void }) {
+  const project = useStore((s) => s.project);
+  const currentRow = useStore((s) => s.currentRow);
+  const row = project.data.rows[currentRow];
+  const cols = [...new Set(templateColumns(o.content))];
+  const started = useRef(false);
+  const box = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = box.current?.querySelector<HTMLInputElement | HTMLTextAreaElement>('input, textarea');
+    el?.focus();
+    el?.select();
+  }, []);
+
+  // one undo step for the whole edit
+  const begin = () => { if (!started.current) { useStore.getState().checkpoint(); started.current = true; } };
+  const setValue = (col: string, v: string) => {
+    begin();
+    useStore.getState().live((p) => {
+      const columns = p.data.columns.includes(col) ? p.data.columns : [...p.data.columns, col];
+      const rows = p.data.rows[currentRow]
+        ? p.data.rows.map((r, i) => (i === currentRow ? { ...r, values: { ...r.values, [col]: v } } : r))
+        : [...p.data.rows, newRow({ [col]: v })];
+      return { ...p, data: { columns, rows } };
+    });
+  };
+  const setContent = (v: string) => { begin(); act.update([o.id], { content: v } as Partial<LabelObject>, true); };
+
+  const cancel = () => { if (started.current) useStore.getState().undo(); onClose(); };
+  const onKey = (e: React.KeyboardEvent) => {
+    e.stopPropagation();
+    if (e.key === 'Escape') { e.preventDefault(); cancel(); }
+    else if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onClose(); }
+  };
+  const onBlur = (e: React.FocusEvent) => { if (!box.current?.contains(e.relatedTarget as Node)) onClose(); };
+  const multi = o.type === 'text' && o.multiline;
+
+  return (
+    <div className="inline-editor" ref={box} style={{ left, top }} onKeyDown={onKey} onBlur={onBlur} onPointerDown={(e) => e.stopPropagation()}>
+      {cols.length > 0 && (
+        <>
+          <div className="ie-head">
+            <span>데이터 · {row ? `${currentRow + 1}행` : '새 행'}</span>
+            <span className="ie-hint">아래 표에 바로 반영</span>
+          </div>
+          {cols.map((c) => (
+            <label key={c} className="ie-field">
+              <span>{c}</span>
+              <input value={row?.values[c] ?? ''} onChange={(e) => setValue(c, e.target.value)} spellCheck={false} />
+            </label>
+          ))}
+        </>
+      )}
+      <label className="ie-field">
+        <span>{cols.length ? '디자인 문구 (모든 라벨)' : '내용'}</span>
+        <textarea rows={multi || o.content.includes('\n') ? 3 : 1} value={o.content} onChange={(e) => setContent(e.target.value)} spellCheck={false} />
+      </label>
+      <div className="ie-foot">Enter 완료 · Shift+Enter 줄바꿈 · Esc 취소</div>
+    </div>
+  );
+}
 
 export function isTyping() {
   const el = document.activeElement as HTMLElement | null;

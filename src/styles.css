@@ -338,3 +338,10 @@ div.card { border: 1px solid var(--border-strong); background: var(--panel); cur
 }
 
 @media screen { #print-root { display: none; } }
+/* inline content editor on the canvas */
+.inline-editor { position: absolute; z-index: 5; width: 280px; display: grid; gap: 6px; padding: 8px; background: var(--panel); border: 1px solid var(--border-strong); border-radius: 8px; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18); font-size: 12px; }
+.inline-editor .ie-head { display: flex; justify-content: space-between; font-weight: 600; }
+.inline-editor .ie-hint, .inline-editor .ie-foot { color: var(--muted); font-weight: 400; font-size: 11px; }
+.inline-editor .ie-field { display: grid; gap: 2px; }
+.inline-editor .ie-field > span { color: var(--muted); font-size: 11px; }
+.inline-editor input, .inline-editor textarea { width: 100%; box-sizing: border-box; font: inherit; resize: vertical; }
