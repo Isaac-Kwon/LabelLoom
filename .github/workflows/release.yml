@@ -1,0 +1,68 @@
+name: Release
+
+# Pushing a tag like v0.1.3 builds that commit and publishes a GitHub release with:
+#   LabelLoom-v0.1.3.html  the whole app in one file; opens offline from file://
+#   LabelLoom-v0.1.3.zip   the full dist/ folder (PWA files, licenses) for self-hosting
+# Release notes come from release-notes/<tag>.md (read from the default branch first, so
+# notes can be added after tagging); without that file GitHub generates them from commits.
+# Run it by hand with a tag to (re)build the release of an existing tag.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to release (e.g. v0.1.0)
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Check the tag matches package.json
+        run: |
+          v="v$(node -p "require('./package.json').version")"
+          if [ "$v" != "$TAG" ]; then echo "::error::Tag $TAG does not match package.json version $v"; exit 1; fi
+
+      - run: npm ci
+      # the tag's commit; github.sha is the branch head when run by hand
+      - run: VITE_COMMIT_SHA=$(git rev-parse HEAD) npm run build
+
+      - name: Package assets
+        run: |
+          mkdir out
+          cp dist/index.html "out/LabelLoom-$TAG.html"
+          (cd dist && zip -qr "../out/LabelLoom-$TAG.zip" .)
+
+      - name: Release notes
+        run: |
+          f="release-notes/$TAG.md"
+          if git show "origin/${{ github.event.repository.default_branch }}:$f" > notes.md 2>/dev/null || cp "$f" notes.md 2>/dev/null; then
+            echo "NOTES=--notes-file notes.md" >> "$GITHUB_ENV"
+          else
+            echo "NOTES=--generate-notes" >> "$GITHUB_ENV"
+          fi
+
+      - name: Publish
+        run: |
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release upload "$TAG" out/* --clobber
+          else
+            gh release create "$TAG" out/* --title "$TAG" --verify-tag $NOTES
+          fi
