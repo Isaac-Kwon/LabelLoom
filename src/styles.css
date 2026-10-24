@@ -175,6 +175,7 @@ textarea.content { font-family: ui-monospace, Consolas, "Malgun Gothic", monospa
 .badge { font-size: 10px; background: var(--accent-soft); color: var(--accent); border-radius: 8px; padding: 1px 6px; }
 .sheet-preview { width: 100%; max-height: 220px; background: var(--panel-2); border-radius: 6px; }
 .preprint { mix-blend-mode: multiply; }
+.bound.no-print { color: #a855f7; }
 .preprint-wizard { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
 .pw-form { display: flex; flex-direction: column; gap: 6px; }
 .pw-preview { display: flex; flex-direction: column; gap: 10px; background: var(--canvas); border-radius: 8px; padding: 12px; }

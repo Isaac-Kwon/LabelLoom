@@ -352,6 +352,11 @@ export function Canvas() {
               className={`hit ${o.locked ? 'locked' : ''}`}
               onPointerDown={(e) => onObjectDown(e, o)} onDoubleClick={() => onDouble(o)} />
           ))}
+          {/* non-printing guides */}
+          {objects.map((o) => o.noPrint && !o.hidden && (
+            <rect key={'np' + o.id} transform={objTransform(o)} width={o.w} height={o.h} fill="none" stroke="#a855f7"
+              strokeWidth={px} strokeDasharray={`${2 * px} ${2 * px}`} pointerEvents="none" />
+          ))}
           {/* selection outlines */}
           {selected.map((o) => (
             <rect key={'s' + o.id} transform={objTransform(o)} width={o.w} height={o.h} fill="none"

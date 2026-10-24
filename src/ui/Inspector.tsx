@@ -82,6 +82,7 @@ function Multi({ objs }: { objs: LabelObject[] }) {
     <Section title="공통">
       <Row label="불투명도"><Num value={objs[0].opacity * 100} step={5} min={0} max={100} unit="%" onChange={(v) => act.update(ids, { opacity: v / 100 })} /></Row>
       <Row><Check label="잠금" checked={allLocked} onChange={(v) => act.update(ids, { locked: v })} /></Row>
+      <Row><Check label="인쇄 안 함 (안내용)" title={NO_PRINT_HINT} checked={objs.every((o) => o.noPrint)} onChange={(v) => act.update(ids, { noPrint: v })} /></Row>
       <BleedButton />
     </Section>
   );
@@ -100,6 +101,8 @@ function BleedButton() {
   );
 }
 
+const NO_PRINT_HINT = '라벨지에 이미 인쇄된 그림의 자리를 표시할 때 씁니다. 화면에는 보라색 점선과 함께 보이고 인쇄·PDF·PNG에서는 빠집니다.';
+
 function Single({ o }: { o: LabelObject }) {
   const up = (patch: Partial<LabelObject>) => act.update([o.id], patch);
   return (
@@ -114,6 +117,7 @@ function Single({ o }: { o: LabelObject }) {
           <Check label="잠금" checked={o.locked} onChange={(v) => up({ locked: v })} />
           <Check label="숨김" checked={o.hidden} onChange={(v) => up({ hidden: v })} />
         </Row>
+        <Row><Check label="인쇄 안 함 (안내용)" title={NO_PRINT_HINT} checked={!!o.noPrint} onChange={(v) => up({ noPrint: v })} /></Row>
       </Section>
       <Section title="위치·크기 (mm)">
         <div className="grid2">

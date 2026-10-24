@@ -255,7 +255,7 @@ export function labelMarkup(p: Project, objects: LabelObject[], ctx: ResolveCtx,
       bg += `<image href="${b.src}" ${box} preserveAspectRatio="${PAR[b.fit]}" opacity="${n(b.opacity)}"/>`;
     }
   }
-  const body = objects.filter((o) => !opts.only || opts.only.has(o.id)).map((o) => objectMarkup(o, ctx, acc, opts)).join('');
+  const body = objects.filter((o) => (!opts.only || opts.only.has(o.id)) && (opts.editor || !o.noPrint)).map((o) => objectMarkup(o, ctx, acc, opts)).join('');
   return (acc.defs.length ? `<defs>${acc.defs.join('')}</defs>` : '') + bg + body;
 }
 

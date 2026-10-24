@@ -74,7 +74,7 @@ export function ExportDialog() {
       if (seen.has(key)) continue;
       seen.add(key);
       for (const o of it.design.objects) {
-        if (o.type !== 'barcode' && o.type !== 'qr') continue;
+        if ((o.type !== 'barcode' && o.type !== 'qr') || o.noPrint) continue;
         const r = resolveObject(o, { row: it.row, rowIndex: it.rowIndex, seq: it.seq, copy: 1, page: 1, now: new Date() });
         if (r.hidden) continue;
         const res = o.type === 'barcode' ? barcodeSvg(o, r.content) : code2dSvg(o, r.content);

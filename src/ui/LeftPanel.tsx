@@ -70,7 +70,7 @@ function Layers() {
                   <input autoFocus defaultValue={o.name} onBlur={(e) => { act.update([o.id], { name: e.target.value }); setEditing(null); }}
                     onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); if (e.key === 'Escape') setEditing(null); }} />
                 ) : (
-                  <span className={`layer-name ${o.hidden ? 'muted' : ''}`}>{o.name || TYPE_LABEL[o.type]}{'content' in o && /\{\{/.test(o.content) ? <span className="bound" title={o.content}> ⛓</span> : null}{o.rules.length ? <span className="bound" title="조건부 스타일"> ◆</span> : null}</span>
+                  <span className={`layer-name ${o.hidden ? 'muted' : ''}`}>{o.name || TYPE_LABEL[o.type]}{'content' in o && /\{\{/.test(o.content) ? <span className="bound" title={o.content}> ⛓</span> : null}{o.rules.length ? <span className="bound" title="조건부 스타일"> ◆</span> : null}{o.noPrint ? <span className="bound no-print" title="인쇄 안 함 (안내용)"> ⊘</span> : null}</span>
                 )}
                 <button className={`icon tiny ${o.locked ? 'active' : ''}`} title={o.locked ? '잠금 해제' : '잠금'} onClick={(e) => { e.stopPropagation(); act.update([o.id], { locked: !o.locked }); }}>{o.locked ? '🔒' : '🔓'}</button>
                 <button className={`icon tiny ${o.hidden ? 'active' : ''}`} title={o.hidden ? '보이기' : '숨기기'} onClick={(e) => { e.stopPropagation(); act.update([o.id], { hidden: !o.hidden }); }}>{o.hidden ? '◌' : '👁'}</button>
@@ -264,7 +264,7 @@ function PaperPanel() {
           <>
             <Check label="화면에 표시 (인쇄 안 됨)" checked={paper.preprint.show} onChange={(v) => up({ preprint: { ...paper.preprint!, show: v } })} />
             <Row label="색"><Color value={paper.preprint.color} onChange={(c) => up({ preprint: { ...paper.preprint!, color: c } })} /></Row>
-            <p className="muted small">입력 영역 {preprintArea(paper).w.toFixed(1)} × {preprintArea(paper).h.toFixed(1)} mm. 개체를 옮기면 입력 영역 가장자리에도 맞춰집니다.</p>
+            <p className="muted small">입력 영역 {preprintArea(paper).w.toFixed(1)} × {preprintArea(paper).h.toFixed(1)} mm. 개체를 옮기면 입력 영역 가장자리에도 맞춰집니다. 다른 인쇄된 그림은 도형·이미지로 그린 뒤 속성에서 "인쇄 안 함"을 켜면 됩니다.</p>
             <div className="btn-row">
               <button onClick={() => useStore.getState().open('preprint')}>마법사로 수정…</button>
               <button onClick={() => up({ preprint: undefined })}>제거</button>

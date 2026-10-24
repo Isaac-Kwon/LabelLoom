@@ -42,6 +42,8 @@ interface Base {
   opacity: number;
   locked: boolean;
   hidden: boolean;
+  /** a guide for artwork already on the stock: shown in the editor, never printed */
+  noPrint?: boolean;
   groupId?: string;
   rules: StyleRule[];
   hideIfEmpty: boolean;
