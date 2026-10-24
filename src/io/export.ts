@@ -49,8 +49,8 @@ export function printPages(p: Project, pages: Page[], o: SheetOpts) {
   printSvgs(L.width, L.height, pages.map((pg, i) => sheetDocument(p, pg.cells, { ...o, mirror: pg.back ? o.mirror : 'none' }, i)));
 }
 
-export function printTestPage(p: Project) {
-  printSvgs(p.paper.width, p.paper.height, [testPageDocument(p)]);
+export function printTestPage(p: Project, o: Pick<SheetOpts, 'cropMarks' | 'markLabels' | 'testPoints'> = {}) {
+  printSvgs(p.paper.width, p.paper.height, [testPageDocument(p, o)]);
 }
 
 function printSvgs(W: number, H: number, svgs: string[]) {

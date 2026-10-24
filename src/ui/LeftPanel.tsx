@@ -4,6 +4,7 @@ import { download } from '../io/export';
 import { TYPE_LABEL, uid } from '../model/defaults';
 import { centerGrid, loadUserPresets, PAPER_PRESETS, saveUserPresets } from '../model/presets';
 import type { LabelObject, Paper } from '../model/types';
+import { preprintArea } from '../render/preprint';
 import { RULE_OPS } from '../render/resolve';
 import { act, currentObjects, expandGroups, useStore } from '../store';
 import { Check, Color, Num, Row, Section, Select, Seg } from './controls';
@@ -151,7 +152,7 @@ function PaperPanel() {
 
   const applyPreset = (name: string) => {
     const p = allPresets.flatMap((g) => g.items).find((x) => x.name === name);
-    if (p) up({ ...p, background: paper.background, labelColor: paper.labelColor });
+    if (p) up({ ...p, background: paper.background, labelColor: paper.labelColor, preprint: p.preprint });
     setTimeout(() => window.dispatchEvent(new Event('labelloom:fit')), 0);
   };
   const savePreset = () => {
@@ -238,7 +239,7 @@ function PaperPanel() {
         </div>
         {paper.bleed > 0 && (
           <p className="muted small">
-            주황 점선까지 그린 부분이 인쇄됩니다. 인쇄할 때 "재단선 표시"를 켜면 재단 여백 가장자리(주황 점선)에 맞춰 재단 표시가 찍힙니다.
+            주황 점선까지 그린 부분이 인쇄됩니다. 인쇄할 때 "재단선 표시"를 켜면 라벨 가장자리(재단선)에 긴 표시가, 재단 여백 가장자리(주황 점선)에 짧은 표시가 찍힙니다.
             {((paper.cols > 1 && paper.gapX < 2 * paper.bleed) || (paper.rows > 1 && paper.gapY < 2 * paper.bleed)) && ` 칸 간격을 ${2 * paper.bleed} mm 이상으로 두어야 라벨 사이에서도 재단 여백이 온전히 인쇄됩니다.`}
           </p>
         )}
@@ -255,6 +256,24 @@ function PaperPanel() {
             <Row label="맞춤"><Select value={paper.background.fit} onChange={(v) => up({ background: { ...paper.background!, fit: v } })} options={[{ value: 'cover', label: '채움' }, { value: 'contain', label: '맞춤' }, { value: 'stretch', label: '늘이기' }]} /></Row>
             <Row label="불투명"><Num value={Math.round(paper.background.opacity * 100)} step={5} min={0} max={100} unit="%" onChange={(v) => up({ background: { ...paper.background!, opacity: v / 100 } })} /></Row>
             <Check label="배경도 인쇄" checked={paper.background.print} onChange={(v) => up({ background: { ...paper.background!, print: v } })} />
+          </>
+        )}
+      </Section>
+      <Section title="미리 인쇄된 테두리 (견출지)" defaultOpen={!!paper.preprint}>
+        {paper.preprint ? (
+          <>
+            <Check label="화면에 표시 (인쇄 안 됨)" checked={paper.preprint.show} onChange={(v) => up({ preprint: { ...paper.preprint!, show: v } })} />
+            <Row label="색"><Color value={paper.preprint.color} onChange={(c) => up({ preprint: { ...paper.preprint!, color: c } })} /></Row>
+            <p className="muted small">입력 영역 {preprintArea(paper).w.toFixed(1)} × {preprintArea(paper).h.toFixed(1)} mm. 개체를 옮기면 입력 영역 가장자리에도 맞춰집니다.</p>
+            <div className="btn-row">
+              <button onClick={() => useStore.getState().open('preprint')}>마법사로 수정…</button>
+              <button onClick={() => up({ preprint: undefined })}>제거</button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="muted small">테두리·그림이 이미 인쇄된 라벨지에 내용만 인쇄할 때, 입력 영역 크기·테두리 두께·라벨 간격을 넣으면 용지가 설정되고 인쇄된 위치가 화면에 보입니다.</p>
+            <button onClick={() => useStore.getState().open('preprint')}>견출지 마법사…</button>
           </>
         )}
       </Section>

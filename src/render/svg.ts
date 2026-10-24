@@ -295,6 +295,9 @@ export interface Fold { dir: 'right' | 'below'; rotate: boolean }
 
 export interface SheetOpts {
   cropMarks?: boolean;
+  /** name the outer crop marks (TRIM / BLEED / FOLD) */
+  markLabels?: boolean;
+  testPoints?: TestPoints;
   outlines?: boolean; // draw label outlines (test page / preview)
   calibrate?: boolean;
   embedFonts?: boolean;
@@ -383,7 +386,8 @@ export function sheetDocument(p: Project, cells: (SheetCell | null)[], o: SheetO
     parts.push(placeLabel(p, cell, x, y, front, cid, false));
     if (cell.back) parts.push(placeLabel(p, cell.back, bx, by, back, cid + 'b', o.fold.rotate));
   });
-  if (o.cropMarks) parts.push(cropMarks(pa, L, o.fold));
+  if (o.cropMarks) parts.push(cropMarks(pa, L, o.fold, o.markLabels));
+  if (o.testPoints) parts.push(testPointsMarkup(p, L, o));
   const cal = p.calibration;
   const tf = o.calibrate && (cal.offsetX || cal.offsetY || cal.scaleX !== 1 || cal.scaleY !== 1)
     ? ` transform="translate(${n(cal.offsetX)} ${n(cal.offsetY)}) scale(${n(cal.scaleX)} ${n(cal.scaleY)})"` : '';
@@ -392,11 +396,13 @@ export function sheetDocument(p: Project, cells: (SheetCell | null)[], o: SheetO
 }
 
 /**
- * Corner crop marks for every unit, lined up with the bleed edge (the printed area) and kept
- * outside it. Marks between units are drawn only when the gap leaves room for them; fold lines
- * (which carry no bleed) get dashed marks.
+ * Corner crop marks for every unit, kept outside the printed area. Each corner gets a long mark
+ * on the trim line (the label edge) and, with bleed, a shorter one on the bleed edge. Marks
+ * between units are drawn only when the gap leaves room for them; fold lines (which carry no
+ * bleed) get dashed marks. With `labels`, the outermost marks at the sheet's corners are named
+ * (only there, so neighbouring names never collide).
  */
-function cropMarks(pa: Paper, L: SheetLayout, fold?: Fold | null): string {
+function cropMarks(pa: Paper, L: SheetLayout, fold?: Fold | null, labels?: boolean): string {
   const bl = Math.max(0, pa.bleed);
   const ext = (edge: boolean, gap: number) => (edge ? bl : Math.min(bl, gap / 2));
   const mark = (edge: boolean, gap: number) => {
@@ -404,7 +410,17 @@ function cropMarks(pa: Paper, L: SheetLayout, fold?: Fold | null): string {
     const len = edge ? 3 : Math.min(3, gap / 2 - g);
     return len >= 0.8 ? { g, len } : null;
   };
-  const out: string[] = [], dash: string[] = [];
+  const out: string[] = [], dash: string[] = [], txt: string[] = [];
+  const fs = 0.9;
+  // names run along their mark, on the side away from the neighbouring mark (side: +1 right/below, -1 left/above)
+  const vText = (xx: number, y0: number, dy: number, side: number, s: string) => {
+    const bx = side > 0 ? xx + 0.3 + fs * 0.75 : xx - 0.3;
+    txt.push(`<text transform="translate(${n(bx)} ${n(y0)}) rotate(-90)" text-anchor="${dy < 0 ? 'start' : 'end'}">${s}</text>`);
+  };
+  const hText = (yy: number, x0: number, dx: number, side: number, s: string) => {
+    const by = side > 0 ? yy + 0.3 + fs * 0.75 : yy - 0.3;
+    txt.push(`<text x="${n(x0)}" y="${n(by)}" text-anchor="${dx < 0 ? 'end' : 'start'}">${s}</text>`);
+  };
   for (let i = 0; i < L.cols * L.rows; i++) {
     const { x, y, col, row } = unitOrigin(L, i);
     const x1 = x + L.unitW, y1 = y + L.unitH;
@@ -412,24 +428,167 @@ function cropMarks(pa: Paper, L: SheetLayout, fold?: Fold | null): string {
     const et = ext(row === 0, L.gapY), eb = ext(row === L.rows - 1, L.gapY);
     const ml = mark(col === 0, L.gapX), mr = mark(col === L.cols - 1, L.gapX);
     const mt = mark(row === 0, L.gapY), mb = mark(row === L.rows - 1, L.gapY);
-    const vMarks = (xx: number, to: string[]) => {
-      if (mt) to.push(`M${n(xx)} ${n(y - mt.g)}V${n(y - mt.g - mt.len)}`);
-      if (mb) to.push(`M${n(xx)} ${n(y1 + mb.g)}V${n(y1 + mb.g + mb.len)}`);
+    const named = { t: !!labels && row === 0, b: !!labels && row === L.rows - 1, l: !!labels && col === 0, r: !!labels && col === L.cols - 1 };
+    // vertical marks are named at the left edge of the first column and the right edge of the last
+    // (plus the first fold line); horizontal marks likewise by row
+    const foldX = fold?.dir === 'right' ? x + pa.labelWidth : NaN, foldY = fold?.dir === 'below' ? y + pa.labelHeight : NaN;
+    const outerX = (xx: number) => (col === 0 && (xx <= x || xx === foldX)) || (col === L.cols - 1 && xx >= x1);
+    const outerY = (yy: number) => (row === 0 && (yy <= y || yy === foldY)) || (row === L.rows - 1 && yy >= y1);
+    // k shortens the bleed-edge marks so they read apart from the trim marks
+    const vMarks = (xx: number, to: string[], k: number, side: number, name: string) => {
+      if (mt) { to.push(`M${n(xx)} ${n(y - mt.g)}V${n(y - mt.g - mt.len * k)}`); if (named.t && outerX(xx)) vText(xx, y - mt.g, -1, side, name); }
+      if (mb) { to.push(`M${n(xx)} ${n(y1 + mb.g)}V${n(y1 + mb.g + mb.len * k)}`); if (named.b && outerX(xx)) vText(xx, y1 + mb.g, 1, side, name); }
     };
-    const hMarks = (yy: number, to: string[]) => {
-      if (ml) to.push(`M${n(x - ml.g)} ${n(yy)}H${n(x - ml.g - ml.len)}`);
-      if (mr) to.push(`M${n(x1 + mr.g)} ${n(yy)}H${n(x1 + mr.g + mr.len)}`);
+    const hMarks = (yy: number, to: string[], k: number, side: number, name: string) => {
+      if (ml) { to.push(`M${n(x - ml.g)} ${n(yy)}H${n(x - ml.g - ml.len * k)}`); if (named.l && outerY(yy)) hText(yy, x - ml.g, -1, side, name); }
+      if (mr) { to.push(`M${n(x1 + mr.g)} ${n(yy)}H${n(x1 + mr.g + mr.len * k)}`); if (named.r && outerY(yy)) hText(yy, x1 + mr.g, 1, side, name); }
     };
-    vMarks(x - el, out); vMarks(x1 + er, out); hMarks(y - et, out); hMarks(y1 + eb, out);
-    if (fold?.dir === 'right') vMarks(x + pa.labelWidth, dash);
-    if (fold?.dir === 'below') hMarks(y + pa.labelHeight, dash);
+    vMarks(x, out, 1, 1, 'TRIM'); vMarks(x1, out, 1, -1, 'TRIM'); hMarks(y, out, 1, 1, 'TRIM'); hMarks(y1, out, 1, -1, 'TRIM');
+    const B = 0.6;
+    if (el > 0.05) vMarks(x - el, out, B, -1, 'BLEED');
+    if (er > 0.05) vMarks(x1 + er, out, B, 1, 'BLEED');
+    if (et > 0.05) hMarks(y - et, out, B, -1, 'BLEED');
+    if (eb > 0.05) hMarks(y1 + eb, out, B, 1, 'BLEED');
+    if (fold?.dir === 'right') vMarks(foldX, dash, 1, 1, 'FOLD');
+    if (fold?.dir === 'below') hMarks(foldY, dash, 1, 1, 'FOLD');
   }
   return `<path d="${out.join('')}" stroke="#000" stroke-width="0.15" fill="none"/>` +
-    (dash.length ? `<path d="${dash.join('')}" stroke="#000" stroke-width="0.15" stroke-dasharray="0.8 0.5" fill="none"/>` : '');
+    (dash.length ? `<path d="${dash.join('')}" stroke="#000" stroke-width="0.15" stroke-dasharray="0.8 0.5" fill="none"/>` : '') +
+    (txt.length ? `<g font-family="sans-serif" font-size="${fs}" fill="#000">${txt.join('')}</g>` : '');
 }
 
-/** Calibration test page: label outlines, centre crosses and a 50 mm ruler. */
-export function testPageDocument(p: Project): string {
+/* ---------- test points ---------- */
+
+/** Print checks placed in the paper margin, outside the labels and their crop marks. */
+export interface TestPoints { process?: boolean; gray?: boolean; design?: boolean; lines?: boolean; registration?: boolean }
+
+type TestItem = { kind: 'patch'; color: string; label: string } | { kind: 'lines'; w: number; label: string } | { kind: 'reg' };
+type Side = 'bottom' | 'top' | 'right' | 'left';
+/** A margin band: `at` is its edge next to the labels, `dir` points away from them. */
+interface Strip { side: Side; at: number; t: number; len: number; dir: 1 | -1 }
+interface TestPlacement { strip: Strip; s: number; labels: boolean; items: TestItem[] }
+
+const PROCESS: [string, string][] = [['#00ffff', 'C'], ['#ff00ff', 'M'], ['#ffff00', 'Y'], ['#000000', 'K'], ['#ff0000', 'R'], ['#00ff00', 'G'], ['#0000ff', 'B']];
+const GRAY = [100, 80, 60, 40, 20, 10, 5];
+const LINE_WIDTHS = [0.1, 0.2, 0.3];
+
+/** Distinct colours used by the designs (white left out), to check how they come out on paper. */
+export function designColors(p: Project, max = 16): string[] {
+  const out = new Set<string>();
+  const add = (c?: string) => {
+    let v = (c ?? '').trim().toLowerCase();
+    if (/^#[0-9a-f]{3}$/.test(v)) v = '#' + [...v.slice(1)].map((h) => h + h).join('');
+    if (/^#[0-9a-f]{6}$/.test(v) && v !== '#ffffff') out.add(v);
+  };
+  const fill = (f: Fill) => { if (f.type === 'solid') add(f.color); else if (f.type !== 'none') f.stops.forEach((s) => add(s.color)); };
+  add(p.paper.labelColor);
+  for (const d of p.designs) for (const o of [...d.objects, ...(d.back ?? [])]) {
+    switch (o.type) {
+      case 'text': fill(o.fill); if (o.effects.outline) add(o.effects.outline.color); break;
+      case 'rect': case 'ellipse': case 'triangle': case 'line':
+        if (o.type !== 'line') fill(o.fill);
+        if (o.strokeWidth > 0) add(o.stroke);
+        break;
+      case 'barcode': case 'qr': add(o.color); add(o.background); break;
+      case 'table':
+        [o.color, o.fill, o.headerFill, o.headerColor, o.borderColor].forEach(add);
+        Object.values(o.styles).forEach((st) => { add(st.fill); add(st.color); });
+        break;
+    }
+  }
+  return [...out].slice(0, max);
+}
+
+function testItems(p: Project, t: TestPoints): TestItem[] {
+  const items: TestItem[] = [];
+  if (t.process) PROCESS.forEach(([color, label]) => items.push({ kind: 'patch', color, label }));
+  if (t.gray) GRAY.forEach((v) => {
+    const h = Math.round(255 * (1 - v / 100)).toString(16).padStart(2, '0');
+    items.push({ kind: 'patch', color: `#${h}${h}${h}`, label: `${v}%` });
+  });
+  if (t.design) designColors(p).forEach((color) => items.push({ kind: 'patch', color, label: color.slice(1) }));
+  if (t.lines) LINE_WIDTHS.forEach((w) => items.push({ kind: 'lines', w, label: `${w}` }));
+  if (t.registration) { items.unshift({ kind: 'reg' }); items.push({ kind: 'reg' }); }
+  return items;
+}
+
+/** Picks the margin band that fits the largest patches. `shrink` keeps room for other content at a band's outer edge. */
+function placeTestPoints(p: Project, L: SheetLayout, o: SheetOpts, shrink: Partial<Record<Side, number>> = {}): TestPlacement | null {
+  const items = testItems(p, o.testPoints ?? {});
+  if (!items.length) return null;
+  const reserve = Math.max(0, p.paper.bleed) + (o.cropMarks ? 4.5 : 0.8);
+  const x1 = L.x0 + L.cols * L.unitW + (L.cols - 1) * L.gapX, y1 = L.y0 + L.rows * L.unitH + (L.rows - 1) * L.gapY;
+  const strips: Strip[] = [
+    { side: 'bottom', at: y1 + reserve, t: L.height - y1 - reserve, len: L.width, dir: 1 },
+    { side: 'top', at: L.y0 - reserve, t: L.y0 - reserve, len: L.width, dir: -1 },
+    { side: 'right', at: x1 + reserve, t: L.width - x1 - reserve, len: L.height, dir: 1 },
+    { side: 'left', at: L.x0 - reserve, t: L.x0 - reserve, len: L.height, dir: -1 },
+  ];
+  let best: TestPlacement | null = null;
+  for (const st of strips) {
+    const t = st.t - (shrink[st.side] ?? 0);
+    const along = (st.len - 4) / items.length - 0.6;
+    const room = st.side === 'bottom' || st.side === 'top' ? 1.8 : 6; // space for the names beside the patches
+    const named = Math.min(5, t - room - 0.5, along), bare = Math.min(5, t - 0.5, along);
+    const pick = named >= 2.5 ? { s: named, labels: true } : { s: bare, labels: false };
+    if (pick.s >= 2 && (!best || pick.s > best.s)) best = { strip: st, items, ...pick };
+  }
+  return best;
+}
+
+/** the 50 mm ruler sits in the bottom 12 mm of the test page */
+const TEST_PAGE_SHRINK = { bottom: 12 };
+
+/** True when the chosen test points fit in a margin of the sheet, or of the test page with `test` (or none are chosen). */
+export function testPointsFit(p: Project, o: SheetOpts, test = false): boolean {
+  return !testItems(p, o.testPoints ?? {}).length ||
+    !!placeTestPoints(p, sheetLayout(p.paper, test ? null : o.fold), o, test ? TEST_PAGE_SHRINK : {});
+}
+
+function testItemMarkup(it: TestItem, x: number, y: number, s: number): string {
+  switch (it.kind) {
+    case 'patch': return `<rect x="${n(x)}" y="${n(y)}" width="${n(s)}" height="${n(s)}" fill="${it.color}"/>`;
+    case 'lines': {
+      // lines and gaps of the same width, kept inside the square
+      let d = '';
+      for (let lx = it.w / 2; lx <= s - it.w / 2 + 1e-6; lx += 2 * it.w) d += `M${n(x + lx)} ${n(y)}V${n(y + s)}`;
+      return `<path d="${d}" stroke="#000" stroke-width="${n(it.w)}" fill="none"/>`;
+    }
+    case 'reg': {
+      const cx = x + s / 2, cy = y + s / 2;
+      return `<circle cx="${n(cx)}" cy="${n(cy)}" r="${n(s * 0.32)}" fill="none" stroke="#000" stroke-width="0.12"/>` +
+        `<path d="M${n(x)} ${n(cy)}H${n(x + s)}M${n(cx)} ${n(y)}V${n(y + s)}" stroke="#000" stroke-width="0.12" fill="none"/>`;
+    }
+  }
+}
+
+function testPointsMarkup(p: Project, L: SheetLayout, o: SheetOpts, shrink?: Partial<Record<Side, number>>): string {
+  const pl = placeTestPoints(p, L, o, shrink);
+  if (!pl) return '';
+  const { strip: st, s, labels, items } = pl;
+  const horiz = st.side === 'bottom' || st.side === 'top';
+  const step = s + 0.6;
+  let a = (st.len - (items.length * step - 0.6)) / 2;
+  const c = st.dir > 0 ? st.at : st.at - s;
+  const fs = Math.min(1.2, s * 0.3);
+  const out: string[] = [], txt: string[] = [];
+  for (const it of items) {
+    const x = horiz ? a : c, y = horiz ? c : a;
+    out.push(testItemMarkup(it, x, y, s));
+    if (labels && it.kind !== 'reg') {
+      // names go on the outer side, away from the labels
+      if (horiz) txt.push(`<text x="${n(x + s / 2)}" y="${n(st.dir > 0 ? y + s + 0.3 + fs * 0.75 : y - 0.4)}" text-anchor="middle">${esc(it.label)}</text>`);
+      else txt.push(`<text x="${n(st.dir > 0 ? x + s + 0.5 : x - 0.5)}" y="${n(y + s / 2 + fs * 0.35)}" text-anchor="${st.dir > 0 ? 'start' : 'end'}">${esc(it.label)}</text>`);
+    }
+    a += step;
+  }
+  return out.join('') + (txt.length ? `<g font-family="sans-serif" font-size="${n(fs)}" fill="#000">${txt.join('')}</g>` : '');
+}
+
+/* ---------- calibration test page ---------- */
+
+/** Calibration test page: label outlines, centre crosses and a 50 mm ruler, plus the chosen crop marks and test points. */
+export function testPageDocument(p: Project, o: Pick<SheetOpts, 'cropMarks' | 'markLabels' | 'testPoints'> = {}): string {
   const pa = p.paper;
   const parts: string[] = [];
   for (let i = 0; i < pa.cols * pa.rows; i++) {
@@ -439,10 +598,17 @@ export function testPageDocument(p: Project): string {
     parts.push(`<path d="M${n(cx - 3)} ${n(cy)}H${n(cx + 3)}M${n(cx)} ${n(cy - 3)}V${n(cy + 3)}" stroke="#000" stroke-width="0.2"/>`);
     parts.push(`<text x="${n(x + 1.5)}" y="${n(y + 4)}" font-size="3" font-family="sans-serif">${i + 1}</text>`);
   }
-  const rx = 10, ry = pa.height - 8;
-  let ruler = `<path d="M${rx} ${ry}H${rx + 50}`;
-  for (let i = 0; i <= 50; i += 5) ruler += `M${rx + i} ${ry}V${ry - (i % 10 === 0 ? 3 : 1.5)}`;
-  ruler += `" stroke="#000" stroke-width="0.2" fill="none"/><text x="${rx + 52}" y="${ry}" font-size="3" font-family="sans-serif">50 mm</text>`;
+  const L = sheetLayout(pa, null);
+  if (o.cropMarks) parts.push(cropMarks(pa, L, null, o.markLabels));
+  if (o.testPoints) parts.push(testPointsMarkup(p, L, o, TEST_PAGE_SHRINK));
+  // the bottom margin holds crop marks when they are on, so the ruler moves into the first label if it fits
+  const inside = !!o.cropMarks && pa.labelWidth >= 54 && pa.labelHeight >= 16;
+  const rx = inside ? pa.marginLeft + (pa.labelWidth - 50) / 2 : 10, ry = inside ? pa.marginTop + pa.labelHeight - 3 : pa.height - 8;
+  let ruler = `<path d="M${n(rx)} ${n(ry)}H${n(rx + 50)}`;
+  for (let i = 0; i <= 50; i += 5) ruler += `M${n(rx + i)} ${n(ry)}V${n(ry - (i % 10 === 0 ? 3 : 1.5))}`;
+  ruler += `" stroke="#000" stroke-width="0.2" fill="none"/>` + (inside
+    ? `<text x="${n(rx + 50)}" y="${n(ry - 4)}" font-size="2.5" text-anchor="end" font-family="sans-serif">50 mm</text>`
+    : `<text x="${rx + 52}" y="${ry}" font-size="3" font-family="sans-serif">50 mm</text>`);
   const cal = p.calibration;
   const tf = ` transform="translate(${n(cal.offsetX)} ${n(cal.offsetY)}) scale(${n(cal.scaleX)} ${n(cal.scaleY)})"`;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${n(pa.width)}mm" height="${n(pa.height)}mm" viewBox="0 0 ${n(pa.width)} ${n(pa.height)}"><g${tf}>${parts.join('')}${ruler}</g></svg>`;

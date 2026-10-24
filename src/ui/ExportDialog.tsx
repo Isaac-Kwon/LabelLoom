@@ -3,7 +3,7 @@ import { download, exportPdf, exportPngZip, exportSplitPdfZip, printPages, print
 import { barcodeSvg, code2dSvg } from '../render/barcode';
 import { buildItems, DEFAULT_DUPLEX, jobFold, paginate, projectDuplex, selectRows, type JobOptions, type Scope } from '../render/jobs';
 import { resolveObject } from '../render/resolve';
-import { sheetDocument, sheetLayout } from '../render/svg';
+import { sheetDocument, sheetLayout, testPointsFit, type TestPoints } from '../render/svg';
 import type { Project } from '../model/types';
 import { useStore } from '../store';
 import { Check, Modal, Num, Progress, Row, Select, Seg } from './controls';
@@ -38,6 +38,8 @@ export function ExportDialog() {
     ...duplexJob(project, saved, hasBack), ...arg,
   });
   const [cropMarks, setCropMarks] = useState<boolean>(saved.cropMarks ?? false);
+  const [markLabels, setMarkLabels] = useState<boolean>(saved.markLabels ?? true);
+  const [testPoints, setTestPoints] = useState<TestPoints>(saved.testPoints ?? {});
   const [outlines, setOutlines] = useState<boolean>(false);
   const [calibrate, setCalibrate] = useState<boolean>(saved.calibrate ?? true);
   const [pdfMode, setPdfMode] = useState<'vector' | 'raster'>(saved.pdfMode ?? 'vector');
@@ -82,16 +84,18 @@ export function ExportDialog() {
     return out;
   }, [items]);
 
-  const sheetOpts = { cropMarks, outlines, calibrate, mirror: job.mirror, fold };
+  const sheetOpts = { cropMarks, markLabels, testPoints, outlines, calibrate, mirror: job.mirror, fold };
+  const markOpts = { cropMarks, markLabels, testPoints };
+  const setTp = (k: keyof TestPoints) => (v: boolean) => setTestPoints((t) => ({ ...t, [k]: v }));
   const previewSvg = useMemo(() => {
     const pg = pages[Math.min(page, pages.length - 1)];
     return pg ? sheetDocument(project, pg.cells, { ...sheetOpts, outlines: true, calibrate: false, mirror: pg.back ? job.mirror : 'none' }, 999) : '';
-  }, [pages, page, project, cropMarks, job.mirror, fold?.dir, fold?.rotate]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pages, page, project, cropMarks, markLabels, testPoints, job.mirror, fold?.dir, fold?.rotate]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const remember = () => {
     try {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify({
-        format, cropMarks, calibrate, pdfMode, dpi, nameTpl, white,
+        format, cropMarks, markLabels, testPoints, calibrate, pdfMode, dpi, nameTpl, white,
         duplexMode: job.duplexMode, foldDir: job.foldDir, foldRotate: job.foldRotate,
       }));
     } catch { /* ignore */ }
@@ -152,7 +156,7 @@ export function ExportDialog() {
       <>
         {busy && <Progress done={busy.done} total={busy.total} label="처리 중" />}
         <span className="spacer" />
-        <button onClick={() => printTestPage(project)} title="라벨 테두리·중심 십자선이 있는 정렬 확인용 페이지">정렬 테스트 페이지</button>
+        <button onClick={() => printTestPage(project, markOpts)} title="라벨 테두리·중심 십자선이 있는 정렬 확인용 페이지 (재단선·테스트 포인트 설정도 함께 인쇄)">정렬 테스트 페이지</button>
         <button onClick={close}>취소</button>
         <button className="primary" disabled={!!busy || !items.length} onClick={run}>
           {format === 'print' ? '인쇄' : '내보내기'} ({items.length}장{format !== 'png' ? ` · ${sheetCount}쪽` : ''})
@@ -232,8 +236,19 @@ export function ExportDialog() {
           )}
           {format !== 'png' && (
             <>
-              <Check label={pa.bleed > 0 ? `재단선 표시 (재단 여백 ${pa.bleed} mm 가장자리 기준)` : '재단선 표시'} checked={cropMarks} onChange={setCropMarks} />
+              <Check label={pa.bleed > 0 ? `재단선 표시 (재단선 + 재단 여백 ${pa.bleed} mm 기준선)` : '재단선 표시'} checked={cropMarks} onChange={setCropMarks} />
+              {cropMarks && <Check label="기준선 이름 표시 (TRIM 재단선 · BLEED 재단 여백 · FOLD 접는 선)" checked={markLabels} onChange={setMarkLabels} />}
               {bleedClipped && <div className="warn small">칸 간격이 재단 여백×2({2 * pa.bleed} mm)보다 좁아 라벨 사이에서는 재단 여백이 간격의 절반으로 줄어듭니다.</div>}
+              <Row label="테스트 포인트">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <Check label="색상 패치 (C M Y K R G B)" checked={!!testPoints.process} onChange={setTp('process')} />
+                  <Check label="회색 단계 (100~5%)" checked={!!testPoints.gray} onChange={setTp('gray')} />
+                  <Check label="디자인에 쓰인 색" checked={!!testPoints.design} onChange={setTp('design')} />
+                  <Check label="선 굵기 (0.1 · 0.2 · 0.3 mm)" checked={!!testPoints.lines} onChange={setTp('lines')} />
+                  <Check label="맞춤 표시 (레지스트레이션)" checked={!!testPoints.registration} onChange={setTp('registration')} />
+                </div>
+              </Row>
+              {!testPointsFit(project, sheetOpts) && <div className="warn small">라벨 바깥 여백이 좁아 테스트 포인트를 넣을 자리가 없습니다. 항목을 줄이거나 용지 여백을 늘리세요.</div>}
               <Check label="라벨 테두리 인쇄" checked={outlines} onChange={setOutlines} />
               <Check label={`프린터 보정 적용 (X ${project.calibration.offsetX}, Y ${project.calibration.offsetY} mm)`} checked={calibrate} onChange={setCalibrate} />
             </>
