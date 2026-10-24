@@ -1,11 +1,10 @@
 import { useMemo, useState } from 'react';
 import { t } from '../i18n';
 import { download, exportPdf, exportPngZip, exportSplitPdfZip, printPages, printTestPage, safeName } from '../io/export';
-import { barcodeSvg, code2dSvg } from '../render/barcode';
 import { buildItems, DEFAULT_DUPLEX, jobFold, paginate, projectDuplex, selectRows, type JobOptions, type Scope } from '../render/jobs';
 import { fetchPictures, pictureUrls } from '../render/images';
 import { preprintSheetMarkup } from '../render/preprint';
-import { resolveObject } from '../render/resolve';
+import { ISSUE_LABEL, issueText, preflight, type Issue, type IssueKind } from '../render/preflight';
 import { sheetDocument, sheetLayout, testPointsFit, type TestPoints } from '../render/svg';
 import type { Project } from '../model/types';
 import { useStore } from '../store';
@@ -68,24 +67,16 @@ export function ExportDialog() {
   const pa = project.paper;
   const bleedClipped = pa.bleed > 0 && !fold && ((pa.cols > 1 && pa.gapX < 2 * pa.bleed) || (pa.rows > 1 && pa.gapY < 2 * pa.bleed));
 
-  const errors = useMemo(() => {
-    const out: string[] = [];
-    const seen = new Set<string>();
-    for (const it of items) {
-      const key = it.row?.id ?? String(it.rowIndex);
-      if (seen.has(key)) continue;
-      seen.add(key);
-      for (const o of it.design.objects) {
-        if ((o.type !== 'barcode' && o.type !== 'qr') || o.noPrint) continue;
-        const r = resolveObject(o, { row: it.row, rowIndex: it.rowIndex, seq: it.seq, copy: 1, page: 1, now: new Date() });
-        if (r.hidden) continue;
-        const res = o.type === 'barcode' ? barcodeSvg(o, r.content) : code2dSvg(o, r.content);
-        if ('error' in res) out.push(t('{row}행 {name}: {error}', { row: it.rowIndex + 1, name: o.name, error: res.error }));
-      }
-      if (out.length > 50) break;
-    }
-    return out;
-  }, [items]);
+  const check = useMemo(() => preflight(project, items, { back: job.duplex && hasBack }), [project, items, job.duplex, hasBack]);
+  const [showAll, setShowAll] = useState(false);
+  // go to the label and object an issue is about
+  const jump = (x: Issue) => {
+    const s = useStore.getState();
+    close();
+    s.setDesign(x.designId, x.side);
+    if (project.data.rows.length) s.setCurrentRow(x.rowIndex);
+    s.select([x.objId]);
+  };
 
   const sheetOpts = { cropMarks, markLabels, testPoints, outlines, calibrate, mirror: job.mirror, fold };
   const markOpts = { cropMarks, markLabels, testPoints };
@@ -291,12 +282,22 @@ export function ExportDialog() {
             <Row label={t('분할 열')}><Select value={splitCol} onChange={setSplitCol} options={project.data.columns.map((c) => ({ value: c, label: c }))} /></Row>
           )}
           {hasRows && <Check label={t("출력 후 '출력됨'으로 기록")} checked={markPrinted} onChange={setMarkPrinted} />}
-          {errors.length > 0 && (
-            <div className="warn">
-              ⚠ {t('코드 오류 {n}건 — 해당 코드는 빈칸으로 출력됩니다.', { n: `${errors.length}${errors.length > 50 ? '+' : ''}` })}
-              <ul className="err-list">{errors.slice(0, 8).map((e) => <li key={e}>{e}</li>)}</ul>
-            </div>
-          )}
+          <div className={check.total ? 'warn preflight' : 'ok-box preflight'}>
+            <strong>{t('인쇄 전 검사')}</strong>{' '}
+            {check.total ? (
+              <>
+                <span className="preflight-counts">
+                  {(Object.keys(ISSUE_LABEL) as IssueKind[]).filter((k) => check.counts[k]).map((k) => <span key={k}>{t(ISSUE_LABEL[k])} {check.counts[k]}</span>)}
+                </span>
+                <ul className="err-list">
+                  {check.issues.slice(0, showAll ? check.issues.length : 8).map((x, i) => (
+                    <li key={i}><button className="link" onClick={() => jump(x)} title={t('이 라벨과 개체로 이동')}>{issueText(x)}</button> <span className="muted small">{t(ISSUE_LABEL[x.kind])}</span></li>
+                  ))}
+                </ul>
+                {check.issues.length > 8 && <button className="link small" onClick={() => setShowAll(!showAll)}>{showAll ? t('접기') : t('모두 보기 ({n})', { n: `${check.issues.length}${check.total > check.issues.length ? '+' : ''}` })}</button>}
+              </>
+            ) : <span>✓ {t('문제를 찾지 못했습니다.')}</span>}
+          </div>
         </div>
         <div className="export-preview">
           {pages.length ? (

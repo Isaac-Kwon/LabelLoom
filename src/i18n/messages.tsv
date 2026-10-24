@@ -637,7 +637,6 @@ PDF 방식	PDF mode	Modalità PDF	Mode PDF
 흰 배경 (끄면 투명)	White background (off = transparent)	Sfondo bianco (disattivato = trasparente)	Fond blanc (désactivé = transparent)
 분할 열	Split by	Suddividi per	Découper par
 출력 후 '출력됨'으로 기록	Mark as printed afterwards	Segna come stampate dopo la stampa	Marquer comme imprimées ensuite
-코드 오류 {n}건 — 해당 코드는 빈칸으로 출력됩니다.	{n} code errors — those codes print blank.	{n} errori nei codici — quei codici saranno stampati vuoti.	{n} erreurs de code — ces codes seront imprimés vides.
 견출지 테두리 겹쳐 보기 (인쇄 안 됨)	Show pre-printed frames (not printed)	Mostra le cornici prestampate (non stampate)	Afficher les cadres pré-imprimés (non imprimés)
 출력할 라벨이 없습니다. 대상이나 인쇄 체크를 확인하세요.	No labels to print. Check the rows setting or the print checkboxes.	Nessuna etichetta da stampare. Controlla le righe scelte o le caselle di stampa.	Aucune étiquette à imprimer. Vérifiez les lignes choisies ou les cases d'impression.
 이미 사용한 칸은 건너뛰고 클릭한 칸부터 인쇄합니다	Skips labels already used and starts printing at the one you click	Salta le etichette già usate e inizia a stampare da quella cliccata	Saute les étiquettes déjà utilisées et commence à celle sur laquelle vous cliquez
@@ -1196,3 +1195,15 @@ N번째 단어 (word:1, 끝에서는 word:-1)	Nth word (word:1, from the end wor
 글자를 호를 따라 배치합니다. +는 위로 볼록(∩), −는 아래로 볼록(∪), 100%는 반원입니다. 곡선에서는 한 줄로 배치됩니다.	Sets the text along an arc. + bends up (∩), − bends down (∪), 100% is a half circle. Curved text is always one line.	Dispone il testo lungo un arco. + curva verso l'alto (∩), − verso il basso (∪), 100% è un semicerchio. Il testo curvo è sempre su una riga.	Dispose le texte le long d'un arc. + courbe vers le haut (∩), − vers le bas (∪), 100 % est un demi-cercle. Le texte courbé tient toujours sur une ligne.
 서식 지우기	Clear formatting	Cancella formattazione	Effacer la mise en forme
 직선으로	Straighten	Raddrizza	Redresser
+# pre-print check
+코드 오류 (빈칸으로 출력)	Code error (prints blank)	Errore nel codice (stampato vuoto)	Erreur de code (imprimé vide)
+글자가 상자를 넘침	Text runs over its box	Il testo esce dal riquadro	Le texte déborde de sa zone
+말줄임(…)으로 잘림	Cut off with …	Troncato con …	Coupé par …
+연결한 값이 비어 있음	Linked value is empty	Il valore collegato è vuoto	La valeur liée est vide
+사진 없음	No photo	Nessuna foto	Aucune photo
+웹 사진을 받지 못함 (PDF·PNG에서 빠짐)	Web photo not downloaded (left out of PDF and PNG)	Foto web non scaricata (manca in PDF e PNG)	Photo web non téléchargée (absente des PDF et PNG)
+인쇄 전 검사	Pre-print check	Controllo prima della stampa	Vérification avant impression
+이 라벨과 개체로 이동	Go to this label and object	Vai a questa etichetta e oggetto	Aller à cette étiquette et cet objet
+접기	Show less	Mostra meno	Afficher moins
+모두 보기 ({n})	Show all ({n})	Mostra tutti ({n})	Tout afficher ({n})
+문제를 찾지 못했습니다.	No problems found.	Nessun problema trovato.	Aucun problème trouvé.

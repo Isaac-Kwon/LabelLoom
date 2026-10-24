@@ -93,15 +93,19 @@ function curveArc(o: TextObj) {
   };
 }
 
+/** Layout of a text as drawn: on a curve it is one line along the arc, sized to the arc's length. */
+export function textLayout(o: TextObj, content: string) {
+  const arc = o.curve && Math.abs(o.curve) >= 1 ? curveArc(o) : null;
+  const L = arc ? layoutText({ ...o, multiline: false, fit: o.fit === 'stretch' ? 'shrink' : o.fit }, content, o.fontSize, arc.length) : layoutText(o, content);
+  return { L, arc };
+}
+
 function textMarkup(o: TextObj, content: string, acc: Acc, override?: string): string {
   if (!plainText(content)) return '';
   const fill = override ?? paint(o.fill, o.id, acc);
   const fam = esc(o.fontFamily);
   const ol = o.effects.outline;
-  const curved = !!o.curve && Math.abs(o.curve) >= 1;
-  // on a curve the text is one line along the arc, sized to the arc's length
-  const arc = curved ? curveArc(o) : null;
-  const L = arc ? layoutText({ ...o, multiline: false, fit: o.fit === 'stretch' ? 'shrink' : o.fit }, content, o.fontSize, arc.length) : layoutText(o, content);
+  const { L, arc } = textLayout(o, content);
   const common = `font-family="${fam}" font-size="${n(L.sizeMm)}" font-weight="${o.bold ? 700 : 400}"${o.italic ? ' font-style="italic"' : ''}${o.letterSpacing ? ` letter-spacing="${n(o.letterSpacing)}"` : ''} xml:space="preserve"`;
   // outline layers and shadows draw every run in their own colour
   const layersOf = (pos: string, body: (colors: boolean) => string, extra = '') => {

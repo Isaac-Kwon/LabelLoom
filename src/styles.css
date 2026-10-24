@@ -275,6 +275,9 @@ input.copies { width: 42px; padding: 1px 3px; }
 .cell-picker button.used { background: var(--border); color: var(--muted); text-decoration: line-through; }
 .cell-picker button.start { background: var(--accent); color: var(--accent-text); }
 .err-list { margin: 4px 0 0; padding-left: 18px; }
+.ok-box { border: 1px solid var(--border); color: var(--ok); padding: 6px 8px; border-radius: 6px; margin: 6px 0; font-size: 12px; }
+.preflight-counts { display: inline-flex; flex-wrap: wrap; gap: 4px 10px; }
+.preflight .err-list button.link { text-align: left; }
 @media (max-width: 900px) { .export-grid { grid-template-columns: 1fr; } }
 
 .drop { border: 2px dashed var(--border-strong); border-radius: 10px; padding: 18px; display: flex; gap: 12px; align-items: center; }
