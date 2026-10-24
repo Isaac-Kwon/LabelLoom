@@ -11,8 +11,10 @@ import { QuickForm } from './ui/QuickPrint';
 
 const KEY = 'quickTemplate'; // separate from the editor's autosave
 
-export function QuickApp({ onEdit, start, onPrinted }: {
+export function QuickApp({ onEdit, onBack, start, onPrinted }: {
   onEdit: (p: Project | null) => void;
+  /** Esc: back to where the editor opened this page (only while showing the editor's own project) */
+  onBack?: () => void;
   /** project handed over by the editor */
   start?: Project;
   /** record printed rows in the editor's data table */
@@ -71,6 +73,14 @@ export function QuickApp({ onEdit, start, onPrinted }: {
   };
   // recording only makes sense for the editor's own project, not another template opened here
   const fromEditor = !!onPrinted && !!start && project === start;
+
+  const canGoBack = !!onBack && !!start && project === start;
+  useEffect(() => {
+    if (!canGoBack) return;
+    const k = (e: KeyboardEvent) => { if (e.key === 'Escape' && !e.isComposing) onBack!(); };
+    window.addEventListener('keydown', k);
+    return () => window.removeEventListener('keydown', k);
+  }, [canGoBack, onBack]);
   const choose = async () => loadFile(await pickFile('.json,application/json'));
 
   return (
@@ -87,7 +97,7 @@ export function QuickApp({ onEdit, start, onPrinted }: {
         {project && <button onClick={async () => notify(await copyQuickLink(project))} title="이 템플릿으로 바로 빠른 출력 화면을 여는 링크 (명단은 포함하지 않음)">🔗 링크 복사</button>}
         {project && <button onClick={choose}>다른 템플릿</button>}
         <button onClick={() => onEdit(project)}
-          title={project ? '이 템플릿을 편집기에서 수정합니다' : '편집기를 엽니다'}>{project ? '✎ 편집기에서 수정' : '편집기 열기'}</button>
+          title={project ? `이 템플릿을 편집기에서 수정합니다${canGoBack ? ' (Esc: 빠른 출력 창으로 돌아가기)' : ''}` : '편집기를 엽니다'}>{project ? '✎ 편집기에서 수정' : '편집기 열기'}</button>
       </header>
       <main className="quick-main">
         {project ? <QuickForm key={loads} project={project} notify={notify} onPrinted={fromEditor && record ? onPrinted : undefined} />

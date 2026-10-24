@@ -37,7 +37,12 @@ function Root() {
       <QuickApp start={from} onPrinted={from ? record : undefined} onEdit={(p) => {
         history.replaceState(null, '', location.pathname);
         setMode({ quick: false, initial: p && p !== from ? p : undefined });
-      }} />
+      }} onBack={from && (() => {
+        // back to the editor with the quick print dialog it came from
+        history.replaceState(null, '', location.pathname);
+        setMode({ quick: false });
+        useStore.getState().open('quick');
+      })} />
     </>;
   }
   return <>
