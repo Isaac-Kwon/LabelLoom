@@ -8,7 +8,7 @@ import { fontFromFile, localFontsSupported, queryLocalFonts, registerFonts } fro
 import { loadRecent, openProjectFile, pickFile, type RecentEntry } from '../io/project';
 import { encodeShare, shareUrl, type ShareKind } from '../io/share';
 import { newRow } from '../model/defaults';
-import { labelSize, PAPER_KIND_LABEL, paperKind, type PaperKind } from '../model/presets';
+import { customPaper, labelSize, loadUserPresets, PAPER_KIND_LABEL, paperKind, type PaperKind } from '../model/presets';
 import { TEMPLATES, type Template } from '../model/templates';
 import type { Paper, Project } from '../model/types';
 import { buildItems, DEFAULT_DUPLEX, labelSizeProject, paginate } from '../render/jobs';
@@ -152,16 +152,29 @@ export function StartDialog({ onLoad }: { onLoad: (p: Project, name?: string) =>
   const [recent, setRecent] = useState<RecentEntry[]>([]);
   const [kind, setKind] = useState<PaperKind | 'all'>('all');
   const [size, setSize] = useState('all');
+  const [custom, setCustom] = useState({ w: 50, h: 30, page: 'roll' as 'roll' | 'A4' | 'Letter', gap: 2 });
+  const current = useStore((s) => s.project.paper);
+  const userPapers = useMemo(loadUserPresets, []);
   useEffect(() => { loadRecent().then(setRecent); }, []);
   const byKind = (p: Paper) => kind === 'all' || paperKind(p) === kind;
   const sizes = useMemo(() => {
     const set = new Set(TEMPLATES.flatMap((t) => t.papers).filter(byKind).map(labelSize));
     return [...set].sort((a, b) => sizeArea(a) - sizeArea(b));
   }, [kind]);
-  const sizeOk = size === 'all' || sizes.includes(size) ? size : 'all';
-  const shown = TEMPLATES
-    .map((t) => ({ t, papers: t.papers.filter((p) => byKind(p) && (sizeOk === 'all' || labelSize(p) === sizeOk)) }))
-    .filter((x) => x.papers.length > 0);
+  // papers outside the template lists: every template is built for them (scaled to fit)
+  const own: Record<string, Paper> = {
+    cur: current,
+    ...Object.fromEntries(userPapers.map((p, i) => [`u${i}`, p])),
+    custom: customPaper(custom.w, custom.h, custom.page, custom.gap),
+  };
+  const sizeOk = size === 'all' || sizes.includes(size) || own[size] ? size : 'all';
+  const override = own[sizeOk];
+  const shown = override
+    ? TEMPLATES.map((t) => ({ t, papers: [override] }))
+    : TEMPLATES
+      .map((t) => ({ t, papers: t.papers.filter((p) => byKind(p) && (sizeOk === 'all' || labelSize(p) === sizeOk)) }))
+      .filter((x) => x.papers.length > 0);
+  const overrideKey = override ? `${sizeOk}|${override.name}|${override.labelWidth}|${override.labelHeight}` : '';
   const pick = (p: Project) => { onLoad(p); close(); };
   return (
     <Modal title="LabelLoom — 새로 만들기" onClose={close} wide="xl">
@@ -177,12 +190,32 @@ export function StartDialog({ onLoad }: { onLoad: (p: Project, name?: string) =>
           ...(Object.keys(PAPER_KIND_LABEL) as PaperKind[]).map((k) => ({ value: k, label: PAPER_KIND_LABEL[k] })),
         ]} />
         <span className="muted small">라벨 크기</span>
-        <Select value={sizeOk} onChange={setSize} options={[{ value: 'all', label: '전체 크기' }, ...sizes.map((k) => ({ value: k, label: `${k} mm` }))]} />
+        <Select value={sizeOk} onChange={setSize} options={[
+          { value: 'all', label: '전체 크기' },
+          ...sizes.map((k) => ({ value: k, label: `${k} mm` })),
+          { value: 'cur', label: `현재 용지 · ${current.name} (${labelSize(current)})` },
+          ...userPapers.map((p, i) => ({ value: `u${i}`, label: `내 용지 · ${p.name} (${labelSize(p)})` })),
+          { value: 'custom', label: '크기 직접 입력…' },
+        ]} />
         <span className="muted small">{shown.length}개 템플릿</span>
       </div>
+      {sizeOk === 'custom' && (
+        <div className="tpl-filter">
+          <Num label="폭" value={custom.w} step={0.5} min={5} max={1000} unit="mm" width={64} onChange={(w) => setCustom({ ...custom, w })} />
+          <Num label="높이" value={custom.h} step={0.5} min={5} max={1000} unit="mm" width={64} onChange={(h) => setCustom({ ...custom, h })} />
+          <Seg value={custom.page} onChange={(page) => setCustom({ ...custom, page })} options={[
+            { value: 'roll', label: '낱장·롤', title: '라벨 한 장 크기의 용지' },
+            { value: 'A4', label: 'A4에 채우기' },
+            { value: 'Letter', label: 'Letter에 채우기' },
+          ]} />
+          {custom.page !== 'roll' && <Num label="간격" value={custom.gap} step={0.5} min={0} unit="mm" width={56} onChange={(gap) => setCustom({ ...custom, gap })} />}
+          <span className="muted small">{override.name}{override.cols * override.rows > 1 ? ` · ${override.cols * override.rows}칸` : ''}</span>
+        </div>
+      )}
+      {override && <p className="muted small">모든 템플릿을 이 크기에 맞춰 늘이거나 줄여 만듭니다{override.preprint ? ' (견출지는 입력 영역 안에 배치)' : ''}. 비율이 많이 다르면 배치를 다듬어 주세요.</p>}
       <div className="gallery">
         {shown.map(({ t, papers }) => (
-          <TemplateCard key={`${t.id}|${kind}|${sizeOk}`} t={t} papers={papers} onPick={pick} />
+          <TemplateCard key={`${t.id}|${kind}|${sizeOk}|${overrideKey}`} t={t} papers={papers} onPick={pick} />
         ))}
       </div>
       {recent.length > 0 && (

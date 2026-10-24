@@ -24,6 +24,19 @@ export function roll(name: string, w: number, h: number, cornerRadius = 0): Pape
   return makePaper({ name, width: w, height: h, labelWidth: w, labelHeight: h, cornerRadius, safeMargin: 1 });
 }
 
+/**
+ * A label of any size: a single sheet of that size, or as many as fit on an A4/Letter
+ * page with `gap` between them and at least `margin` from the page edge.
+ */
+export function customPaper(lw: number, lh: number, page: 'roll' | 'A4' | 'Letter', gap = 0, margin = 5): Paper {
+  const name = `${fmt(lw)}×${fmt(lh)}`;
+  if (page === 'roll') return roll(name, lw, lh);
+  const pg = page === 'A4' ? A4 : LETTER;
+  const fit = (avail: number, unit: number) => Math.max(1, Math.floor((avail + gap + 1e-6) / (unit + gap)));
+  const cols = fit(pg.width - 2 * margin, lw), rows = fit(pg.height - 2 * margin, lh);
+  return sheet(`${page} ${cols}×${rows} (${name})`, pg, lw, lh, cols, rows, gap, gap);
+}
+
 export function centerGrid(pw: number, ph: number, lw: number, lh: number, cols: number, rows: number, gx: number, gy: number) {
   const r = (v: number) => Math.round(v * 100) / 100;
   return {

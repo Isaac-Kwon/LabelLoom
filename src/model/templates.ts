@@ -1,5 +1,6 @@
 import { newDesign, newObject, newProject, newRow } from './defaults';
 import { PAPER_PRESETS, preset } from './presets';
+import { preprintArea } from '../render/preprint';
 import type { DataTable, LabelObject, Paper, Project, StyleRule, TextObj } from './types';
 
 type P<T> = Partial<T> & Record<string, unknown>;
@@ -13,14 +14,23 @@ function obj(type: LabelObject['type'], x: number, y: number, w: number, h: numb
 const solid = (color: string) => ({ type: 'solid' as const, color });
 const r1 = (v: number) => Math.round(v * 10) / 10;
 
+/** Move a layout drawn from the label's corner into the writable area of a pre-printed label. */
+function inArea(objects: LabelObject[], paper: Paper): LabelObject[] {
+  const a = preprintArea(paper);
+  if (!a.x && !a.y) return objects;
+  return objects.map((o) => ({ ...o, x: r1(o.x + a.x), y: r1(o.y + a.y) }));
+}
+
 /**
- * Scale a layout drawn for a `refW`×`refH` label onto `paper`'s label size.
+ * Scale a layout drawn for a `refW`×`refH` label onto `paper`'s label size (its writable
+ * area on pre-printed stock), so every template works on any size.
  * Codes stay square, lines keep their thickness and fonts follow the smaller axis
  * (text boxes shrink-to-fit, so a font that is still too big just shrinks).
  */
 function fitTo(objects: LabelObject[], refW: number, refH: number, paper: Paper): LabelObject[] {
-  const sx = paper.labelWidth / refW, sy = paper.labelHeight / refH, s = Math.min(sx, sy);
-  return objects.map((o) => {
+  const a = preprintArea(paper);
+  const sx = a.w / refW, sy = a.h / refH, s = Math.min(sx, sy);
+  return inArea(objects.map((o) => {
     const n = { ...o, x: r1(o.x * sx), y: r1(o.y * sy), w: r1(o.w * sx), h: r1(o.h * sy) } as LabelObject;
     if (n.type === 'line') { n.h = o.h; n.y = r1((o.y + o.h / 2) * sy - o.h / 2); }
     if (n.type === 'qr') {
@@ -30,7 +40,7 @@ function fitTo(objects: LabelObject[], refW: number, refH: number, paper: Paper)
     if (n.type === 'text') { n.fontSize = r1(n.fontSize * s); n.minFontSize = Math.max(4, r1(n.minFontSize * s)); }
     if (n.type === 'barcode') n.textSize = Math.max(4, r1(n.textSize * s));
     return n;
-  });
+  }), paper);
 }
 
 function project(paper: Paper, design: string, objects: LabelObject[], name: string, data?: DataTable): Project {
@@ -67,7 +77,7 @@ const ATTENDEES: string[][] = [
 const attendeeTable = () => table(['이름', '소속', '직함', '참가구분', 'ID', '이메일'], ATTENDEES);
 
 function badge(paper: Paper): Project {
-  const W = paper.labelWidth, H = paper.labelHeight;
+  const { w: W, h: H } = preprintArea(paper);
   const band = Math.max(7, H * 0.16);
   const objects: LabelObject[] = [
     obj('rect', 0, 0, W, band, { name: '상단 띠', fill: solid('#1e3a8a'), strokeWidth: 0, rules: ROLE_RULES }),
@@ -82,7 +92,7 @@ function badge(paper: Paper): Project {
     obj('rect', 0, H - band, W, band, { name: '하단 띠', fill: solid('#1e3a8a'), strokeWidth: 0, rules: ROLE_RULES }),
     text(3, H - band + 0.8, W - 6, band - 1.6, '{{참가구분}}', { name: '참가구분', fill: solid('#ffffff'), bold: true, fontSize: 13, align: 'center' }),
   ];
-  return project(paper, '일반 명찰', objects, '학술대회 명찰', attendeeTable());
+  return project(paper, '일반 명찰', inArea(objects, paper), '학술대회 명찰', attendeeTable());
 }
 
 function simpleBadge(paper: Paper): Project {
