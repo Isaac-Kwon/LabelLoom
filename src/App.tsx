@@ -20,6 +20,7 @@ import { TableWizard } from './ui/TableWizard';
 import { Inspector } from './ui/Inspector';
 import { LeftPanel } from './ui/LeftPanel';
 import { loadMediaInto } from './ui/media';
+import { editorForced, SmallScreen, unforceEditor, useSmallScreen } from './ui/SmallScreen';
 import { copy, duplicate, group, nudge, paste, reorder, selectAll, ungroup } from './ui/ops';
 import { CanvasBar, Toolbar } from './ui/Toolbar';
 
@@ -37,6 +38,8 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
   const [dataH, setDataH] = useState(() => Number(localStorage.getItem('labelloom.dataH')) || 220);
   const [ready, setReady] = useState(false);
   const [dropping, setDropping] = useState(false);
+  const small = useSmallScreen();
+  const [forced, setForced] = useState(editorForced);
 
   const loadProject = useCallback((p: Project, name = '') => {
     const s = useStore.getState();
@@ -170,6 +173,14 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
     }
   };
 
+  // phones get a view-only page instead of the editor
+  if (small && !forced) {
+    return <>
+      <SmallScreen onEditor={() => setForced(true)} onQuick={onQuick} />
+      {toast && <div className="toast">{toast}</div>}
+    </>;
+  }
+
   return (
     <div className="app" onDragOver={(e) => { if (e.dataTransfer.types.includes('Files')) { e.preventDefault(); setDropping(true); } }}
       onDragLeave={(e) => { if (e.currentTarget === e.target) setDropping(false); }} onDrop={onDrop}>
@@ -196,7 +207,8 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
       {dialog === 'about' && <AboutDialog />}
       {dialog === 'preprint' && <PreprintWizard />}
       {dialog === 'table' && <TableWizard />}
-      {dropping && <DropOverlay title={t('여기에 놓으세요')} kinds={[t('.json · .zip 프로젝트'), t('xlsx · csv 데이터'), t('이미지 · SVG')]} />}
+      {dropping && <DropOverlay title={t('여기에 놓으세요')} kinds={[t('.json · .zip 프로젝트'),t('xlsx · csv 데이터'), t('이미지 · SVG')]} />}
+      {small && <button className="small-back" title={t('작은 화면용 보기 전용 화면으로 돌아갑니다')} onClick={() => { unforceEditor(); setForced(false); }}>← {t('보기 화면으로')}</button>}
       {toast && <div className="toast">{toast}</div>}
       <div className="build-tag" title={BUILD_DETAIL}>{BUILD_LABEL}</div>
     </div>
