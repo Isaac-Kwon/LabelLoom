@@ -75,6 +75,7 @@ export function usedColumns(p: Project): string[] {
   for (const d of p.designs) {
     for (const o of [...d.objects, ...(d.back ?? [])]) {
       if ('content' in o) templateColumns(o.content).forEach((c) => set.add(c));
+      if (o.type === 'table') o.cells.flat().forEach((v) => templateColumns(v).forEach((c) => set.add(c)));
       o.rules.forEach((r) => r.column && set.add(r.column));
     }
   }
@@ -140,7 +141,7 @@ export function resolveObject(o: LabelObject, ctx: ResolveCtx): Resolved {
     if (s.text !== undefined && s.text !== '') content = resolveTemplate(s.text, ctx);
     if (s.color) {
       if (obj.type === 'text') obj = { ...obj, fill: { type: 'solid', color: s.color } };
-      else if (obj.type === 'barcode' || obj.type === 'qr') obj = { ...obj, color: s.color };
+      else if (obj.type === 'barcode' || obj.type === 'qr' || obj.type === 'table') obj = { ...obj, color: s.color };
       else if ('fill' in obj) obj = { ...obj, fill: { type: 'solid', color: s.color } };
     }
     if (s.stroke && 'stroke' in obj) obj = { ...obj, stroke: s.stroke };

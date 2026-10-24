@@ -9,6 +9,7 @@ import { act, currentObjects, useStore } from '../store';
 import { Check, Color, Num, Row, Section, Select, Seg } from './controls';
 import { pickImageInto } from './media';
 import { align, convert, distribute, group, matchSize, reorder, ungroup } from './ops';
+import { TableSection } from './TableEditor';
 
 export function Inspector() {
   const project = useStore((s) => s.project);
@@ -115,6 +116,7 @@ function Single({ o }: { o: LabelObject }) {
       {(o.type === 'rect' || o.type === 'ellipse' || o.type === 'triangle' || o.type === 'line') && <ShapeSection o={o} />}
       {o.type === 'barcode' && <BarcodeSection o={o} />}
       {o.type === 'qr' && <QrSection o={o} />}
+      {o.type === 'table' && <TableSection o={o} />}
       {(o.type === 'image' || o.type === 'svg') && (
         <Section title={o.type === 'image' ? '이미지' : 'SVG'}>
           <Row><button onClick={() => pickImageInto(o.id, o.type as 'image' | 'svg')}>파일 선택…</button></Row>

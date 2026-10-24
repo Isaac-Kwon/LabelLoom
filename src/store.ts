@@ -207,7 +207,7 @@ export const act = {
 };
 
 function nameOf(t: ObjType) {
-  return ({ text: '텍스트', rect: '사각형', ellipse: '원', triangle: '삼각형', line: '선', barcode: '바코드', qr: 'QR', image: '이미지', svg: 'SVG' } as const)[t];
+  return ({ text: '텍스트', rect: '사각형', ellipse: '원', triangle: '삼각형', line: '선', barcode: '바코드', qr: 'QR', image: '이미지', svg: 'SVG', table: '표' } as const)[t];
 }
 
 /** Expand a selection to whole groups. */

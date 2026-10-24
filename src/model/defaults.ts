@@ -1,5 +1,5 @@
 import type {
-  BarcodeObj, Design, ImageObj, LabelObject, ObjType, Paper, Project, QrObj, Row, ShapeObj, SvgObj, TextObj,
+  BarcodeObj, Design, ImageObj, LabelObject, ObjType, Paper, Project, QrObj, Row, ShapeObj, SvgObj, TableObj, TextObj,
 } from './types';
 import { SCHEMA_VERSION } from './types';
 
@@ -14,8 +14,16 @@ const base = (type: ObjType, x: number, y: number, w: number, h: number) => ({
 
 export const TYPE_LABEL: Record<ObjType, string> = {
   text: '텍스트', rect: '사각형', ellipse: '원', triangle: '삼각형', line: '선',
-  barcode: '바코드', qr: 'QR/2D 코드', image: '이미지', svg: 'SVG',
+  barcode: '바코드', qr: 'QR/2D 코드', image: '이미지', svg: 'SVG', table: '표',
 };
+
+const TIMETABLE = [
+  ['', '월', '화', '수', '목', '금'],
+  ['1교시', '', '', '', '', ''],
+  ['2교시', '', '', '', '', ''],
+  ['3교시', '', '', '', '', ''],
+  ['4교시', '', '', '', '', ''],
+];
 
 export function newObject(type: ObjType, x = 5, y = 5, w?: number, h?: number): LabelObject {
   switch (type) {
@@ -56,6 +64,18 @@ export function newObject(type: ObjType, x = 5, y = 5, w?: number, h?: number): 
     }
     case 'svg': {
       const o: SvgObj = { ...base('svg', x, y, w ?? 20, h ?? 20), type: 'svg', svg: '', fit: 'contain' };
+      return o;
+    }
+    case 'table': {
+      const cells = TIMETABLE.map((r) => [...r]);
+      const o: TableObj = {
+        ...base('table', x, y, w ?? 60, h ?? 30), type: 'table', cells,
+        colWidths: cells[0].map((_, c) => (c === 0 ? 1.2 : 1)), rowHeights: cells.map(() => 1),
+        merges: [], styles: {},
+        fontFamily: DEFAULT_FONT, fontSize: 9, minFontSize: 4, color: '#111111', align: 'center', vAlign: 'middle',
+        padding: 0.6, fill: '', headerRow: true, headerCol: true, headerFill: '#e8eefc', headerColor: '#111111',
+        borderColor: '#1f2937', borderWidth: 0.2, outerWidth: 0.4,
+      };
       return o;
     }
   }

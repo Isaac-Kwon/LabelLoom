@@ -1,6 +1,7 @@
-import type { BarcodeObj, Fill, ImageObj, LabelObject, Paper, Project, QrObj, ShapeObj, SvgObj, TextObj } from '../model/types';
+import { cellKey, cellSpans, tableGeometry } from '../model/table';
+import type { BarcodeObj, Fill, ImageObj, LabelObject, Paper, Project, QrObj, ShapeObj, SvgObj, TableObj, TextObj } from '../model/types';
 import { barcodeSvg, code2dSvg } from './barcode';
-import { resolveObject, type ResolveCtx } from './resolve';
+import { resolveObject, resolveTemplate, type ResolveCtx } from './resolve';
 import { layoutText } from './text';
 
 export const esc = (s: string) =>
@@ -165,7 +166,41 @@ function svgMarkup(o: SvgObj, editor?: boolean): string {
   return `<svg x="0" y="0" width="${n(o.w)}" height="${n(o.h)}" viewBox="${esc(s.viewBox)}" preserveAspectRatio="${o.fit === 'stretch' ? 'none' : 'xMidYMid meet'}">${s.inner}</svg>`;
 }
 
-function bodyMarkup(o: LabelObject, content: string, acc: Acc, editor?: boolean, override?: string): string {
+function tableMarkup(o: TableObj, ctx: ResolveCtx, acc: Acc): string {
+  const { rows, cols, xs, ys } = tableGeometry(o);
+  const spans = cellSpans(o);
+  const bg: string[] = [], txt: string[] = [], grid: string[] = [];
+  const pad = Math.max(0, o.padding);
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+    const k = cellKey(r, c);
+    const span = spans.get(k);
+    if (span === null) continue;
+    const rs = span?.rs ?? 1, cs = span?.cs ?? 1;
+    const x0 = xs[c], y0 = ys[r], w = xs[c + cs] - x0, h = ys[r + rs] - y0;
+    const head = (o.headerRow && r === 0) || (o.headerCol && c === 0);
+    const st = o.styles[k] ?? {};
+    const fill = st.fill || (head ? o.headerFill : o.fill);
+    if (fill) bg.push(`<rect x="${n(x0)}" y="${n(y0)}" width="${n(w)}" height="${n(h)}" fill="${fill}"/>`);
+    if (o.borderWidth > 0) grid.push(`<rect x="${n(x0)}" y="${n(y0)}" width="${n(w)}" height="${n(h)}"/>`);
+    const content = resolveTemplate(o.cells[r]?.[c] ?? '', ctx);
+    if (!content) continue;
+    const t: TextObj = {
+      id: `${o.id}_${r}_${c}`, type: 'text', name: '', x: 0, y: 0, w: Math.max(0.1, w - 2 * pad), h: Math.max(0.1, h - 2 * pad),
+      rotation: 0, opacity: 1, locked: false, hidden: false, rules: [], hideIfEmpty: false,
+      content, fontFamily: o.fontFamily, fontSize: o.fontSize, minFontSize: o.minFontSize,
+      bold: st.bold ?? head, italic: false, underline: false, align: st.align ?? o.align, vAlign: o.vAlign,
+      multiline: true, fit: 'shrink', letterSpacing: 0, lineHeight: 1.15, ellipsis: false,
+      fill: { type: 'solid', color: st.color || (head ? o.headerColor : o.color) }, effects: {},
+    };
+    txt.push(`<g transform="translate(${n(x0 + pad)} ${n(y0 + pad)})">${textMarkup(t, content, acc)}</g>`);
+  }
+  const gridG = grid.length ? `<g fill="none" stroke="${o.borderColor}" stroke-width="${n(o.borderWidth)}">${grid.join('')}</g>` : '';
+  const ow = o.outerWidth;
+  const outer = ow > 0 ? `<rect x="${n(ow / 2)}" y="${n(ow / 2)}" width="${n(Math.max(0, o.w - ow))}" height="${n(Math.max(0, o.h - ow))}" fill="none" stroke="${o.borderColor}" stroke-width="${n(ow)}"/>` : '';
+  return bg.join('') + txt.join('') + gridG + outer;
+}
+
+function bodyMarkup(o: LabelObject, content: string, acc: Acc, ctx: ResolveCtx, editor?: boolean, override?: string): string {
   switch (o.type) {
     case 'text': return textMarkup(o, content, acc, override);
     case 'rect': case 'ellipse': case 'triangle': case 'line': return shapeMarkup(o, acc, override);
@@ -173,6 +208,7 @@ function bodyMarkup(o: LabelObject, content: string, acc: Acc, editor?: boolean,
     case 'qr': return qrMarkup(o, content, editor);
     case 'image': return imageMarkup(o, editor);
     case 'svg': return svgMarkup(o, editor);
+    case 'table': return tableMarkup(o, ctx, acc);
   }
 }
 
@@ -197,9 +233,9 @@ export function objectMarkup(src: LabelObject, ctx: ResolveCtx, acc: Acc, opts: 
       acc.defs.push(`<filter id="${fid}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${n(sh.blur / 2)}"/></filter>`);
       filt = ` filter="url(#${fid})"`;
     }
-    inner += `<g transform="translate(${n(sh.dx)} ${n(sh.dy)})" opacity="${n(sh.opacity)}"${filt}>${bodyMarkup(o, content, acc, opts.editor, sh.color)}</g>`;
+    inner += `<g transform="translate(${n(sh.dx)} ${n(sh.dy)})" opacity="${n(sh.opacity)}"${filt}>${bodyMarkup(o, content, acc, ctx, opts.editor, sh.color)}</g>`;
   }
-  inner += bodyMarkup(o, content, acc, opts.editor);
+  inner += bodyMarkup(o, content, acc, ctx, opts.editor);
   const op = (hidden ? 0.18 : 1) * o.opacity;
   return `<g transform="${objTransform(o)}"${op !== 1 ? ` opacity="${n(op)}"` : ''} data-id="${o.id}">${inner}</g>`;
 }

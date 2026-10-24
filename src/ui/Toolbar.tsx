@@ -17,6 +17,7 @@ const TOOLS: { t: Tool; icon: string; label: string; key: string }[] = [
   { t: 'qr', icon: '▦', label: 'QR 코드', key: 'Q' },
   { t: 'image', icon: '🖼', label: '이미지', key: 'I' },
   { t: 'svg', icon: '✒', label: 'SVG', key: '' },
+  { t: 'table', icon: '▤', label: '표', key: '' },
 ];
 
 export function Toolbar({ onOpen, onSave }: { onOpen: () => void; onSave: (saveAs?: boolean) => void }) {

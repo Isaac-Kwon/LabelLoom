@@ -27,7 +27,7 @@ export function LeftPanel() {
   );
 }
 
-const ICON: Record<LabelObject['type'], string> = { text: 'T', rect: '▭', ellipse: '◯', triangle: '△', line: '╱', barcode: '▥', qr: '▦', image: '🖼', svg: '✒' };
+const ICON: Record<LabelObject['type'], string> = { text: 'T', rect: '▭', ellipse: '◯', triangle: '△', line: '╱', barcode: '▥', qr: '▦', image: '🖼', svg: '✒', table: '▤' };
 
 function Layers() {
   const project = useStore((s) => s.project);

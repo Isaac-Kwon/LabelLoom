@@ -95,6 +95,8 @@ function needsRaster(o: LabelObject, ttf: Set<string>): boolean {
         !!o.effects.shadow || !!o.effects.outline || o.letterSpacing !== 0;
     case 'rect': case 'ellipse': case 'triangle': case 'line':
       return !!o.effects.shadow && o.effects.shadow.blur > 0;
+    case 'table':
+      return !ttf.has(firstFamily(o.fontFamily)) || o.headerRow || o.headerCol || Object.values(o.styles).some((s) => s.bold);
     default: return false;
   }
 }

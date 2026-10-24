@@ -1,7 +1,7 @@
 // LabelLoom project schema. All lengths are millimetres unless noted.
 export const SCHEMA_VERSION = 1;
 
-export type ObjType = 'text' | 'rect' | 'ellipse' | 'triangle' | 'line' | 'barcode' | 'qr' | 'image' | 'svg';
+export type ObjType = 'text' | 'rect' | 'ellipse' | 'triangle' | 'line' | 'barcode' | 'qr' | 'image' | 'svg' | 'table';
 
 export interface GradientStop { offset: number; color: string }
 export type Fill =
@@ -114,7 +114,44 @@ export interface SvgObj extends Base {
   fit: 'contain' | 'stretch';
 }
 
-export type LabelObject = TextObj | ShapeObj | BarcodeObj | QrObj | ImageObj | SvgObj;
+/** Per-cell overrides; key is "row,col". */
+export interface TableCellStyle {
+  fill?: string;
+  color?: string;
+  bold?: boolean;
+  align?: 'left' | 'center' | 'right';
+}
+
+/** Cell (r,c) spans rs rows and cs columns; the covered cells are not drawn. */
+export interface TableMerge { r: number; c: number; rs: number; cs: number }
+
+export interface TableObj extends Base {
+  type: 'table';
+  /** cells[row][col], each a template like text content */
+  cells: string[][];
+  /** relative weights, scaled to the box */
+  colWidths: number[];
+  rowHeights: number[];
+  merges: TableMerge[];
+  styles: Record<string, TableCellStyle>;
+  fontFamily: string;
+  fontSize: number; // pt, shrinks to fit each cell
+  minFontSize: number;
+  color: string;
+  align: 'left' | 'center' | 'right';
+  vAlign: 'top' | 'middle' | 'bottom';
+  padding: number; // mm
+  fill: string; // cell background, '' = none
+  headerRow: boolean;
+  headerCol: boolean;
+  headerFill: string;
+  headerColor: string;
+  borderColor: string;
+  borderWidth: number;
+  outerWidth: number;
+}
+
+export type LabelObject = TextObj | ShapeObj | BarcodeObj | QrObj | ImageObj | SvgObj | TableObj;
 
 export interface Design {
   id: string;
