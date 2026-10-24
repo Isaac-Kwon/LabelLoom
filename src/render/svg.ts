@@ -278,7 +278,20 @@ export function cellOrigin(paper: Paper, index: number) {
   return { x: paper.marginLeft + c * (paper.labelWidth + paper.gapX), y: paper.marginTop + r * (paper.labelHeight + paper.gapY), col: c, row: r };
 }
 
-export interface SheetCell { objects: LabelObject[]; ctx: ResolveCtx; raster?: Map<string, RasterPatch> }
+export interface SheetCell {
+  objects: LabelObject[];
+  ctx: ResolveCtx;
+  raster?: Map<string, RasterPatch>;
+  /** fold printing: the back side drawn next to this cell */
+  back?: SheetCell | null;
+}
+
+/**
+ * Fold printing: the back is printed on the same side of the sheet, next to the front
+ * (`right`) or below it (`below`), and the piece is folded along the shared edge.
+ * `rotate` turns the back 180° (needed when folding along a horizontal line).
+ */
+export interface Fold { dir: 'right' | 'below'; rotate: boolean }
 
 export interface SheetOpts {
   cropMarks?: boolean;
@@ -287,68 +300,128 @@ export interface SheetOpts {
   embedFonts?: boolean;
   /** mirror columns (long edge flip) or rows (short edge) for back sides */
   mirror?: 'none' | 'cols' | 'rows';
+  fold?: Fold | null;
+}
+
+/** Placement grid of a sheet. Without fold this is the paper's label grid; with fold, each unit holds front + back. */
+export interface SheetLayout {
+  width: number; height: number;
+  cols: number; rows: number;
+  unitW: number; unitH: number;
+  x0: number; y0: number;
+  gapX: number; gapY: number;
+  /** the page had to grow to fit one fold unit */
+  grown: boolean;
+}
+
+export function sheetLayout(pa: Paper, fold?: Fold | null): SheetLayout {
+  if (!fold) {
+    return {
+      width: pa.width, height: pa.height, cols: pa.cols, rows: pa.rows, unitW: pa.labelWidth, unitH: pa.labelHeight,
+      x0: pa.marginLeft, y0: pa.marginTop, gapX: pa.gapX, gapY: pa.gapY, grown: false,
+    };
+  }
+  const unitW = pa.labelWidth * (fold.dir === 'right' ? 2 : 1);
+  const unitH = pa.labelHeight * (fold.dir === 'below' ? 2 : 1);
+  const bl = Math.max(0, pa.bleed);
+  // fold units go on plain paper: keep room for bleed between them and centre the block
+  const gapX = Math.max(pa.gapX, 2 * bl), gapY = Math.max(pa.gapY, 2 * bl);
+  const m = Math.max(0, Math.min(pa.marginLeft, pa.marginTop));
+  const fit = (avail: number, unit: number, gap: number) => Math.floor((avail - 2 * m + gap + 1e-6) / (unit + gap));
+  let width = pa.width, height = pa.height, cols = fit(width, unitW, gapX), rows = fit(height, unitH, gapY), grown = false;
+  if (cols < 1) { cols = 1; width = unitW + 2 * m; grown = true; }
+  if (rows < 1) { rows = 1; height = unitH + 2 * m; grown = true; }
+  const x0 = (width - (cols * unitW + (cols - 1) * gapX)) / 2;
+  const y0 = (height - (rows * unitH + (rows - 1) * gapY)) / 2;
+  return { width, height, cols, rows, unitW, unitH, x0, y0, gapX, gapY, grown };
+}
+
+function unitOrigin(L: SheetLayout, index: number) {
+  const col = index % L.cols, row = Math.floor(index / L.cols);
+  return { x: L.x0 + col * (L.unitW + L.gapX), y: L.y0 + row * (L.unitH + L.gapY), col, row };
 }
 
 interface Sides { l: number; t: number; r: number; b: number }
 
-function placeLabel(p: Project, cell: SheetCell, x: number, y: number, b: Sides, cid: string): string {
+function placeLabel(p: Project, cell: SheetCell, x: number, y: number, b: Sides, cid: string, rotate: boolean): string {
   const pa = p.paper, W = pa.labelWidth, H = pa.labelHeight;
+  const tf = rotate ? `translate(${n(x + W)} ${n(y + H)}) rotate(180)` : `translate(${n(x)} ${n(y)})`;
   const rx = b.l || b.t || b.r || b.b ? 0 : pa.cornerRadius;
   return `<clipPath id="${cid}"><rect x="${n(-b.l)}" y="${n(-b.t)}" width="${n(W + b.l + b.r)}" height="${n(H + b.t + b.b)}" rx="${n(rx)}"/></clipPath>` +
-    `<g transform="translate(${n(x)} ${n(y)})"><g clip-path="url(#${cid})">${labelMarkup(p, cell.objects, cell.ctx, { idp: cid + '_', raster: cell.raster })}</g></g>`;
+    `<g transform="${tf}"><g clip-path="url(#${cid})">${labelMarkup(p, cell.objects, cell.ctx, { idp: cid + '_', raster: cell.raster })}</g></g>`;
 }
 
 export function sheetDocument(p: Project, cells: (SheetCell | null)[], o: SheetOpts = {}, pageNo = 0): string {
   const pa = p.paper;
+  const L = sheetLayout(pa, o.fold);
+  const W = pa.labelWidth, H = pa.labelHeight;
   const parts: string[] = [];
   const bl = Math.max(0, pa.bleed);
   // bleed reaches at most halfway into the gap between neighbours, so it never shows on the next label
   const side = (edge: boolean, gap: number) => (edge ? bl : Math.min(bl, gap / 2));
+  const outline = (x: number, y: number) => `<rect x="${n(x)}" y="${n(y)}" width="${n(W)}" height="${n(H)}" rx="${n(pa.cornerRadius)}" fill="none" stroke="#9ca3af" stroke-width="0.2"/>`;
   cells.forEach((cell, i) => {
     let idx = i;
-    if (o.mirror === 'cols') idx = Math.floor(i / pa.cols) * pa.cols + (pa.cols - 1 - (i % pa.cols));
-    if (o.mirror === 'rows') idx = (pa.rows - 1 - Math.floor(i / pa.cols)) * pa.cols + (i % pa.cols);
-    const { x, y, col, row } = cellOrigin(pa, idx);
-    if (o.outlines) parts.push(`<rect x="${n(x)}" y="${n(y)}" width="${n(pa.labelWidth)}" height="${n(pa.labelHeight)}" rx="${n(pa.cornerRadius)}" fill="none" stroke="#9ca3af" stroke-width="0.2"/>`);
+    if (!o.fold && o.mirror === 'cols') idx = Math.floor(i / L.cols) * L.cols + (L.cols - 1 - (i % L.cols));
+    if (!o.fold && o.mirror === 'rows') idx = (L.rows - 1 - Math.floor(i / L.cols)) * L.cols + (i % L.cols);
+    const { x, y, col, row } = unitOrigin(L, idx);
+    const b: Sides = { l: side(col === 0, L.gapX), r: side(col === L.cols - 1, L.gapX), t: side(row === 0, L.gapY), b: side(row === L.rows - 1, L.gapY) };
+    const cid = `c${pageNo}_${i}`;
+    if (!o.fold) {
+      if (o.outlines) parts.push(outline(x, y));
+      if (cell) parts.push(placeLabel(p, cell, x, y, b, cid, false));
+      return;
+    }
+    const right = o.fold.dir === 'right';
+    const bx = x + (right ? W : 0), by = y + (right ? 0 : H);
+    if (o.outlines) parts.push(outline(x, y), outline(bx, by));
     if (!cell) return;
-    const b: Sides = { l: side(col === 0, pa.gapX), r: side(col === pa.cols - 1, pa.gapX), t: side(row === 0, pa.gapY), b: side(row === pa.rows - 1, pa.gapY) };
-    parts.push(placeLabel(p, cell, x, y, b, `c${pageNo}_${i}`));
+    // no bleed across the fold line, otherwise one side would spill onto the other
+    const front: Sides = right ? { ...b, r: 0 } : { ...b, b: 0 };
+    let back: Sides = right ? { ...b, l: 0 } : { ...b, t: 0 };
+    if (o.fold.rotate) back = { l: back.r, r: back.l, t: back.b, b: back.t };
+    parts.push(placeLabel(p, cell, x, y, front, cid, false));
+    if (cell.back) parts.push(placeLabel(p, cell.back, bx, by, back, cid + 'b', o.fold.rotate));
   });
-  if (o.cropMarks) parts.push(cropMarks(pa));
+  if (o.cropMarks) parts.push(cropMarks(pa, L, o.fold));
   const cal = p.calibration;
   const tf = o.calibrate && (cal.offsetX || cal.offsetY || cal.scaleX !== 1 || cal.scaleY !== 1)
     ? ` transform="translate(${n(cal.offsetX)} ${n(cal.offsetY)}) scale(${n(cal.scaleX)} ${n(cal.scaleY)})"` : '';
   const style = o.embedFonts && p.fonts.length ? `<style>${fontFaceCss(p)}</style>` : '';
-  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${n(pa.width)}mm" height="${n(pa.height)}mm" viewBox="0 0 ${n(pa.width)} ${n(pa.height)}">${style}<g${tf}>${parts.join('')}</g></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${n(L.width)}mm" height="${n(L.height)}mm" viewBox="0 0 ${n(L.width)} ${n(L.height)}">${style}<g${tf}>${parts.join('')}</g></svg>`;
 }
 
 /**
- * Corner crop marks for every label, kept outside the bleed. Marks between labels are drawn only
- * when the gap leaves room for them.
+ * Corner crop marks for every unit, kept outside the bleed. Marks between units are drawn only
+ * when the gap leaves room for them; fold lines get dashed marks.
  */
-function cropMarks(pa: Paper): string {
+function cropMarks(pa: Paper, L: SheetLayout, fold?: Fold | null): string {
   const bl = Math.max(0, pa.bleed);
   const mark = (edge: boolean, gap: number) => {
     const g = (edge ? bl : Math.min(bl, gap / 2)) + 1;
     const len = edge ? 3 : Math.min(3, gap / 2 - g);
     return len >= 0.8 ? { g, len } : null;
   };
-  const out: string[] = [];
-  for (let i = 0; i < pa.cols * pa.rows; i++) {
-    const { x, y, col, row } = cellOrigin(pa, i);
-    const x1 = x + pa.labelWidth, y1 = y + pa.labelHeight;
-    const ml = mark(col === 0, pa.gapX), mr = mark(col === pa.cols - 1, pa.gapX);
-    const mt = mark(row === 0, pa.gapY), mb = mark(row === pa.rows - 1, pa.gapY);
-    for (const xx of [x, x1]) {
-      if (mt) out.push(`M${n(xx)} ${n(y - mt.g)}V${n(y - mt.g - mt.len)}`);
-      if (mb) out.push(`M${n(xx)} ${n(y1 + mb.g)}V${n(y1 + mb.g + mb.len)}`);
-    }
-    for (const yy of [y, y1]) {
-      if (ml) out.push(`M${n(x - ml.g)} ${n(yy)}H${n(x - ml.g - ml.len)}`);
-      if (mr) out.push(`M${n(x1 + mr.g)} ${n(yy)}H${n(x1 + mr.g + mr.len)}`);
-    }
+  const out: string[] = [], dash: string[] = [];
+  for (let i = 0; i < L.cols * L.rows; i++) {
+    const { x, y, col, row } = unitOrigin(L, i);
+    const x1 = x + L.unitW, y1 = y + L.unitH;
+    const ml = mark(col === 0, L.gapX), mr = mark(col === L.cols - 1, L.gapX);
+    const mt = mark(row === 0, L.gapY), mb = mark(row === L.rows - 1, L.gapY);
+    const vMarks = (xx: number, to: string[]) => {
+      if (mt) to.push(`M${n(xx)} ${n(y - mt.g)}V${n(y - mt.g - mt.len)}`);
+      if (mb) to.push(`M${n(xx)} ${n(y1 + mb.g)}V${n(y1 + mb.g + mb.len)}`);
+    };
+    const hMarks = (yy: number, to: string[]) => {
+      if (ml) to.push(`M${n(x - ml.g)} ${n(yy)}H${n(x - ml.g - ml.len)}`);
+      if (mr) to.push(`M${n(x1 + mr.g)} ${n(yy)}H${n(x1 + mr.g + mr.len)}`);
+    };
+    vMarks(x, out); vMarks(x1, out); hMarks(y, out); hMarks(y1, out);
+    if (fold?.dir === 'right') vMarks(x + pa.labelWidth, dash);
+    if (fold?.dir === 'below') hMarks(y + pa.labelHeight, dash);
   }
-  return `<path d="${out.join('')}" stroke="#000" stroke-width="0.15" fill="none"/>`;
+  return `<path d="${out.join('')}" stroke="#000" stroke-width="0.15" fill="none"/>` +
+    (dash.length ? `<path d="${dash.join('')}" stroke="#000" stroke-width="0.15" stroke-dasharray="0.8 0.5" fill="none"/>` : '');
 }
 
 /** Calibration test page: label outlines, centre crosses and a 50 mm ruler. */

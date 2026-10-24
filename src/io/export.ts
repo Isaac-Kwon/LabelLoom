@@ -4,7 +4,7 @@ import JSZip from 'jszip';
 import type { LabelObject, Project } from '../model/types';
 import { paginate, type JobItem, type Page } from '../render/jobs';
 import { resolveTemplate, type ResolveCtx } from '../render/resolve';
-import { fontFaceCss, labelDocument, labelMarkup, sheetDocument, testPageDocument, type RasterPatch, type SheetOpts } from '../render/svg';
+import { fontFaceCss, labelDocument, labelMarkup, sheetDocument, sheetLayout, testPageDocument, type RasterPatch, type SheetCell, type SheetOpts } from '../render/svg';
 
 export function download(blob: Blob, name: string) {
   const a = document.createElement('a');
@@ -45,14 +45,15 @@ const toBlob = (c: HTMLCanvasElement, type = 'image/png', q?: number) =>
 /* ---------- browser print (vector, uses installed fonts) ---------- */
 
 export function printPages(p: Project, pages: Page[], o: SheetOpts) {
-  printSvgs(p, pages.map((pg, i) => sheetDocument(p, pg.cells, { ...o, mirror: pg.back ? o.mirror : 'none' }, i)));
+  const L = sheetLayout(p.paper, o.fold);
+  printSvgs(L.width, L.height, pages.map((pg, i) => sheetDocument(p, pg.cells, { ...o, mirror: pg.back ? o.mirror : 'none' }, i)));
 }
 
 export function printTestPage(p: Project) {
-  printSvgs(p, [testPageDocument(p)]);
+  printSvgs(p.paper.width, p.paper.height, [testPageDocument(p)]);
 }
 
-function printSvgs(p: Project, svgs: string[]) {
+function printSvgs(W: number, H: number, svgs: string[]) {
   document.getElementById('print-root')?.remove();
   document.getElementById('print-style')?.remove();
   const root = document.createElement('div');
@@ -60,9 +61,9 @@ function printSvgs(p: Project, svgs: string[]) {
   root.innerHTML = svgs.map((svg) => `<div class="print-page">${svg}</div>`).join('');
   const style = document.createElement('style');
   style.id = 'print-style';
-  style.textContent = `@page{size:${p.paper.width}mm ${p.paper.height}mm;margin:0}
+  style.textContent = `@page{size:${W}mm ${H}mm;margin:0}
 @media print{body>*:not(#print-root){display:none!important}#print-root{display:block!important}
-.print-page{width:${p.paper.width}mm;height:${p.paper.height}mm;overflow:hidden;page-break-after:always;break-after:page}
+.print-page{width:${W}mm;height:${H}mm;overflow:hidden;page-break-after:always;break-after:page}
 .print-page:last-child{page-break-after:auto;break-after:auto}.print-page>svg{display:block;width:100%;height:100%}}
 @media screen{#print-root{display:none}}`;
   document.head.appendChild(style);
@@ -136,7 +137,7 @@ async function rasterPatches(p: Project, objects: LabelObject[], ctx: ResolveCtx
 }
 
 export async function exportPdf(p: Project, pages: Page[], o: PdfOptions): Promise<Blob> {
-  const { width: W, height: H } = p.paper;
+  const { width: W, height: H } = sheetLayout(p.paper, o.sheet.fold);
   const doc = new jsPDF({ unit: 'mm', format: [W, H], orientation: W > H ? 'landscape' : 'portrait', compress: true });
   const ttf = ttfFamilies(p);
   if (o.mode === 'vector') {
@@ -159,8 +160,11 @@ export async function exportPdf(p: Project, pages: Page[], o: PdfOptions): Promi
         const c = await svgToCanvas(svg, mmToPx(W, o.dpi), mmToPx(H, o.dpi), true);
         doc.addImage(c, 'PNG', 0, 0, W, H, undefined, 'FAST');
       } else {
-        const cells = [];
-        for (const cell of pg.cells) cells.push(cell ? { ...cell, raster: await rasterPatches(p, cell.objects, cell.ctx, ttf, o.dpi) } : null);
+        const withRaster = async (c: SheetCell) => ({ ...c, raster: await rasterPatches(p, c.objects, c.ctx, ttf, o.dpi) });
+        const cells: (SheetCell | null)[] = [];
+        for (const cell of pg.cells) {
+          cells.push(cell ? { ...(await withRaster(cell)), back: cell.back ? await withRaster(cell.back) : cell.back } : null);
+        }
         host.innerHTML = sheetDocument(p, cells, sheetOpts, i);
         const el = host.firstElementChild as SVGSVGElement;
         await doc.svg(el, { x: 0, y: 0, width: W, height: H });
@@ -197,6 +201,7 @@ export async function exportPngZip(p: Project, items: JobItem[], o: { dpi: numbe
 
 /** One PDF per distinct value of `column`, zipped. */
 export async function exportSplitPdfZip(p: Project, items: JobItem[], column: string, o: PdfOptions & { startCell: number; duplex: boolean }): Promise<Blob> {
+  const fold = o.sheet.fold;
   const groups = new Map<string, JobItem[]>();
   for (const it of items) {
     const key = it.row?.values[column]?.trim() || '(빈 값)';
@@ -206,7 +211,7 @@ export async function exportSplitPdfZip(p: Project, items: JobItem[], column: st
   const zip = new JSZip();
   let done = 0;
   for (const [key, list] of groups) {
-    const pages = paginate(p, list, { startCell: 1, duplex: o.duplex });
+    const pages = paginate(p, list, { startCell: 1, duplex: o.duplex && !fold, fold });
     const blob = await exportPdf(p, pages, { ...o, onProgress: undefined });
     zip.file(`${safeName(key)}.pdf`, blob);
     o.onProgress?.(++done, groups.size);

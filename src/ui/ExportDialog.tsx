@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import { download, exportPdf, exportPngZip, exportSplitPdfZip, printPages, printTestPage, safeName } from '../io/export';
 import { barcodeSvg, code2dSvg } from '../render/barcode';
-import { buildItems, paginate, selectRows, type JobOptions, type Scope } from '../render/jobs';
+import { buildItems, DEFAULT_DUPLEX, jobFold, paginate, selectRows, type JobOptions, type Scope } from '../render/jobs';
 import { resolveObject } from '../render/resolve';
-import { sheetDocument } from '../render/svg';
+import { sheetDocument, sheetLayout } from '../render/svg';
 import { useStore } from '../store';
 import { Check, Modal, Num, Progress, Row, Select, Seg } from './controls';
 import { filterRows } from './DataPanel';
@@ -28,7 +28,9 @@ export function ExportDialog() {
   const [job, setJob] = useState<JobOptions>({
     scope: arg?.scope ?? (filtered ? 'filtered' : 'checked'), rangeFrom: 1, rangeTo: project.data.rows.length || 1,
     currentRow, copies: 1, blankCount: project.paper.cols * project.paper.rows, startCell: 1,
-    duplex: false, mirror: 'cols', ...arg,
+    ...DEFAULT_DUPLEX,
+    duplexMode: saved.duplexMode ?? DEFAULT_DUPLEX.duplexMode, foldDir: saved.foldDir ?? DEFAULT_DUPLEX.foldDir,
+    foldRotate: saved.foldRotate ?? DEFAULT_DUPLEX.foldRotate, ...arg,
   });
   const [cropMarks, setCropMarks] = useState<boolean>(saved.cropMarks ?? false);
   const [outlines, setOutlines] = useState<boolean>(false);
@@ -45,11 +47,16 @@ export function ExportDialog() {
   const filteredIds = useMemo(() => filterRows(project, filter), [project, filter]);
   const opts: JobOptions = { ...job, filteredIds, currentRow };
   const items = useMemo(() => buildItems(project, opts), [project, job, filteredIds, currentRow]); // eslint-disable-line react-hooks/exhaustive-deps
-  const pages = useMemo(() => paginate(project, items, { startCell: format === 'png' ? 1 : job.startCell, duplex: job.duplex && hasBack }), [project, items, job.startCell, job.duplex, hasBack, format]);
+  const fold = hasBack && format !== 'png' ? jobFold(job) : null;
+  const layout = sheetLayout(project.paper, fold);
+  const pages = useMemo(
+    () => paginate(project, items, { startCell: format === 'png' ? 1 : job.startCell, duplex: job.duplex && hasBack && !fold, fold }),
+    [project, items, job.startCell, job.duplex, hasBack, format, fold?.dir, fold?.rotate], // eslint-disable-line react-hooks/exhaustive-deps
+  );
   const sheetCount = pages.filter((p) => !p.back).length;
-  const per = project.paper.cols * project.paper.rows;
+  const per = layout.cols * layout.rows;
   const pa = project.paper;
-  const bleedClipped = pa.bleed > 0 && ((pa.cols > 1 && pa.gapX < 2 * pa.bleed) || (pa.rows > 1 && pa.gapY < 2 * pa.bleed));
+  const bleedClipped = pa.bleed > 0 && !fold && ((pa.cols > 1 && pa.gapX < 2 * pa.bleed) || (pa.rows > 1 && pa.gapY < 2 * pa.bleed));
 
   const errors = useMemo(() => {
     const out: string[] = [];
@@ -70,14 +77,19 @@ export function ExportDialog() {
     return out;
   }, [items]);
 
-  const sheetOpts = { cropMarks, outlines, calibrate, mirror: job.mirror };
+  const sheetOpts = { cropMarks, outlines, calibrate, mirror: job.mirror, fold };
   const previewSvg = useMemo(() => {
     const pg = pages[Math.min(page, pages.length - 1)];
     return pg ? sheetDocument(project, pg.cells, { ...sheetOpts, outlines: true, calibrate: false, mirror: pg.back ? job.mirror : 'none' }, 999) : '';
-  }, [pages, page, project, cropMarks, job.mirror]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pages, page, project, cropMarks, job.mirror, fold?.dir, fold?.rotate]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const remember = () => {
-    try { localStorage.setItem(SETTINGS_KEY, JSON.stringify({ format, cropMarks, calibrate, pdfMode, dpi, nameTpl, white })); } catch { /* ignore */ }
+    try {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify({
+        format, cropMarks, calibrate, pdfMode, dpi, nameTpl, white,
+        duplexMode: job.duplexMode, foldDir: job.foldDir, foldRotate: job.foldRotate,
+      }));
+    } catch { /* ignore */ }
   };
 
   const markDone = () => {
@@ -108,7 +120,7 @@ export function ExportDialog() {
         download(blob, `${base}-png.zip`);
       } else {
         if (!splitCol) { notify('분할할 열을 고르세요.'); setBusy(null); return; }
-        const blob = await exportSplitPdfZip(project, items, splitCol, { mode: pdfMode, dpi, sheet: sheetOpts, onProgress, startCell: 1, duplex: job.duplex && hasBack });
+        const blob = await exportSplitPdfZip(project, items, splitCol, { mode: pdfMode, dpi, sheet: sheetOpts, onProgress, startCell: 1, duplex: job.duplex && hasBack && !fold });
         download(blob, `${base}-${safeName(splitCol)}.zip`);
       }
       markDone();
@@ -171,13 +183,40 @@ export function ExportDialog() {
           {format !== 'png' && per > 1 && (
             <>
               <Row label="시작 칸"><Num value={job.startCell} step={1} min={1} max={per} onChange={(v) => set({ startCell: Math.round(v) })} unit={`/ ${per}`} /></Row>
-              <StartCellPicker cols={project.paper.cols} rows={project.paper.rows} value={job.startCell} onChange={(v) => set({ startCell: v })} />
+              <StartCellPicker cols={layout.cols} rows={layout.rows} value={job.startCell} onChange={(v) => set({ startCell: v })} />
             </>
           )}
           {hasBack && format !== 'png' && (
             <>
-              <Check label="양면 (각 장 뒤에 뒷면 장 추가)" checked={job.duplex} onChange={(v) => set({ duplex: v })} />
-              {job.duplex && <Row label="뒤집기"><Seg value={job.mirror} onChange={(v) => set({ mirror: v })} options={[{ value: 'cols', label: '긴 쪽 (좌우 반전)' }, { value: 'rows', label: '짧은 쪽 (상하 반전)' }]} /></Row>}
+              <Check label="양면" checked={job.duplex} onChange={(v) => set({ duplex: v })} />
+              {job.duplex && (
+                <Row label="방식">
+                  <Seg value={job.duplexMode} onChange={(v) => set({ duplexMode: v, startCell: 1 })} options={[
+                    { value: 'sheets', label: '앞뒤 따로 인쇄', title: '각 장 뒤에 뒷면 장을 추가 (프린터 양면 정렬이 맞아야 함)' },
+                    { value: 'fold', label: '펼쳐서 접기', title: '앞면과 뒷면을 같은 면에 나란히 인쇄 → 잘라서 반으로 접기 (정렬 걱정 없음)' },
+                  ]} />
+                </Row>
+              )}
+              {job.duplex && job.duplexMode === 'sheets' && (
+                <Row label="뒤집기"><Seg value={job.mirror} onChange={(v) => set({ mirror: v })} options={[{ value: 'cols', label: '긴 쪽 (좌우 반전)' }, { value: 'rows', label: '짧은 쪽 (상하 반전)' }]} /></Row>
+              )}
+              {job.duplex && job.duplexMode === 'fold' && (
+                <>
+                  <Row label="뒷면 위치">
+                    <Seg value={job.foldDir} onChange={(v) => set({ foldDir: v, foldRotate: v === 'below', startCell: 1 })} options={[
+                      { value: 'right', label: '옆에 붙이기', title: '앞면 오른쪽에 뒷면 · 세로선을 따라 접기' },
+                      { value: 'below', label: '아래에 붙이기', title: '앞면 아래에 뒷면 · 가로선을 따라 접기' },
+                    ]} />
+                  </Row>
+                  <Check label="뒷면 180° 뒤집어 배치" checked={job.foldRotate} onChange={(v) => set({ foldRotate: v })}
+                    title="가로선으로 접을 때(아래에 붙이기) 켜야 접은 뒤 뒷면이 바로 보입니다. 텐트형 명패도 이 설정을 씁니다." />
+                  <p className="muted small">
+                    한 칸에 {job.foldDir === 'right' ? '앞면 | 뒷면' : '앞면 / 뒷면'}을 붙여 {layout.cols}×{layout.rows}개씩 배치합니다.
+                    재단선을 켜면 접는 선은 점선으로 표시됩니다.
+                  </p>
+                  {layout.grown && <div className="warn">⚠ 용지에 한 칸도 들어가지 않아 용지 크기를 {Math.round(layout.width)}×{Math.round(layout.height)} mm로 늘렸습니다.</div>}
+                </>
+              )}
             </>
           )}
           {format !== 'png' && (

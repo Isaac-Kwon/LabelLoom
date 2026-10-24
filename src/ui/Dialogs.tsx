@@ -7,7 +7,7 @@ import { encodeShare, shareUrl } from '../io/share';
 import { newRow } from '../model/defaults';
 import { TEMPLATES } from '../model/templates';
 import type { Project } from '../model/types';
-import { buildItems, paginate } from '../render/jobs';
+import { buildItems, DEFAULT_DUPLEX, paginate } from '../render/jobs';
 import { pickDesign, previewCtx } from '../render/resolve';
 import { labelDocument } from '../render/svg';
 import { useStore } from '../store';
@@ -177,7 +177,7 @@ export function ReprintDialog() {
     const proj: Project = labelPage
       ? { ...p, paper: { ...p.paper, width: p.paper.labelWidth, height: p.paper.labelHeight, cols: 1, rows: 1, marginLeft: 0, marginTop: 0, gapX: 0, gapY: 0 } }
       : p;
-    const items = buildItems(proj, { scope: 'current', currentRow: index, rangeFrom: 1, rangeTo: 1, copies: 1, blankCount: 1, startCell: 1, duplex: false, mirror: 'cols' });
+    const items = buildItems(proj, { scope: 'current', currentRow: index, rangeFrom: 1, rangeTo: 1, copies: 1, blankCount: 1, startCell: 1, ...DEFAULT_DUPLEX });
     printPages(proj, paginate(proj, items, { startCell: labelPage ? 1 : cell, duplex: false }), { calibrate: !labelPage });
     const now = new Date().toISOString();
     commit((x) => ({ ...x, data: { ...x.data, rows: x.data.rows.map((r) => (r.id === rowId ? { ...r, printed: now } : r)) } }));

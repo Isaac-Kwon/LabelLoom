@@ -319,7 +319,7 @@ function DesignsPanel() {
         {cur.back && cur.back.length > 0 && (
           <button onClick={() => { if (confirm('뒷면을 삭제할까요?')) { commit((p) => ({ ...p, designs: p.designs.map((d) => (d.id === cur.id ? { ...d, back: undefined } : d)) })); s().setDesign(cur.id, 'front'); } }}>뒷면 삭제</button>
         )}
-        <p className="muted small">내보내기에서 "양면"을 켜면 각 장 뒤에 뒷면 장이 좌우 반전 배치로 추가됩니다.</p>
+        <p className="muted small">내보내기에서 "양면"을 켜면 각 장 뒤에 뒷면 장을 추가하거나(앞뒤 따로 인쇄), 앞면 옆·아래에 뒷면을 붙여 한 면에 인쇄한 뒤 접을 수 있습니다(펼쳐서 접기).</p>
       </Section>
       <Section title={`디자인 자동 선택 규칙 (${rules.length})`}
         actions={<button className="icon small" title="규칙 추가" disabled={project.designs.length < 2} onClick={() => setRules([...rules, { column: project.data.columns[0] ?? '', op: 'eq', value: '', designId: project.designs[1]?.id ?? project.designs[0].id }])}>＋</button>}>

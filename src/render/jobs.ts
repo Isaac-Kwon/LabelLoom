@@ -1,6 +1,6 @@
 import type { Design, Project, Row } from '../model/types';
 import { pickDesign, type ResolveCtx } from './resolve';
-import type { SheetCell } from './svg';
+import { sheetLayout, type Fold, type SheetCell } from './svg';
 
 export type Scope = 'checked' | 'all' | 'filtered' | 'range' | 'unprinted' | 'current';
 
@@ -17,8 +17,20 @@ export interface JobOptions {
   /** 1-based cell where the first sheet starts */
   startCell: number;
   duplex: boolean;
+  /** sheets: back on its own sheet (needs printer alignment) · fold: front and back side by side, folded after cutting */
+  duplexMode: 'sheets' | 'fold';
   mirror: 'cols' | 'rows';
+  foldDir: 'right' | 'below';
+  foldRotate: boolean;
 }
+
+export const DEFAULT_DUPLEX: Pick<JobOptions, 'duplex' | 'duplexMode' | 'mirror' | 'foldDir' | 'foldRotate'> = {
+  duplex: false, duplexMode: 'sheets', mirror: 'cols', foldDir: 'right', foldRotate: false,
+};
+
+/** Fold settings for the renderer, or null when not fold-printing. */
+export const jobFold = (o: Pick<JobOptions, 'duplex' | 'duplexMode' | 'foldDir' | 'foldRotate'>): Fold | null =>
+  o.duplex && o.duplexMode === 'fold' ? { dir: o.foldDir, rotate: o.foldRotate } : null;
 
 export interface JobItem {
   row?: Row;
@@ -57,7 +69,8 @@ export function buildItems(p: Project, o: JobOptions): JobItem[] {
 
 export interface Page { cells: (SheetCell | null)[]; back?: boolean; items: JobItem[] }
 
-export function paginate(p: Project, items: JobItem[], o: Pick<JobOptions, 'startCell' | 'duplex'>, now = new Date()): Page[] {
+export function paginate(p: Project, items: JobItem[], o: Pick<JobOptions, 'startCell' | 'duplex'> & { fold?: Fold | null }, now = new Date()): Page[] {
+  if (o.fold) return paginateFold(p, items, o.startCell, o.fold, now);
   const per = p.paper.cols * p.paper.rows;
   const pages: Page[] = [];
   let cells: (SheetCell | null)[] = [];
@@ -87,6 +100,28 @@ export function paginate(p: Project, items: JobItem[], o: Pick<JobOptions, 'star
     pageItems.push(it);
     if (cells.length >= per) flush();
   });
+  if (cells.some(Boolean)) flush();
+  return pages;
+}
+
+/** Fold printing: each cell carries its back, all on one side of the sheet. */
+function paginateFold(p: Project, items: JobItem[], startCell: number, fold: Fold, now: Date): Page[] {
+  const L = sheetLayout(p.paper, fold);
+  const per = L.cols * L.rows;
+  const pages: Page[] = [];
+  let cells: (SheetCell | null)[] = Array(Math.min(per - 1, Math.max(0, startCell - 1))).fill(null);
+  let pageItems: JobItem[] = [];
+  const flush = () => {
+    while (cells.length < per) cells.push(null);
+    pages.push({ cells, items: pageItems });
+    cells = []; pageItems = [];
+  };
+  for (const it of items) {
+    const ctx: ResolveCtx = { row: it.row, rowIndex: it.rowIndex, seq: it.seq, copy: it.copy, page: pages.length + 1, now };
+    cells.push({ objects: it.design.objects, ctx, back: it.design.back?.length ? { objects: it.design.back, ctx } : null });
+    pageItems.push(it);
+    if (cells.length >= per) flush();
+  }
   if (cells.some(Boolean)) flush();
   return pages;
 }
