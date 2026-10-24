@@ -1244,4 +1244,11 @@ export const it: Record<Msg, string> = {
   "인쇄소용 PDF": "PDF per tipografia",
   "인쇄소용": "tipografia",
   "재단 여백이 0 mm입니다. 인쇄소는 보통 2~3 mm를 요구합니다. 용지 설정에서 정하세요.": "L'abbondanza è 0 mm. Le tipografie di solito chiedono 2–3 mm. Impostala nelle impostazioni del foglio.",
+  "ZPL (실험적)": "ZPL (sperimentale)",
+  "Zebra 호환 라벨 프린터용 ZPL 파일": "File ZPL per stampanti di etichette compatibili Zebra",
+  "끄면 밝기 50%를 기준으로 검정·흰색만 남깁니다. 글자와 바코드는 끈 상태가 더 선명합니다.": "Se disattivato, tutto diventa nero o bianco al 50% di luminosità. Testo e codici a barre sono più nitidi così.",
+  "라벨마다 흑백 그림 한 장(^GFA)으로 보냅니다. 프린터의 라벨 크기와 디자인 크기가 같아야 합니다. 파일은 Zebra Setup Utilities의 파일 보내기나, 공유 프린터라면 Windows 명령 프롬프트에서 {cmd} 로 보냅니다.": "Ogni etichetta viene inviata come un'immagine in bianco e nero (^GFA). Il formato etichetta della stampante deve corrispondere al design. Invia il file con Invia file di Zebra Setup Utilities o, per una stampante condivisa, dal prompt dei comandi di Windows con {cmd}.",
+  "사진은 점으로 표현 (디더링)": "Rendi le foto a punti (dithering)",
+  "실험적 기능입니다. 실제 프린터에서 충분히 확인하지 못했으니 먼저 한 장으로 시험하세요.": "Funzione sperimentale: non ancora ben provata su stampanti reali, prova prima con una sola etichetta.",
+  "프린터 해상도": "Risoluzione stampante",
 };

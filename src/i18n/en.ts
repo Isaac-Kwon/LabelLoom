@@ -1242,4 +1242,11 @@ export const en = {
   "인쇄소용 PDF": "Print-shop PDF",
   "인쇄소용": "print-shop",
   "재단 여백이 0 mm입니다. 인쇄소는 보통 2~3 mm를 요구합니다. 용지 설정에서 정하세요.": "The bleed is 0 mm. Print shops usually ask for 2–3 mm. Set it in the paper settings.",
+  "ZPL (실험적)": "ZPL (experimental)",
+  "Zebra 호환 라벨 프린터용 ZPL 파일": "ZPL file for Zebra-compatible label printers",
+  "끄면 밝기 50%를 기준으로 검정·흰색만 남깁니다. 글자와 바코드는 끈 상태가 더 선명합니다.": "When off, everything is black or white at 50% brightness. Text and barcodes are sharper with it off.",
+  "라벨마다 흑백 그림 한 장(^GFA)으로 보냅니다. 프린터의 라벨 크기와 디자인 크기가 같아야 합니다. 파일은 Zebra Setup Utilities의 파일 보내기나, 공유 프린터라면 Windows 명령 프롬프트에서 {cmd} 로 보냅니다.": "Each label goes as one black-and-white graphic (^GFA). The printer's label size must match the design. Send the file with Zebra Setup Utilities' Send File, or for a shared printer from the Windows command prompt with {cmd}.",
+  "사진은 점으로 표현 (디더링)": "Render photos as dots (dithering)",
+  "실험적 기능입니다. 실제 프린터에서 충분히 확인하지 못했으니 먼저 한 장으로 시험하세요.": "Experimental: not yet well tested on real printers, so try a single label first.",
+  "프린터 해상도": "Printer resolution",
 };

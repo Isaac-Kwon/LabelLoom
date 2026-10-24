@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { t } from '../i18n';
 import { download, exportPdf, exportPngZip, exportPressPdf, exportSplitPdfZip, pressLayout, pressPageSvg, printPages, printTestPage, safeName } from '../io/export';
 import { buildItems, DEFAULT_DUPLEX, groupItems, jobFold, paginate, projectDuplex, selectRows, type GroupOptions, type JobOptions, type Scope } from '../render/jobs';
 import { fetchPictures, pictureUrls } from '../render/images';
 import { preprintSheetMarkup } from '../render/preprint';
 import { ISSUE_LABEL, issueText, preflight, type Issue, type IssueKind } from '../render/preflight';
+import { exportZpl, ZPL_DPI, zplPreview } from '../io/zpl';
 import { cmykRisk, cmykText } from '../render/color';
 import { designColors, sheetDocument, sheetLayout, testPointsFit, type TestPoints } from '../render/svg';
 import type { Project } from '../model/types';
@@ -12,7 +13,7 @@ import { useStore } from '../store';
 import { Check, Modal, Num, PrintSetupAlert, Progress, Row, Select, Seg } from './controls';
 import { filterRows } from './DataPanel';
 
-type Format = 'print' | 'pdf' | 'png' | 'split' | 'press';
+type Format = 'print' | 'pdf' | 'png' | 'split' | 'press' | 'zpl';
 
 const SETTINGS_KEY = 'labelloom.exportSettings';
 export const loadExportSettings = () => { try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}'); } catch { return {}; } };
@@ -98,8 +99,18 @@ export function ExportDialog() {
       return [{ objects: it.design.objects, ctx }, ...(job.duplex && it.design.back?.length ? [{ objects: it.design.back, ctx }] : [])];
     });
   }, [format, labels, job.duplex]);
-  const pageCount = format === 'press' ? pressCells.length : pages.length;
+  const [zpl, setZpl] = useState<{ dpi: number; dither: boolean }>(saved.zpl ?? { dpi: 203, dither: false });
+  const pageCount = format === 'press' ? pressCells.length : format === 'zpl' ? labels.length : pages.length;
+  const [zplImg, setZplImg] = useState('');
+  useEffect(() => {
+    if (format !== 'zpl') return;
+    const it = labels[Math.min(page, labels.length - 1)];
+    let live = true;
+    if (it) void zplPreview(project, it, zpl).then((u) => live && setZplImg(u)).catch(() => live && setZplImg(''));
+    return () => { live = false; };
+  }, [format, labels, page, project, zpl]);
   const previewSvg = useMemo(() => {
+    if (format === 'zpl') return zplImg ? `<img src="${zplImg}" alt="" style="width:100%;image-rendering:pixelated">` : '';
     if (format === 'press') {
       const c = pressCells[Math.min(page, pressCells.length - 1)];
       return c ? pressPageSvg(project, c, cropMarks) : '';
@@ -109,12 +120,12 @@ export function ExportDialog() {
     const svg = sheetDocument(project, pg.cells, { ...sheetOpts, outlines: true, calibrate: false, mirror: pg.back ? job.mirror : 'none' }, 999);
     // the stock's own artwork (never printed) sits on the fronts of the label grid; fold layouts use plain paper
     return showPreprint && !pg.back && !fold ? svg.replace(/<\/svg>$/, preprintSheetMarkup(project.paper) + '</svg>') : svg;
-  }, [pages, page, project, cropMarks, markLabels, testPoints, job.mirror, fold?.dir, fold?.rotate, showPreprint, format, pressCells]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pages, page, project, cropMarks, markLabels, testPoints, job.mirror, fold?.dir, fold?.rotate, showPreprint, format, pressCells, zplImg]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const remember = () => {
     try {
       localStorage.setItem(SETTINGS_KEY, JSON.stringify({
-        format, cropMarks, markLabels, testPoints, calibrate, pdfMode, dpi, nameTpl, white,
+        format, cropMarks, markLabels, testPoints, calibrate, pdfMode, dpi, nameTpl, white, zpl,
         duplexMode: job.duplexMode, foldDir: job.foldDir, foldRotate: job.foldRotate,
       }));
     } catch { /* ignore */ }
@@ -151,11 +162,14 @@ export function ExportDialog() {
         close();
         return;
       }
-      setBusy({ done: 0, total: format === 'png' ? labels.length : pageCount });
+      setBusy({ done: 0, total: format === 'png' || format === 'zpl' ? labels.length : pageCount });
       const onProgress = (done: number, total: number) => setBusy({ done, total });
       if (format === 'pdf') {
         const blob = await exportPdf(project, pages, { mode: pdfMode, dpi, sheet: sheetOpts, onProgress });
         download(blob, `${base}.pdf`);
+      } else if (format === 'zpl') {
+        const blob = await exportZpl(project, labels, { ...zpl, onProgress });
+        download(blob, `${base}.zpl`);
       } else if (format === 'press') {
         const blob = await exportPressPdf(project, labels, { mode: pdfMode, dpi, marks: cropMarks, backs: job.duplex && hasBack, onProgress });
         download(blob, `${base}-${t('인쇄소용')}.pdf`);
@@ -199,6 +213,7 @@ export function ExportDialog() {
             <Seg value={format} onChange={setFormat} options={[
               { value: 'print', label: t('인쇄'), title: t('브라우저 인쇄 (벡터, 설치된 글꼴 사용 · "PDF로 저장"도 가능)') },
               { value: 'pdf', label: 'PDF' }, { value: 'png', label: 'PNG (ZIP)' }, { value: 'split', label: t('분할 PDF'), title: t('열 값별로 PDF를 나눠 ZIP으로') },
+              { value: 'zpl', label: t('ZPL (실험적)'), title: t('Zebra 호환 라벨 프린터용 ZPL 파일') },
               { value: 'press', label: t('인쇄소용 PDF'), title: t('라벨마다 한 쪽, 재단 여백과 재단선 포함 (TrimBox·BleedBox 지정)') },
             ]} />
           </Row>
@@ -243,6 +258,17 @@ export function ExportDialog() {
             <>
               <Row label={t('시작 칸')}><Num value={job.startCell} step={1} min={1} max={per} onChange={(v) => set({ startCell: Math.round(v) })} unit={`/ ${per}`} /></Row>
               <StartCellPicker cols={layout.cols} rows={layout.rows} value={job.startCell} onChange={(v) => set({ startCell: v })} />
+            </>
+          )}
+          {format === 'zpl' && (
+            <>
+              <div className="warn small">{t('실험적 기능입니다. 실제 프린터에서 충분히 확인하지 못했으니 먼저 한 장으로 시험하세요.')}</div>
+              <Row label={t('프린터 해상도')}>
+                <Seg value={String(zpl.dpi)} onChange={(v) => setZpl({ ...zpl, dpi: Number(v) })} options={ZPL_DPI.map((d) => ({ value: String(d), label: `${d} dpi` }))} />
+              </Row>
+              <Check label={t('사진은 점으로 표현 (디더링)')} checked={zpl.dither} onChange={(v) => setZpl({ ...zpl, dither: v })}
+                title={t('끄면 밝기 50%를 기준으로 검정·흰색만 남깁니다. 글자와 바코드는 끈 상태가 더 선명합니다.')} />
+              <p className="muted small">{t('라벨마다 흑백 그림 한 장(^GFA)으로 보냅니다. 프린터의 라벨 크기와 디자인 크기가 같아야 합니다. 파일은 Zebra Setup Utilities의 파일 보내기나, 공유 프린터라면 Windows 명령 프롬프트에서 {cmd} 로 보냅니다.', { cmd: `copy /b ${safeName(project.name)}.zpl \\\\PC\\Zebra` })}</p>
             </>
           )}
           {format === 'press' && <PressOptions project={project} cropMarks={cropMarks} setCropMarks={setCropMarks} backs={hasBack ? job.duplex : null} setBacks={(v) => set({ duplex: v })} />}
@@ -310,7 +336,7 @@ export function ExportDialog() {
               </p>
             </>
           )}
-          {format !== 'print' && <Row label={t('해상도')}><Num value={dpi} step={50} min={72} max={1200} unit="dpi" onChange={setDpi} /></Row>}
+          {format !== 'print' && format !== 'zpl' && <Row label={t('해상도')}><Num value={dpi} step={50} min={72} max={1200} unit="dpi" onChange={setDpi} /></Row>}
           {format === 'png' && (
             <>
               <Row label={t('파일 이름')}><input value={nameTpl} onChange={(e) => setNameTpl(e.target.value)} placeholder={`{{#seq:0000}}_{{${t('이름')}}}`} /></Row>
@@ -342,7 +368,7 @@ export function ExportDialog() {
           {pageCount ? (
             <>
               <div className="preview-sheet" dangerouslySetInnerHTML={{ __html: previewSvg }} />
-              {pa.preprint && !fold && format !== 'press' && <Check label={t('견출지 테두리 겹쳐 보기 (인쇄 안 됨)')} checked={showPreprint} onChange={setShowPreprint} />}
+              {pa.preprint && !fold && sheet && <Check label={t('견출지 테두리 겹쳐 보기 (인쇄 안 됨)')} checked={showPreprint} onChange={setShowPreprint} />}
               <div className="btn-row center">
                 <button disabled={page <= 0} onClick={() => setPage(page - 1)}>◀</button>
                 <span>{Math.min(page, pageCount - 1) + 1} / {pageCount}{format !== 'press' && pages[Math.min(page, pages.length - 1)]?.back ? ` (${t('뒷면')})` : ''}</span>
