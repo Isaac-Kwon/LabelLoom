@@ -7,6 +7,7 @@ import { pickDesign } from '../render/resolve';
 import { act, currentDesign, useStore, type Tool } from '../store';
 
 const PX_PER_MM_100 = 96 / 25.4;
+const ISSUES_URL = 'https://github.com/Isaac-Kwon/LabelLoom/issues';
 
 const TOOLS = [
   { t: 'select', icon: '↖', label: m('선택'), key: 'V' },
@@ -51,6 +52,7 @@ export function Toolbar({ onOpen, onSave }: { onOpen: () => void; onSave: (saveA
           <hr />
           <button onClick={() => s.open('shortcuts')}>{t('단축키')} <kbd>?</kbd></button>
           <button onClick={() => s.open('about')}>{t('프로그램 정보…')}</button>
+          <button onClick={() => window.open(ISSUES_URL, '_blank', 'noopener')} title={t('GitHub 이슈 페이지에서 질문·버그 제보·기능 요청')}>{t('문의사항 (GitHub Issue)')} ↗</button>
         </div>
       </div>
       <input className="project-name" value={project.name} title={fileName || t('저장되지 않음')}

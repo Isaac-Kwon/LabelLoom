@@ -962,6 +962,8 @@ export const it: Record<Msg, string> = {
   "링크로 공유…": "Condividi con un link…",
   "글꼴 관리…": "Font…",
   "프로그램 정보…": "Informazioni…",
+  "문의사항 (GitHub Issue)": "Contatti e segnalazioni (GitHub Issue)",
+  "GitHub 이슈 페이지에서 질문·버그 제보·기능 요청": "Fai domande, segnala bug o richiedi funzionalità su GitHub Issues",
   "저장되지 않음": "Non salvato",
   "실행 취소": "Annulla",
   "다시 실행": "Ripeti",

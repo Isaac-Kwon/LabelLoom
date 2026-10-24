@@ -960,6 +960,8 @@ export const en = {
   "링크로 공유…": "Share as link…",
   "글꼴 관리…": "Fonts…",
   "프로그램 정보…": "About…",
+  "문의사항 (GitHub Issue)": "Contact & feedback (GitHub Issue)",
+  "GitHub 이슈 페이지에서 질문·버그 제보·기능 요청": "Ask questions, report bugs or request features on GitHub Issues",
   "저장되지 않음": "Not saved",
   "실행 취소": "Undo",
   "다시 실행": "Redo",
