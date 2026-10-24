@@ -414,8 +414,115 @@ export function CalibrationDialog() {
         <Num label={t('X 배율')} value={cal.scaleX * 100} step={0.1} unit="%" onChange={(v) => up({ scaleX: v / 100 })} />
         <Num label={t('Y 배율')} value={cal.scaleY * 100} step={0.1} unit="%" onChange={(v) => up({ scaleY: v / 100 })} />
       </div>
+      <div className="cal-graphics">
+        <SignGuide />
+        <AlignScope x={cal.offsetX} y={cal.offsetY} />
+      </div>
       <p className="muted small">{t('보정값은 프로젝트에 저장되며 인쇄·PDF 출력에 적용됩니다 (내보내기 창에서 끌 수 있음).')}</p>
     </Modal>
+  );
+}
+
+// fixed paper colours: the graphics stand for the printout, so they stay the same in dark mode
+const CAL_RED = '#dc2626', CAL_INK = '#111827', CAL_FIX = '#2563eb';
+
+function arrow(x1: number, y1: number, x2: number, y2: number, color: string, head = 5) {
+  const a = Math.atan2(y2 - y1, x2 - x1);
+  const pt = (d: number) => `${x2 - head * Math.cos(a + d)},${y2 - head * Math.sin(a + d)}`;
+  return (
+    <g>
+      <line x1={x1} y1={y1} x2={x2 - head * 0.7 * Math.cos(a)} y2={y2 - head * 0.7 * Math.sin(a)} stroke={color} strokeWidth={1.2} />
+      <polygon points={`${x2},${y2} ${pt(0.45)} ${pt(-0.45)}`} fill={color} />
+    </g>
+  );
+}
+
+const cross = (x: number, y: number, r: number, color: string, w = 1.4) => (
+  <path d={`M${x - r} ${y}H${x + r}M${x} ${y - r}V${y + r}`} stroke={color} strokeWidth={w} fill="none" />
+);
+
+/** Which way the print has to be off for a negative or a positive value. */
+function SignGuide() {
+  const panel = (dx: number, dy: number, title: string, sign: string) => (
+    <figure className="cal-sign">
+      <svg viewBox="0 0 100 70" width={120} height={84} role="img" aria-label={title}>
+        <rect x={0.5} y={0.5} width={99} height={69} rx={4} fill="#fff" stroke="#e5e7eb" />
+        <rect x={22} y={13} width={56} height={40} rx={3} fill="#f3f4f6" stroke="#9ca3af" />
+        {cross(50, 33, 6, CAL_RED)}
+        <rect x={22 + dx} y={13 + dy} width={56} height={40} rx={3} fill="none" stroke={CAL_INK} strokeDasharray="3 2" />
+        {cross(50 + dx, 33 + dy, 6, CAL_INK)}
+        {arrow(50 + dx * 0.9, 33 + dy * 0.9, 50 + dx * 0.15, 33 + dy * 0.15, CAL_FIX, 4)}
+      </svg>
+      <figcaption>{title}<b>{sign}</b></figcaption>
+    </figure>
+  );
+  return (
+    <div className="cal-signs">
+      {panel(9, 7, t('인쇄가 오른쪽·아래로 밀림'), t('X −, Y − 입력'))}
+      {panel(-9, -7, t('인쇄가 왼쪽·위로 치우침'), t('X +, Y + 입력'))}
+    </div>
+  );
+}
+
+const SCOPE_RANGES = [0.5, 1, 2, 5, 10, 20, 50, 100];
+
+/**
+ * Reticle for the entered offset: the red cross is the label's centre on the label sheet, the black
+ * one where the printer puts it without correction (the opposite of the offset, which moves the print).
+ */
+function AlignScope({ x, y }: { x: number; y: number }) {
+  const ex = -x || 0, ey = -y || 0;
+  const big = Math.max(Math.abs(ex), Math.abs(ey));
+  const R = SCOPE_RANGES.find((r) => big <= r * 0.9) ?? SCOPE_RANGES[SCOPE_RANGES.length - 1];
+  const k = 88 / R; // px per mm, the scope is 200 px wide with the centre at 0
+  const clamp = (v: number) => Math.max(-94, Math.min(94, v));
+  const px = clamp(ex * k), py = clamp(ey * k);
+  const mm = (v: number) => String(Math.round(Math.abs(v) * 100) / 100);
+  const lines = [];
+  for (let i = -10; i <= 10; i++) {
+    const v = (i * 88) / 10, major = i % 5 === 0;
+    const stroke = i === 0 ? '#9ca3af' : major ? '#d1d5db' : '#f0f1f3';
+    lines.push(<line key={`v${i}`} x1={v} y1={-96} x2={v} y2={96} stroke={stroke} strokeWidth={0.8} />, <line key={`h${i}`} x1={-96} y1={v} x2={96} y2={v} stroke={stroke} strokeWidth={0.8} />);
+    if (i === 0) continue;
+    // ticks on the axes, like a rifle scope
+    const tl = major ? 5 : 2.5;
+    lines.push(<path key={`t${i}`} d={`M${v} ${-tl}V${tl}M${-tl} ${v}H${tl}`} stroke="#6b7280" strokeWidth={0.8} />);
+    if (major) {
+      const label = String((i * R) / 10).replace('-', '−');
+      lines.push(
+        <text key={`lx${i}`} x={v} y={13} fontSize={7} textAnchor="middle" fill="#6b7280">{label}</text>,
+        <text key={`ly${i}`} x={-7} y={v + 2.5} fontSize={7} textAnchor="end" fill="#6b7280">{label}</text>,
+      );
+    }
+  }
+  const parts: string[] = [];
+  if (Math.abs(ex) >= 0.005) parts.push(t(ex > 0 ? '오른쪽 {v} mm' : '왼쪽 {v} mm', { v: mm(ex) }));
+  if (Math.abs(ey) >= 0.005) parts.push(t(ey > 0 ? '아래 {v} mm' : '위 {v} mm', { v: mm(ey) }));
+  const off = parts.length > 0;
+  return (
+    <figure className="cal-scope">
+      <svg viewBox="-100 -100 200 200" width={200} height={200} role="img" aria-label={t('입력값으로 본 어긋남')}>
+        <rect x={-99.5} y={-99.5} width={199} height={199} rx={6} fill="#fff" stroke="#e5e7eb" />
+        {lines}
+        <circle r={44} fill="none" stroke="#e5e7eb" strokeWidth={0.8} />
+        <circle r={88} fill="none" stroke="#e5e7eb" strokeWidth={0.8} />
+        {off && <path d={`M${px} ${py}V0M${px} ${py}H0`} stroke={CAL_INK} strokeWidth={0.7} strokeDasharray="2 2" opacity={0.5} />}
+        {off && Math.hypot(px, py) > 16 && arrow(px * 0.88, py * 0.88, px * 0.12, py * 0.12, CAL_FIX)}
+        {cross(0, 0, 12, CAL_RED, 1.6)}
+        <circle r={2} fill="none" stroke={CAL_RED} strokeWidth={1} />
+        {cross(px, py, 12, CAL_INK, 1.6)}
+        <text x={-94} y={-88} fontSize={7} fill="#6b7280">mm</text>
+      </svg>
+      <figcaption>
+        <div><b>{t('보정 전 인쇄 위치')}</b>: {off ? parts.join(' · ') : t('어긋남 없음')}</div>
+        <div className="cal-legend">
+          <span><i style={{ background: CAL_RED }} />{t('라벨지의 라벨 중심')}</span>
+          <span><i style={{ background: CAL_INK }} />{t('보정 전 인쇄된 십자선')}</span>
+          <span><i style={{ background: CAL_FIX }} />{t('입력값만큼 옮겨 맞춤')}</span>
+        </div>
+        <div className="muted small">{t('한 눈금 {v} mm', { v: String(R / 10) })}</div>
+      </figcaption>
+    </figure>
   );
 }
 

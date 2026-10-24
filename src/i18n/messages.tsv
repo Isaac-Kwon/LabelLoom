@@ -457,6 +457,21 @@ Y 이동	Y offset	Spostamento Y	Décalage Y
 X 배율	X scale	Scala X	Échelle X
 Y 배율	Y scale	Scala Y	Échelle Y
 보정값은 프로젝트에 저장되며 인쇄·PDF 출력에 적용됩니다 (내보내기 창에서 끌 수 있음).	The correction is saved in the project and applied to printing and PDF (you can turn it off in the export window).	La correzione viene salvata nel progetto e applicata a stampa e PDF (puoi disattivarla nella finestra di esportazione).	La correction est enregistrée dans le projet et appliquée à l'impression et au PDF (désactivable dans la fenêtre d'export).
+인쇄가 오른쪽·아래로 밀림	Print lands right/low	Stampa spostata a destra/in basso	Impression décalée à droite/en bas
+X −, Y − 입력	Enter X −, Y −	Inserisci X −, Y −	Saisir X −, Y −
+인쇄가 왼쪽·위로 치우침	Print lands left/high	Stampa spostata a sinistra/in alto	Impression décalée à gauche/en haut
+X +, Y + 입력	Enter X +, Y +	Inserisci X +, Y +	Saisir X +, Y +
+오른쪽 {v} mm	{v} mm right	{v} mm a destra	{v} mm à droite
+왼쪽 {v} mm	{v} mm left	{v} mm a sinistra	{v} mm à gauche
+아래 {v} mm	{v} mm down	{v} mm in basso	{v} mm en bas
+위 {v} mm	{v} mm up	{v} mm in alto	{v} mm en haut
+입력값으로 본 어긋남	Misalignment given by the entered values	Disallineamento secondo i valori inseriti	Décalage d'après les valeurs saisies
+보정 전 인쇄 위치	Print position before correction	Posizione di stampa prima della correzione	Position d'impression avant correction
+어긋남 없음	No offset	Nessuno spostamento	Aucun décalage
+라벨지의 라벨 중심	Label centre on the label sheet	Centro dell'etichetta sul foglio	Centre de l'étiquette sur la planche
+보정 전 인쇄된 십자선	Printed cross before correction	Croce stampata prima della correzione	Croix imprimée avant correction
+입력값만큼 옮겨 맞춤	Shift applied by the entered values	Spostamento applicato dai valori inseriti	Déplacement appliqué par les valeurs saisies
+한 눈금 {v} mm	One tick = {v} mm	Una tacca = {v} mm	Une graduation = {v} mm
 "{name}" 글꼴을 내장했습니다.	Embedded the font "{name}".	Font "{name}" incorporato.	Police « {name} » intégrée.
 글꼴 이름 (디자인에서 쓸 이름)	Font name (as used in the design)	Nome del font (come usato nel design)	Nom de la police (tel qu'utilisé dans le design)
 글꼴 목록을 가져오지 못했습니다 (권한 거부 또는 미지원).	Could not get the font list (permission denied or not supported).	Impossibile ottenere l'elenco dei font (permesso negato o non supportato).	Impossible d'obtenir la liste des polices (autorisation refusée ou non prise en charge).

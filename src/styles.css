@@ -299,6 +299,16 @@ input.stock-search { flex: 1; min-width: 200px; max-width: 320px; }
 .hits li { display: grid; grid-template-columns: 34px 1fr 90px 64px; gap: 8px; align-items: center; padding: 3px 6px; border-radius: 6px; background: var(--panel-2); }
 .wide-input { width: 100%; font-size: 15px; padding: 8px; }
 .steps { padding-left: 20px; line-height: 1.7; margin: 0; }
+.cal-graphics { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-start; margin: 10px 0 4px; }
+.cal-signs { display: flex; flex-direction: column; gap: 8px; }
+.cal-graphics figure { margin: 0; }
+.cal-graphics svg { display: block; font-family: sans-serif; }
+.cal-sign figcaption { font-size: 11px; color: var(--muted); max-width: 120px; margin-top: 2px; }
+.cal-sign figcaption b { display: block; color: var(--text); }
+.cal-scope { flex: 1; min-width: 200px; display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.cal-scope figcaption { flex: 1; min-width: 150px; display: flex; flex-direction: column; gap: 6px; font-size: 12px; }
+.cal-legend { display: flex; flex-direction: column; gap: 3px; color: var(--muted); font-size: 11px; }
+.cal-legend i { display: inline-block; width: 12px; height: 3px; margin-right: 6px; vertical-align: middle; border-radius: 1px; }
 .font-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
 .font-list li { display: flex; gap: 10px; align-items: center; }
 .font-sample { flex: 1; font-size: 16px; }
