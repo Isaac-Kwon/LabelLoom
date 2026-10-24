@@ -1239,3 +1239,28 @@ N번째 단어 (word:1, 끝에서는 word:-1)	Nth word (word:1, from the end wor
 체크인 {n}	Checked in {n}	Registrati {n}	Enregistrés {n}
 모든 행의 체크인 기록을 지울까요?	Clear the check-in record of every row?	Cancellare la registrazione di tutte le righe?	Effacer l'enregistrement de toutes les lignes ?
 체크인 기록 지우기	Clear check-ins	Cancella registrazioni	Effacer les enregistrements
+# find & replace, re-link columns
+(비우면 지움)	(leave empty to delete)	(lascia vuoto per eliminare)	(laisser vide pour supprimer)
+(연결 안 함)	(not linked)	(non collegato)	(non lié)
+{n}곳 찾음	{n} found	{n} trovati	{n} trouvé(s)
+{n}곳을 바꿨습니다.	Replaced {n}.	Sostituiti {n}.	{n} remplacé(s).
+{{열 이름}} 안은 바꾸지 않음	Leave {{column name}} fields alone	Non toccare i campi {{nome colonna}}	Ne pas toucher aux champs {{nom de colonne}}
+대소문자 구분	Match case	Maiuscole/minuscole	Respecter la casse
+데이터 값	Data values	Valori dei dati	Valeurs des données
+데이터 연결이 끊기지 않게 합니다. 열 이름을 바꾸려면 열 다시 연결을 쓰세요.	Keeps the data links intact. To change a column name, use Re-link columns.	Mantiene intatti i collegamenti ai dati. Per cambiare il nome di una colonna usa Ricollega colonne.	Préserve les liens aux données. Pour changer un nom de colonne, utilisez Relier les colonnes.
+데이터에 없음	not in the data	non nei dati	absent des données
+디자인 문구 (모든 디자인·앞뒷면·표·조건부 문구)	Design text (all designs, both sides, tables, conditional text)	Testo del design (tutti i design, entrambi i lati, tabelle, testo condizionale)	Texte du design (tous les designs, recto verso, tableaux, texte conditionnel)
+디자인에 연결된 열이 없습니다.	The designs are not linked to any column.	I design non sono collegati ad alcuna colonna.	Les designs ne sont liés à aucune colonne.
+디자인의 열 {n}개가 데이터에 없음 · 다시 연결	{n} design column(s) not in the data · Re-link	{n} colonne del design assenti nei dati · Ricollega	{n} colonne(s) du design absente(s) des données · Relier
+디자인이 읽는 {{열 이름}}을 지금 데이터의 열로 바꿉니다. 열 이름이 다른 명단을 가져왔을 때 쓰세요. 데이터는 그대로입니다.	Points the {{column name}} fields the designs read at columns of the current data. Use it after importing a list with different column names. The data is not changed.	Collega i campi {{nome colonna}} letti dai design alle colonne dei dati attuali. Usalo dopo aver importato un elenco con nomi di colonna diversi. I dati non cambiano.	Relie les champs {{nom de colonne}} lus par les designs aux colonnes des données actuelles. À utiliser après l'import d'une liste aux noms de colonnes différents. Les données ne changent pas.
+모두 바꾸기	Replace all	Sostituisci tutto	Tout remplacer
+모든 열	All columns	Tutte le colonne	Toutes les colonnes
+바꿀 말	Replace with	Sostituisci con	Remplacer par
+셀 값 전체가 같을 때만	Only when the whole cell matches	Solo se corrisponde l'intera cella	Seulement si la cellule entière correspond
+열 {n}개를 다시 연결했습니다.	Re-linked {n} column(s).	Ricollegate {n} colonne.	{n} colonne(s) reliée(s).
+열 다시 연결	Re-link columns	Ricollega colonne	Relier les colonnes
+열 다시 연결…	Re-link columns…	Ricollega colonne…	Relier les colonnes…
+적용 ({n})	Apply ({n})	Applica ({n})	Appliquer ({n})
+찾아 바꾸기	Find and replace	Trova e sostituisci	Rechercher et remplacer
+찾아 바꾸기…	Find and replace…	Trova e sostituisci…	Rechercher et remplacer…
+찾을 말	Find	Trova	Rechercher

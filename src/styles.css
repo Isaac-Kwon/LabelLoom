@@ -521,3 +521,8 @@ input.stock-search { flex: 1; min-width: 200px; max-width: 320px; }
 .cmd-grid button { font-size: 12px; padding: 4px 6px; }
 button.danger { background: #dc2626; border-color: #dc2626; color: #fff; }
 button.danger:hover { background: #b91c1c; border-color: #b91c1c; }
+button.warn-btn { background: var(--warn-bg); color: var(--warn-text); border-color: transparent; }
+.warn-inline { color: var(--warn-text); }
+table.remap { border-collapse: collapse; width: 100%; }
+table.remap td { padding: 3px 6px; }
+table.remap tr.missing code { color: var(--warn-text); }

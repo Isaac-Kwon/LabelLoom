@@ -21,6 +21,7 @@ import { QuickDialog } from './ui/QuickPrint';
 import { TableWizard } from './ui/TableWizard';
 import { Tour } from './ui/Tour';
 import { Inspector } from './ui/Inspector';
+import { RemapDialog, ReplaceDialog } from './ui/ReplaceDialogs';
 import { LeftPanel } from './ui/LeftPanel';
 import { loadMediaInto } from './ui/media';
 import { editorForced, SmallScreen, unforceEditor, useSmallScreen } from './ui/SmallScreen';
@@ -128,6 +129,7 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
       if (mod && k === 's') { e.preventDefault(); void onSave(e.shiftKey); return; }
       if (mod && k === 'o') { e.preventDefault(); void onOpen(); return; }
       if (mod && k === 'p') { e.preventDefault(); s.open('export'); return; }
+      if (mod && k === 'h') { e.preventDefault(); s.open('replace'); return; }
       if (e.key === 'F1') { e.preventDefault(); s.open('help'); return; }
       if (s.dialog || isTyping()) return;
       if (mod && k === 'z') { e.preventDefault(); if (e.shiftKey) s.redo(); else s.undo(); return; }
@@ -214,6 +216,8 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
       {dialog === 'help' && <HelpDialog onLoad={loadProject} />}
       {dialog === 'preprint' && <PreprintWizard />}
       {dialog === 'table' && <TableWizard />}
+      {dialog === 'replace' && <ReplaceDialog />}
+      {dialog === 'remap' && <RemapDialog />}
       <Tour />
       {dropping && <DropOverlay title={t('여기에 놓으세요')} kinds={[t('.json · .zip 프로젝트'),t('xlsx · csv 데이터'), t('이미지 · SVG')]} />}
       {small && <button className="small-back" title={t('작은 화면용 보기 전용 화면으로 돌아갑니다')} onClick={() => { unforceEditor(); setForced(false); }}>← {t('보기 화면으로')}</button>}

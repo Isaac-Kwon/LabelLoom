@@ -7,6 +7,7 @@ import type { Project, Row } from '../model/types';
 import { pickDesign, renameColumnInDesigns } from '../render/resolve';
 import { useStore } from '../store';
 import { INTERVALS, intervalLabel } from './ImportDialog';
+import { missingColumns } from './ReplaceDialogs';
 
 const ROW_H = 26;
 
@@ -41,6 +42,7 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
   const multiDesign = project.designs.length > 1;
   const printedCount = rows.filter((r) => r.printed).length;
   const checkedCount = rows.filter((r) => r.checkedIn).length;
+  const missing = useMemo(() => missingColumns(project), [project]);
   const totalLabels = rows.filter((r) => r.print).reduce((s, r) => s + r.copies, 0);
 
   const setTable = (fn: (rows: Row[], cols: string[]) => { rows?: Row[]; columns?: string[] }) =>
@@ -156,6 +158,9 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
             <button onClick={() => exportTable(project.data, 'xlsx', project.name, false)}>{t('xlsx (데이터만)')}</button>
           </div>
         </div>
+        {missing.length > 0 && (
+          <button className="warn-btn" onClick={() => open('remap')} title={missing.map((c) => `{{${c}}}`).join(' ')}>⚠ {t('디자인의 열 {n}개가 데이터에 없음 · 다시 연결', { n: missing.length })}</button>
+        )}
         <button data-tour="serial" onClick={() => open('serial')}>{t('일련번호 생성')}</button>
         <button onClick={addRow}>＋ {t('행')}</button>
         <button onClick={addColumn}>＋ {t('열')}</button>
@@ -192,6 +197,8 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
             {checkedCount > 0 && <button onClick={clearCheckIn}>{t('체크인 기록 지우기')}</button>}
             {source && <button onClick={() => { if (confirm(t('URL 연결을 끊을까요? 지금 데이터는 그대로 남습니다.'))) commit((p) => ({ ...p, dataSource: undefined })); }}>{t('URL 연결 끊기')}</button>}
             <button onClick={() => open('reprint')}>{t('현장 재발행 / 현장 등록')}</button>
+            <button onClick={() => open('replace')}>{t('찾아 바꾸기…')}</button>
+            <button onClick={() => open('remap')}>{t('열 다시 연결…')}</button>
           </div>
         </div>
       </div>

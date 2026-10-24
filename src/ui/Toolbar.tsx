@@ -46,6 +46,9 @@ export function Toolbar({ onOpen, onSave }: { onOpen: () => void; onSave: (saveA
           <button onClick={async () => { try { s.notify(t('저장했습니다: {name}', { name: await saveProjectZip(project) })); } catch (e) { s.notify((e as Error).message); } }}
             title={t('그림과 글꼴을 원본 파일 그대로 project.json과 함께 ZIP으로 묶습니다. 열기로 다시 불러올 수 있습니다')}>{t('ZIP으로 저장 (그림·글꼴 원본 포함)')}</button>
           <hr />
+          <button onClick={() => s.open('replace')}>{t('찾아 바꾸기…')} <kbd>Ctrl+H</kbd></button>
+          <button onClick={() => s.open('remap')}>{t('열 다시 연결…')}</button>
+          <hr />
           <button onClick={() => s.open('share')}>{t('링크로 공유…')}</button>
           <button onClick={() => s.open('fonts')}>{t('글꼴 관리…')}</button>
           <button onClick={() => s.open('calibration')}>{t('프린터 정렬 보정…')}</button>
