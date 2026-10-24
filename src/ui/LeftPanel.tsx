@@ -238,7 +238,7 @@ function PaperPanel() {
         </div>
         {paper.bleed > 0 && (
           <p className="muted small">
-            주황 점선까지 그린 부분이 인쇄됩니다. 인쇄할 때 "재단선 표시"를 켜면 재단 여백 바깥에 재단 표시가 찍힙니다.
+            주황 점선까지 그린 부분이 인쇄됩니다. 인쇄할 때 "재단선 표시"를 켜면 재단 여백 가장자리(주황 점선)에 맞춰 재단 표시가 찍힙니다.
             {((paper.cols > 1 && paper.gapX < 2 * paper.bleed) || (paper.rows > 1 && paper.gapY < 2 * paper.bleed)) && ` 칸 간격을 ${2 * paper.bleed} mm 이상으로 두어야 라벨 사이에서도 재단 여백이 온전히 인쇄됩니다.`}
           </p>
         )}

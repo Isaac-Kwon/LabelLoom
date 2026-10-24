@@ -232,7 +232,7 @@ export function ExportDialog() {
           )}
           {format !== 'png' && (
             <>
-              <Check label={pa.bleed > 0 ? `재단선 표시 (재단 여백 ${pa.bleed} mm 바깥)` : '재단선 표시'} checked={cropMarks} onChange={setCropMarks} />
+              <Check label={pa.bleed > 0 ? `재단선 표시 (재단 여백 ${pa.bleed} mm 가장자리 기준)` : '재단선 표시'} checked={cropMarks} onChange={setCropMarks} />
               {bleedClipped && <div className="warn small">칸 간격이 재단 여백×2({2 * pa.bleed} mm)보다 좁아 라벨 사이에서는 재단 여백이 간격의 절반으로 줄어듭니다.</div>}
               <Check label="라벨 테두리 인쇄" checked={outlines} onChange={setOutlines} />
               <Check label={`프린터 보정 적용 (X ${project.calibration.offsetX}, Y ${project.calibration.offsetY} mm)`} checked={calibrate} onChange={setCalibrate} />

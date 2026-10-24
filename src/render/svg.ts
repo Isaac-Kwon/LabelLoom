@@ -392,13 +392,15 @@ export function sheetDocument(p: Project, cells: (SheetCell | null)[], o: SheetO
 }
 
 /**
- * Corner crop marks for every unit, kept outside the bleed. Marks between units are drawn only
- * when the gap leaves room for them; fold lines get dashed marks.
+ * Corner crop marks for every unit, lined up with the bleed edge (the printed area) and kept
+ * outside it. Marks between units are drawn only when the gap leaves room for them; fold lines
+ * (which carry no bleed) get dashed marks.
  */
 function cropMarks(pa: Paper, L: SheetLayout, fold?: Fold | null): string {
   const bl = Math.max(0, pa.bleed);
+  const ext = (edge: boolean, gap: number) => (edge ? bl : Math.min(bl, gap / 2));
   const mark = (edge: boolean, gap: number) => {
-    const g = (edge ? bl : Math.min(bl, gap / 2)) + 1;
+    const g = ext(edge, gap) + 1;
     const len = edge ? 3 : Math.min(3, gap / 2 - g);
     return len >= 0.8 ? { g, len } : null;
   };
@@ -406,6 +408,8 @@ function cropMarks(pa: Paper, L: SheetLayout, fold?: Fold | null): string {
   for (let i = 0; i < L.cols * L.rows; i++) {
     const { x, y, col, row } = unitOrigin(L, i);
     const x1 = x + L.unitW, y1 = y + L.unitH;
+    const el = ext(col === 0, L.gapX), er = ext(col === L.cols - 1, L.gapX);
+    const et = ext(row === 0, L.gapY), eb = ext(row === L.rows - 1, L.gapY);
     const ml = mark(col === 0, L.gapX), mr = mark(col === L.cols - 1, L.gapX);
     const mt = mark(row === 0, L.gapY), mb = mark(row === L.rows - 1, L.gapY);
     const vMarks = (xx: number, to: string[]) => {
@@ -416,7 +420,7 @@ function cropMarks(pa: Paper, L: SheetLayout, fold?: Fold | null): string {
       if (ml) to.push(`M${n(x - ml.g)} ${n(yy)}H${n(x - ml.g - ml.len)}`);
       if (mr) to.push(`M${n(x1 + mr.g)} ${n(yy)}H${n(x1 + mr.g + mr.len)}`);
     };
-    vMarks(x, out); vMarks(x1, out); hMarks(y, out); hMarks(y1, out);
+    vMarks(x - el, out); vMarks(x1 + er, out); hMarks(y - et, out); hMarks(y1 + eb, out);
     if (fold?.dir === 'right') vMarks(x + pa.labelWidth, dash);
     if (fold?.dir === 'below') hMarks(y + pa.labelHeight, dash);
   }
