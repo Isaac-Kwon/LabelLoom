@@ -3,7 +3,7 @@ import { m, t, type Msg } from '../i18n';
 import type { LabelObject } from '../model/types';
 import { act, currentObjects, useStore } from '../store';
 import { pickImageInto } from './media';
-import { align, copy, duplicate, extendToBleed, group, paste, reorder, selectAll, ungroup } from './ops';
+import { align, copy, duplicate, extendToBleed, group, inlineEditable, paste, reorder, selectAll, ungroup } from './ops';
 import { editTable } from './TableCanvas';
 
 type Item = { label: Msg; key?: string; run: () => void; disabled?: boolean; title?: Msg } | 'sep';
@@ -49,7 +49,7 @@ export function CanvasMenu({ x, y, at, onEdit, onClose }: {
     const grouped = sel.some((o) => o.groupId);
 
     if (one && !one.locked) {
-      if ('content' in one) items.push({ label: m('내용 편집'), key: 'Enter', run: () => onEdit(one) });
+      if (inlineEditable(one)) items.push({ label: m('내용 편집'), key: 'Enter', run: () => onEdit(one) });
       else if (one.type === 'table') items.push({ label: m('표 칸 편집'), key: 'Enter', run: () => editTable(one) });
       else if (one.type === 'image' || one.type === 'svg') items.push({ label: m('파일 바꾸기…'), run: () => pickImageInto(one.id, one.type as 'image' | 'svg') });
       if (items.length) items.push('sep');

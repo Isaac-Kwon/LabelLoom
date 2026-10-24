@@ -107,6 +107,18 @@ export function pickFile(accept: string): Promise<File | null> {
   });
 }
 
+export function pickFiles(accept: string): Promise<File[]> {
+  return new Promise((res) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = accept;
+    input.multiple = true;
+    input.onchange = () => res([...(input.files ?? [])]);
+    input.oncancel = () => res([]);
+    input.click();
+  });
+}
+
 export async function openProjectFile(): Promise<{ project: Project; name: string } | null> {
   const w = window as PickerWindow;
   let file: File | null = null;

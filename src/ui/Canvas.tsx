@@ -8,6 +8,7 @@ import { labelMarkup, objTransform } from '../render/svg';
 import { act, currentObjects, expandGroups, useStore } from '../store';
 import { CanvasMenu } from './CanvasMenu';
 import { pickImageInto } from './media';
+import { inlineEditable } from './ops';
 import { editTable, tableCellAt, TableOverlay } from './TableCanvas';
 
 type Handle = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
@@ -55,7 +56,7 @@ export function Canvas() {
   const [menu, setMenu] = useState<{ x: number; y: number; at: { x: number; y: number } } | null>(null);
   const dragRef = useRef<Drag | null>(null);
   dragRef.current = drag;
-  const editObj = editing ? objects.find((o): o is ContentObj => o.id === editing && 'content' in o) : undefined;
+  const editObj = editing ? objects.find((o): o is ContentObj => o.id === editing && inlineEditable(o)) : undefined;
 
   // the inline editor follows the selection: selecting something else closes it
   useEffect(() => { if (editing && !(selection.length === 1 && selection[0] === editing)) setEditing(null); }, [selection, editing]);
@@ -66,7 +67,7 @@ export function Canvas() {
       if ((e.key !== 'Enter' && e.key !== 'F2') || isTyping() || useStore.getState().dialog) return;
       const s = useStore.getState();
       const o = currentObjects(s).find((x) => s.selection.length === 1 && x.id === s.selection[0]);
-      if (o && 'content' in o && !o.locked) { e.preventDefault(); setEditing(o.id); }
+      if (o && inlineEditable(o) && !o.locked) { e.preventDefault(); setEditing(o.id); }
       if (o?.type === 'table' && !o.locked && !s.cellSel) { e.preventDefault(); editTable(o); }
     };
     window.addEventListener('keydown', h);
@@ -363,7 +364,7 @@ export function Canvas() {
   const onDouble = (e: React.MouseEvent, o: LabelObject) => {
     if (o.type === 'table' && !o.locked) editTable(o, tableCellAt(o, toMm(e)));
     else if (o.type === 'image' || o.type === 'svg') pickImageInto(o.id, o.type);
-    else if ('content' in o && !o.locked) { useStore.getState().select([o.id]); setEditing(o.id); }
+    else if (inlineEditable(o) && !o.locked) { useStore.getState().select([o.id]); setEditing(o.id); }
   };
 
   /* ---------- drawing helpers ---------- */

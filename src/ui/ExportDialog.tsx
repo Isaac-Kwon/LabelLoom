@@ -3,6 +3,7 @@ import { t } from '../i18n';
 import { download, exportPdf, exportPngZip, exportSplitPdfZip, printPages, printTestPage, safeName } from '../io/export';
 import { barcodeSvg, code2dSvg } from '../render/barcode';
 import { buildItems, DEFAULT_DUPLEX, jobFold, paginate, projectDuplex, selectRows, type JobOptions, type Scope } from '../render/jobs';
+import { fetchPictures, pictureUrls } from '../render/images';
 import { preprintSheetMarkup } from '../render/preprint';
 import { resolveObject } from '../render/resolve';
 import { sheetDocument, sheetLayout, testPointsFit, type TestPoints } from '../render/svg';
@@ -125,6 +126,13 @@ export function ExportDialog() {
     }
     const base = safeName(project.name);
     try {
+      // pictures linked from the web go into the output as data, when their servers allow it
+      const urls = pictureUrls(project, items);
+      if (urls.length) {
+        setBusy({ done: 0, total: urls.length });
+        await fetchPictures(urls, (done, total) => setBusy({ done, total }));
+        setBusy(null);
+      }
       if (format === 'print') {
         printPages(project, pages, sheetOpts);
         markDone();

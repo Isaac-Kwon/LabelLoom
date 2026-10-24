@@ -71,7 +71,16 @@ function printSvgs(W: number, H: number, svgs: string[]) {
   document.body.appendChild(root);
   const cleanup = () => { root.remove(); style.remove(); window.removeEventListener('afterprint', cleanup); };
   window.addEventListener('afterprint', cleanup);
-  setTimeout(() => window.print(), 50);
+  // pictures linked from the web must be loaded before the print dialog takes its snapshot
+  void imagesLoaded(root, 8000).then(() => setTimeout(() => window.print(), 50));
+}
+
+/** Resolves once every <image> under `el` has loaded or failed, or after `timeout` ms. */
+function imagesLoaded(el: Element, timeout: number): Promise<void> {
+  const pending = [...el.querySelectorAll('image')].filter((im) => !/^data:/.test(im.getAttribute('href') ?? ''));
+  if (!pending.length) return Promise.resolve();
+  const each = pending.map((im) => new Promise<void>((res) => { im.addEventListener('load', () => res(), { once: true }); im.addEventListener('error', () => res(), { once: true }); }));
+  return Promise.race([Promise.all(each).then(() => undefined), new Promise<void>((res) => setTimeout(res, timeout))]);
 }
 
 /* ---------- PDF ---------- */

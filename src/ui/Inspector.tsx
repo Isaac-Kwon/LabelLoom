@@ -3,13 +3,14 @@ import { readAsDataURL, pickFile } from '../io/project';
 import { m, t, tn, tx } from '../i18n';
 import { COMMON_FONTS } from '../io/fonts';
 import { OBJ_TYPES, typeLabel } from '../model/defaults';
-import type { BarcodeObj, Effects, Fill, LabelObject, ObjType, QrObj, ShapeObj, StyleRule, TextObj } from '../model/types';
+import type { BarcodeObj, Effects, Fill, ImageObj, LabelObject, ObjType, QrObj, ShapeObj, StyleRule, TextObj } from '../model/types';
 import { barcodeSvg, code2dSvg, CODES_2D, moduleSizeMm, SYMBOLOGIES } from '../render/barcode';
+import { findPicture, isUrl, usedPictureKeys } from '../render/images';
 import { previewCtx, resolveObject, RULE_OPS } from '../render/resolve';
 import { act, currentObjects, useStore } from '../store';
 import { Check, Color, Num, Row, Section, Select, Seg } from './controls';
-import { pickImageInto } from './media';
-import { align, convert, distribute, extendToBleed, group, matchSize, reorder, ungroup } from './ops';
+import { addPictures, pickImageInto, pictureFromUrl, saveRowPictures } from './media';
+import { align, convert, distribute, extendToBleed, group, matchLabel, matchSize, reorder, ungroup } from './ops';
 import { TableSection } from './TableEditor';
 
 export function Inspector() {
@@ -95,8 +96,8 @@ function BleedButton() {
     <Row>
       <button onClick={extendToBleed} title={bleed > 0
         ? t('라벨 가장자리에 닿은 변을 재단선 밖 {n} mm까지 늘립니다. 가장자리에 닿지 않으면 라벨 전체 + 재단 여백을 채웁니다.', { n: bleed })
-        : t('용지 설정에서 재단 여백(블리드)을 먼저 정하세요.')}>
-        ⤢ {t('재단 여백까지 늘리기')}{bleed > 0 ? ` (${bleed} mm)` : ''}
+        : t('재단 여백이 0 mm라 라벨 가장자리 근처(1 mm 이내)의 변을 가장자리에 맞춥니다. 가장자리에 닿지 않으면 라벨 전체를 채웁니다. 재단 여백은 용지 설정에서 정합니다.')}>
+        ⤢ {t('재단 여백까지 늘리기')} ({Math.max(0, bleed)} mm)
       </button>
     </Row>
   );
@@ -129,20 +130,25 @@ function Single({ o }: { o: LabelObject }) {
           <Num label={t('회전')} value={o.rotation} step={1} unit="°" onChange={(v) => up({ rotation: ((v % 360) + 360) % 360 })} />
           <Num label={t('불투명')} value={Math.round(o.opacity * 100)} step={5} min={0} max={100} unit="%" onChange={(v) => up({ opacity: v / 100 })} />
         </div>
+        <div className="btn-row">
+          <button onClick={() => matchLabel('w')} title={t('라벨 폭과 같게 하고 왼쪽 끝에 붙입니다.')}>{t('W = 라벨 폭')}</button>
+          <button onClick={() => matchLabel('h')} title={t('라벨 높이와 같게 하고 위쪽 끝에 붙입니다.')}>{t('H = 라벨 높이')}</button>
+        </div>
         <BleedButton />
       </Section>
-      {'content' in o && <ContentSection o={o} />}
+      {'content' in o && o.type !== 'image' && <ContentSection o={o} />}
       {o.type === 'text' && <TextSection o={o} />}
       {(o.type === 'rect' || o.type === 'ellipse' || o.type === 'triangle' || o.type === 'line') && <ShapeSection o={o} />}
       {o.type === 'barcode' && <BarcodeSection o={o} />}
       {o.type === 'qr' && <QrSection o={o} />}
       {o.type === 'table' && <TableSection o={o} />}
-      {(o.type === 'image' || o.type === 'svg') && (
-        <Section title={o.type === 'image' ? t('이미지') : 'SVG'}>
-          <Row><button onClick={() => pickImageInto(o.id, o.type as 'image' | 'svg')}>{t('파일 선택…')}</button></Row>
+      {o.type === 'image' && <ImageSection o={o} />}
+      {o.type === 'svg' && (
+        <Section title="SVG">
+          <Row><button onClick={() => pickImageInto(o.id, 'svg')}>{t('파일 선택…')}</button></Row>
           <Row label={t('맞춤')}>
             <Select value={o.fit} onChange={(v) => up({ fit: v } as Partial<LabelObject>)}
-              options={o.type === 'image' ? [{ value: 'contain', label: t('비율 유지 (맞춤)') }, { value: 'cover', label: t('비율 유지 (채움)') }, { value: 'stretch', label: t('늘이기') }] : [{ value: 'contain', label: t('비율 유지') }, { value: 'stretch', label: t('늘이기') }]} />
+              options={[{ value: 'contain', label: t('비율 유지') }, { value: 'stretch', label: t('늘이기') }]} />
           </Row>
         </Section>
       )}
@@ -162,7 +168,7 @@ const TOKENS = [
   { v: '(01)', l: m('GS1 (01) GTIN') }, { v: '(10)', l: m('GS1 (10) LOT') }, { v: '(17)', l: m('GS1 (17) 유통기한') }, { v: '(21)', l: m('GS1 (21) 일련번호') },
 ];
 
-function ContentSection({ o }: { o: TextObj | BarcodeObj | QrObj }) {
+function ContentSection({ o, title, hint }: { o: TextObj | BarcodeObj | QrObj | ImageObj; title?: string; hint?: string }) {
   const project = useStore((s) => s.project);
   const currentRow = useStore((s) => s.currentRow);
   const ref = useRef<HTMLTextAreaElement>(null);
@@ -180,7 +186,8 @@ function ContentSection({ o }: { o: TextObj | BarcodeObj | QrObj }) {
   const row = project.data.rows[currentRow];
   const resolved = resolveObject(o, previewCtx(row, currentRow, project.seqStart)).content;
   return (
-    <Section title={t('내용 · 데이터 연결')} tour="content">
+    <Section title={title ?? t('내용 · 데이터 연결')} tour="content">
+      {hint && <p className="muted small">{hint}</p>}
       <textarea ref={ref} className="content" rows={o.type === 'text' && o.multiline ? 4 : 2} value={o.content}
         onChange={(e) => act.update([o.id], { content: e.target.value } as Partial<LabelObject>)} spellCheck={false} />
       <div className="btn-row">
@@ -196,6 +203,86 @@ function ContentSection({ o }: { o: TextObj | BarcodeObj | QrObj }) {
       <div className="preview-value" title={t('현재 행으로 계산된 값')}>{resolved ? resolved.replace(/[\x00-\x1f]/g, (c) => (c === '\n' ? '↵' : '·')) : <span className="muted">{t('(빈 값)')}</span>}</div>
       <Check label={t('값이 비면 숨김')} checked={o.hideIfEmpty} onChange={(v) => act.update([o.id], { hideIfEmpty: v })} />
     </Section>
+  );
+}
+
+/* ---------- images ---------- */
+
+function ImageSection({ o }: { o: ImageObj }) {
+  const project = useStore((s) => s.project);
+  const currentRow = useStore((s) => s.currentRow);
+  const { commit, notify } = useStore.getState();
+  const [busy, setBusy] = useState<{ done: number; total: number } | null>(null);
+  const up = (p: Partial<ImageObj>) => act.update([o.id], p as Partial<LabelObject>);
+  const bound = o.content.trim() !== '';
+  const pics = project.images ?? {};
+  const count = Object.keys(pics).length;
+  const ctx = (i: number) => previewCtx(project.data.rows[i], i, project.seqStart);
+  const current = bound ? findPicture(pics, resolveObject(o, ctx(currentRow)).content) : null;
+  const stats = useMemo(() => {
+    let missing = 0;
+    const urls = new Set<string>();
+    if (bound) project.data.rows.forEach((_, i) => {
+      const v = resolveObject(o, ctx(i)).content.trim();
+      const pic = findPicture(pics, v);
+      if ('missing' in pic) missing++;
+      else if (isUrl(v) && !pics[v]) urls.add(v);
+    });
+    return { missing, urls: [...urls] };
+  }, [project.data.rows, pics, o, bound]); // eslint-disable-line react-hooks/exhaustive-deps
+  const add = async () => {
+    try {
+      const n = await addPictures();
+      if (n) notify(t('사진 {n}장을 추가했습니다.', { n }));
+    } catch (e) { notify((e as Error).message); }
+  };
+  const saveUrls = async () => {
+    setBusy({ done: 0, total: stats.urls.length });
+    const r = await saveRowPictures(stats.urls, (done, total) => setBusy({ done, total }));
+    setBusy(null);
+    notify(r.failed.length ? t('웹 사진 {saved}개 저장 · {failed}개는 서버가 허용하지 않아 저장하지 못했습니다.', { saved: r.saved, failed: r.failed.length }) : t('웹 사진 {n}개를 프로젝트에 저장했습니다.', { n: r.saved }));
+  };
+  const clearUnused = () => {
+    const used = usedPictureKeys(project);
+    const drop = Object.keys(pics).filter((k) => !used.has(k));
+    if (!drop.length) { notify(t('지울 사진이 없습니다. 모두 명단에서 쓰고 있습니다.')); return; }
+    if (!confirm(t('명단에서 쓰지 않는 사진 {n}장을 지울까요?', { n: drop.length }))) return;
+    commit((p) => ({ ...p, images: Object.fromEntries(Object.entries(p.images ?? {}).filter(([k]) => used.has(k))) }));
+  };
+  return (
+    <>
+      <Section title={t('이미지')}>
+        <Row>
+          <button onClick={() => pickImageInto(o.id, 'image')}>{t('파일 선택…')}</button>
+          <button onClick={() => void pictureFromUrl(o.id)} title={t('웹에 있는 그림을 주소로 가져옵니다')}>{t('URL로 넣기…')}</button>
+        </Row>
+        {isUrl(o.src) && <div className="warn small">{t('주소로 연결된 그림입니다. PDF·PNG에서는 빠질 수 있고, 원본이 없어지면 그림도 사라집니다.')}</div>}
+        {bound && <p className="muted small">{t('행마다 다른 이미지를 쓰는 중이라 이 그림은 쓰이지 않습니다.')}</p>}
+        <Row label={t('맞춤')}>
+          <Select value={o.fit} onChange={(v) => up({ fit: v })}
+            options={[{ value: 'contain', label: t('비율 유지 (맞춤)') }, { value: 'cover', label: t('비율 유지 (채움)') }, { value: 'stretch', label: t('늘이기') }]} />
+        </Row>
+      </Section>
+      <ContentSection o={o} title={t('행마다 다른 이미지')}
+        hint={t('{code}처럼 열을 넣으면 행마다 그 값의 그림을 씁니다. 값은 사진 묶음의 파일 이름(확장자 생략 가능)이나 https:// 주소입니다. 비워 두면 위 그림을 씁니다.', { code: `{{${t('사진')}}}` })} />
+      {bound && (
+        <Section title={t('사진 묶음 ({n}장)', { n: count })}>
+          <div className="btn-row">
+            <button onClick={add}>{t('사진 추가 (여러 파일·ZIP)…')}</button>
+            {count > 0 && <button onClick={clearUnused}>{t('안 쓰는 사진 지우기')}</button>}
+          </div>
+          {current && 'missing' in current && <div className="warn small">{t('현재 행: "{name}" 사진이 없습니다.', { name: current.missing })}</div>}
+          {current && 'failed' in current && current.failed && <div className="warn small">{t('현재 행: 웹 사진을 내려받지 못했습니다. 화면과 인쇄에는 보이지만 PDF·PNG에서는 빠집니다.')}</div>}
+          {stats.missing > 0 && <div className="warn small">{t('사진을 찾지 못한 행 {n}개', { n: stats.missing })}</div>}
+          {stats.urls.length > 0 && (
+            <>
+              <p className="muted small">{t('웹 주소 사진 {n}개: 프로젝트에 저장해 두면 원본이 없어지거나 인터넷이 끊겨도 씁니다.', { n: stats.urls.length })}</p>
+              <button onClick={saveUrls} disabled={!!busy}>{busy ? `${busy.done} / ${busy.total}` : t('웹 사진을 프로젝트에 저장')}</button>
+            </>
+          )}
+        </Section>
+      )}
+    </>
   );
 }
 

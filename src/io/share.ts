@@ -30,6 +30,7 @@ function stripImages(p: Project): Project {
   return {
     ...p,
     paper: { ...p.paper, background: undefined },
+    images: undefined,
     designs: p.designs.map((d) => ({ ...d, objects: d.objects.map(strip), back: d.back?.map(strip) })),
   };
 }
@@ -48,7 +49,8 @@ function stripSvg(p: Project): Project {
 
 function shareProject(p: Project, o: ShareOptions): Project {
   let proj = o.includeImages ? p : stripImages(p);
-  if (!o.includeData) proj = sampleRow(proj);
+  // pictures per data row only matter with the rows they belong to
+  if (!o.includeData) proj = { ...sampleRow(proj), images: undefined };
   return o.includeFonts ? proj : { ...proj, fonts: [] };
 }
 
@@ -82,7 +84,8 @@ export interface SharePartSize { part: SharePart; bytes: number; count: number }
  */
 export async function measureShare(p: Project, o: ShareOptions, code: string): Promise<SharePartSize[]> {
   const objs = p.designs.flatMap((d) => [...d.objects, ...(d.back ?? [])]);
-  const images = objs.filter((x) => (x.type === 'image' && x.src) || (x.type === 'qr' && x.logo)).length + (p.paper.background?.src ? 1 : 0);
+  const images = objs.filter((x) => (x.type === 'image' && x.src) || (x.type === 'qr' && x.logo)).length + (p.paper.background?.src ? 1 : 0) +
+    (o.includeData ? Object.keys(p.images ?? {}).length : 0);
   const svgs = objs.filter((x) => x.type === 'svg' && x.svg).length;
   const without: [SharePart, number, Project, ShareOptions][] = [];
   if (o.includeImages && images) without.push(['images', images, p, { ...o, includeImages: false }]);

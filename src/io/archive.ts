@@ -3,8 +3,9 @@ import { t } from '../i18n';
 import type { EmbeddedFont, LabelObject, Project } from '../model/types';
 
 /**
- * Project as a ZIP: project.json plus images/ and fonts/ holding the embedded files as they were
- * added (same bytes, no re-encoding). In project.json those fields read "zip:images/001.png".
+ * Project as a ZIP: project.json plus images/ and fonts/ holding the embedded files (pictures per
+ * data row included) as they were added (same bytes, no re-encoding). In project.json those
+ * fields read "zip:images/001.png".
  */
 
 const PROJECT = 'project.json';
@@ -46,6 +47,7 @@ export async function projectToZip(p: Project): Promise<Blob> {
     ...p,
     paper: p.paper.background ? { ...p.paper, background: { ...p.paper.background, src: image(p.paper.background.src) ?? '' } } : p.paper,
     designs: p.designs.map((d) => ({ ...d, objects: d.objects.map(obj), back: d.back?.map(obj) })),
+    images: p.images && Object.fromEntries(Object.entries(p.images).map(([k, v]) => [k, image(v) ?? v])),
     fonts: p.fonts.map((f) => ({ ...f, data: put('font:' + f.data, f.data, 'fonts', FONT_EXT[f.format] ?? 'bin') })),
   };
   zip.file(PROJECT, JSON.stringify(out, null, 1));
@@ -79,6 +81,9 @@ export async function projectFromZip(file: Blob): Promise<unknown> {
       if (Array.isArray(d.objects)) d.objects = await Promise.all(d.objects.map(obj));
       if (Array.isArray(d.back)) d.back = await Promise.all(d.back.map(obj));
     }
+  }
+  if (p.images && typeof p.images === 'object') {
+    for (const k of Object.keys(p.images)) p.images[k] = await image(p.images[k]);
   }
   if (Array.isArray(p.fonts)) p.fonts = await Promise.all(p.fonts.map(async (f) => (isZipRef(f.data) ? { ...f, data: await read(f.data) } : f)));
   return p;

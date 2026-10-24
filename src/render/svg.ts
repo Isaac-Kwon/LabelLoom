@@ -2,6 +2,7 @@ import { t } from '../i18n';
 import { cellKey, cellSpans, tableGeometry } from '../model/table';
 import type { BarcodeObj, Fill, ImageObj, LabelObject, Paper, Project, QrObj, ShapeObj, SvgObj, TableObj, TextObj } from '../model/types';
 import { barcodeSvg, code2dSvg } from './barcode';
+import { objectPicture } from './images';
 import { resolveObject, resolveTemplate, type ResolveCtx } from './resolve';
 import { layoutText } from './text';
 
@@ -24,7 +25,7 @@ export interface RenderOpts {
   only?: Set<string>;
 }
 
-interface Acc { defs: string[]; idp: string }
+interface Acc { defs: string[]; idp: string; images?: Record<string, string> }
 
 function paint(f: Fill, key: string, acc: Acc): string {
   switch (f.type) {
@@ -135,9 +136,14 @@ function qrMarkup(o: QrObj, content: string, editor?: boolean): string {
 
 const PAR = { contain: 'xMidYMid meet', cover: 'xMidYMid slice', stretch: 'none' } as const;
 
-function imageMarkup(o: ImageObj, editor?: boolean, placeholder = t('이미지')): string {
-  if (!o.src) return editor ? `<rect width="${n(o.w)}" height="${n(o.h)}" fill="#f1f5f9" stroke="#94a3b8" stroke-width="0.2" stroke-dasharray="1 0.6"/><text x="${n(o.w / 2)}" y="${n(o.h / 2 + 1)}" font-size="${n(Math.min(3, o.h / 3))}" text-anchor="middle" fill="#64748b" font-family="sans-serif">${esc(placeholder)}</text>` : '';
-  return `<image href="${o.src}" width="${n(o.w)}" height="${n(o.h)}" preserveAspectRatio="${PAR[o.fit]}"/>`;
+const placeholderBox = (o: LabelObject, label: string) =>
+  `<rect width="${n(o.w)}" height="${n(o.h)}" fill="#f1f5f9" stroke="#94a3b8" stroke-width="0.2" stroke-dasharray="1 0.6"/><text x="${n(o.w / 2)}" y="${n(o.h / 2 + 1)}" font-size="${n(Math.min(3, o.h / 3))}" text-anchor="middle" fill="#64748b" font-family="sans-serif">${esc(label)}</text>`;
+
+function imageMarkup(o: ImageObj, content: string, acc: Acc, editor?: boolean): string {
+  const pic = objectPicture(o, content, acc.images);
+  if ('missing' in pic) return errorBox(o, t('이미지 없음: {name}', { name: pic.missing }), editor);
+  if (!pic.src) return editor ? placeholderBox(o, o.content.trim() ? t('(빈 값)') : t('이미지')) : '';
+  return `<image href="${esc(pic.src)}" width="${n(o.w)}" height="${n(o.h)}" preserveAspectRatio="${PAR[o.fit]}"/>`;
 }
 
 export function sanitizeSvg(raw: string): { viewBox: string; inner: string } | null {
@@ -160,7 +166,7 @@ export function sanitizeSvg(raw: string): { viewBox: string; inner: string } | n
 
 const svgCache = new Map<string, ReturnType<typeof sanitizeSvg>>();
 function svgMarkup(o: SvgObj, editor?: boolean): string {
-  if (!o.svg) return imageMarkup({ ...o, type: 'image', src: '', fit: 'contain' }, editor, 'SVG');
+  if (!o.svg) return editor ? placeholderBox(o, 'SVG') : '';
   let s = svgCache.get(o.svg);
   if (s === undefined) { s = sanitizeSvg(o.svg); svgCache.set(o.svg, s); }
   if (!s) return errorBox(o, t('SVG 오류'), editor);
@@ -207,7 +213,7 @@ function bodyMarkup(o: LabelObject, content: string, acc: Acc, ctx: ResolveCtx, 
     case 'rect': case 'ellipse': case 'triangle': case 'line': return shapeMarkup(o, acc, override);
     case 'barcode': return barcodeMarkup(o, content, editor);
     case 'qr': return qrMarkup(o, content, editor);
-    case 'image': return imageMarkup(o, editor);
+    case 'image': return imageMarkup(o, content, acc, editor);
     case 'svg': return svgMarkup(o, editor);
     case 'table': return tableMarkup(o, ctx, acc);
   }
@@ -243,7 +249,7 @@ export function objectMarkup(src: LabelObject, ctx: ResolveCtx, acc: Acc, opts: 
 
 /** Label content in label-local mm coordinates. */
 export function labelMarkup(p: Project, objects: LabelObject[], ctx: ResolveCtx, opts: RenderOpts = {}): string {
-  const acc: Acc = { defs: [], idp: opts.idp ?? 'l' };
+  const acc: Acc = { defs: [], idp: opts.idp ?? 'l', images: p.images };
   const paper = p.paper;
   let bg = '';
   if (opts.paperBg !== false) {

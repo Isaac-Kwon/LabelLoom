@@ -56,7 +56,7 @@ export function newObject(type: ObjType, x = 5, y = 5, w?: number, h?: number): 
       return o;
     }
     case 'image': {
-      const o: ImageObj = { ...base('image', x, y, w ?? 20, h ?? 20), type: 'image', src: '', fit: 'contain' };
+      const o: ImageObj = { ...base('image', x, y, w ?? 20, h ?? 20), type: 'image', src: '', fit: 'contain', content: '' };
       return o;
     }
     case 'svg': {

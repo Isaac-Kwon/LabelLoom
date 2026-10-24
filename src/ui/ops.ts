@@ -1,7 +1,10 @@
 import { t } from '../i18n';
 import { newObject, uid } from '../model/defaults';
-import type { LabelObject, ObjType } from '../model/types';
+import type { BarcodeObj, LabelObject, ObjType, QrObj, TextObj } from '../model/types';
 import { act, currentObjects, useStore } from '../store';
+
+/** Objects whose content is typed text; an image's content names a picture and is set in the inspector. */
+export const inlineEditable = (o: LabelObject): o is TextObj | BarcodeObj | QrObj => o.type === 'text' || o.type === 'barcode' || o.type === 'qr';
 
 const st = () => useStore.getState();
 const sel = () => {
@@ -130,18 +133,20 @@ export function nudge(dx: number, dy: number) {
 export function convert(o: LabelObject, type: ObjType): LabelObject {
   const fresh = newObject(type, o.x, o.y, o.w, o.h);
   const keep = { id: o.id, name: o.name, rotation: o.rotation, opacity: o.opacity, locked: o.locked, hidden: o.hidden, groupId: o.groupId, rules: o.rules, hideIfEmpty: o.hideIfEmpty };
-  const content = 'content' in o ? { content: o.content } : {};
-  return { ...fresh, ...keep, ...('content' in fresh ? content : {}) } as LabelObject;
+  // an image's content names a picture, so text and code content only carries over among themselves
+  const content = 'content' in o && o.type !== 'image' ? { content: o.content } : {};
+  return { ...fresh, ...keep, ...('content' in fresh && fresh.type !== 'image' ? content : {}) } as LabelObject;
 }
 
 /**
  * Grow the selected objects past the trim line by the bleed on every side they touch
  * (within 1 mm of the label edge). An object touching no edge fills the whole label + bleed.
+ * With no bleed this snaps those sides to the label edge.
  */
 export function extendToBleed() {
   const s = st();
-  const { labelWidth: W, labelHeight: H, bleed } = s.project.paper;
-  if (bleed <= 0) { s.notify(t('먼저 용지 설정에서 재단 여백(블리드)을 정하세요.')); return; }
+  const { labelWidth: W, labelHeight: H } = s.project.paper;
+  const bleed = Math.max(0, s.project.paper.bleed);
   const objs = sel().filter((o) => !o.locked && !o.rotation);
   if (!objs.length) { s.notify(t('회전하지 않은 개체를 선택하세요.')); return; }
   const near = 1;
@@ -155,6 +160,15 @@ export function extendToBleed() {
     if (b || all) y1 = H + bleed;
     return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
   });
+}
+
+/** Give the selected objects the label's width (from its left edge) or height (from its top edge). */
+export function matchLabel(dim: 'w' | 'h') {
+  const s = st();
+  const objs = sel().filter((o) => !o.locked);
+  if (!objs.length) return;
+  const { labelWidth: W, labelHeight: H } = s.project.paper;
+  act.update(objs.map((o) => o.id), () => (dim === 'w' ? { x: 0, w: W } : { y: 0, h: H }));
 }
 
 export function selectAll() {

@@ -148,6 +148,7 @@ export function resolveObject(o: LabelObject, ctx: ResolveCtx): Resolved {
     if (s.stroke && 'stroke' in obj) obj = { ...obj, stroke: s.stroke };
     if (s.fontSize && obj.type === 'text') obj = { ...obj, fontSize: s.fontSize };
   }
-  if (o.hideIfEmpty && 'content' in o && content.trim() === '') hidden = true;
+  // an image without a template shows its own file, so it never counts as empty
+  if (o.hideIfEmpty && 'content' in o && content.trim() === '' && (o.type !== 'image' || o.content.trim())) hidden = true;
   return { obj, content, hidden };
 }

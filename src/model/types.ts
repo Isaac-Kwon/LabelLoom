@@ -106,8 +106,13 @@ export interface QrObj extends Base {
 
 export interface ImageObj extends Base {
   type: 'image';
-  src: string; // data url
+  src: string; // data url, or an http(s) url linked rather than embedded
   fit: 'contain' | 'cover' | 'stretch';
+  /**
+   * Picture per data row, e.g. "{{사진}}": the value is a file name in Project.images, a URL or a
+   * data URL. Empty = always `src`.
+   */
+  content: string;
 }
 
 export interface SvgObj extends Base {
@@ -242,6 +247,8 @@ export interface Project {
   designs: Design[];
   designRules: DesignRule[];
   fonts: EmbeddedFont[];
+  /** pictures for image objects bound to a column: file name (or saved URL) → data url */
+  images?: Record<string, string>;
   data: DataTable;
   dataSource?: DataSource;
   calibration: Calibration;
