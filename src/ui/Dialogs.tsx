@@ -17,6 +17,7 @@ import { buildItems, DEFAULT_DUPLEX, labelSizeProject, paginate } from '../rende
 import { pickDesign, previewCtx } from '../render/resolve';
 import { labelDocument } from '../render/svg';
 import { useStore } from '../store';
+import { LESSONS, lessonProject, type Lesson } from '../tutorial/lessons';
 import { Check, Modal, Num, Row, Seg, Select } from './controls';
 
 /* ---------- serial numbers ---------- */
@@ -180,6 +181,18 @@ function TemplateCard({ t: tpl, papers, onPick }: { t: Template; papers: Paper[]
   );
 }
 
+function LessonCard({ lesson, n, onPick }: { lesson: Lesson; n: number; onPick: (p: Project) => void }) {
+  const preview = useMemo(() => lesson.make(), [lesson]);
+  return (
+    <div className="card" role="button" tabIndex={0} onClick={() => onPick(lessonProject(lesson))}
+      onKeyDown={(e) => { if (e.key === 'Enter') onPick(lessonProject(lesson)); }}>
+      <Thumb p={preview} />
+      <strong>{n}. {t(lesson.title)}</strong>
+      <span className="muted small">{t(lesson.summary)}</span>
+    </div>
+  );
+}
+
 /** The label layout of a sheet (or a single roll label), without any design. */
 function SheetThumb({ p }: { p: Paper }) {
   const cells = [];
@@ -263,7 +276,7 @@ export function StartDialog({ onLoad }: { onLoad: (p: Project, name?: string) =>
   const [kind, setKind] = useState<PaperKind | 'all'>('all');
   const [size, setSize] = useState('all');
   const [custom, setCustom] = useState({ w: 50, h: 30, page: 'roll' as 'roll' | 'A4' | 'Letter', gap: 2 });
-  const [tab, setTab] = useState<'templates' | 'stock'>('templates');
+  const [tab, setTab] = useState<'templates' | 'stock' | 'tutorial'>(() => (useStore.getState().dialogArg === 'tutorial' ? 'tutorial' : 'templates'));
   const [stock, setStock] = useState<Paper | null>(null);
   const current = useStore((s) => s.project.paper);
   const userPapers = useMemo(loadUserPresets, []);
@@ -298,7 +311,14 @@ export function StartDialog({ onLoad }: { onLoad: (p: Project, name?: string) =>
       <div className="tabs start-tabs">
         <button className={tab === 'templates' ? 'on' : ''} onClick={() => setTab('templates')}>{t('템플릿')}</button>
         <button className={tab === 'stock' ? 'on' : ''} onClick={() => setTab('stock')}>{t('기성 라벨 용지')}</button>
+        <button className={tab === 'tutorial' ? 'on' : ''} onClick={() => setTab('tutorial')}>{t('튜토리얼')}</button>
       </div>
+      {tab === 'tutorial' && <>
+        <p className="muted small">{t('처음이라면 예제를 열어 따라 해 보세요. 예제를 열어도 지금 작업은 최근 저장한 작업에 남습니다.')}</p>
+        <div className="gallery">
+          {LESSONS.map((l, i) => <LessonCard key={l.id} lesson={l} n={i + 1} onPick={pick} />)}
+        </div>
+      </>}
       {tab === 'stock' && (
         <StockPane
           onBlank={(p) => pick(newProject({ ...p }))}

@@ -87,7 +87,7 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
         const prev = await loadAutosave();
         if (prev) {
           try { loadProject(migrateProject(prev)); } catch { s.open('start'); }
-        } else s.open('start');
+        } else s.open('start', 'tutorial'); // first visit: start with the tutorial tab
       }
       boot.done = true;
       setReady(true);
