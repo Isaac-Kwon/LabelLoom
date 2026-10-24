@@ -140,11 +140,23 @@ export function Canvas() {
     return { x: (e.clientX - r.left - pan.x) / zoom, y: (e.clientY - r.top - pan.y) / zoom };
   };
 
+  // a touchpad pinch arrives as a ctrl+wheel; over the canvas it is our zoom, not the
+  // page's. React's onWheel is passive, so the page zoom is blocked natively here and
+  // stays available everywhere else.
+  useEffect(() => {
+    const el = wrap.current!;
+    const wheel = (e: WheelEvent) => { if (e.ctrlKey) e.preventDefault(); };
+    const gesture = (e: Event) => e.preventDefault(); // Safari pinches with gesture events
+    el.addEventListener('wheel', wheel, { passive: false });
+    el.addEventListener('gesturestart', gesture);
+    return () => { el.removeEventListener('wheel', wheel); el.removeEventListener('gesturestart', gesture); };
+  }, []);
+
   const onWheel = (e: React.WheelEvent) => {
     if (e.ctrlKey || e.metaKey) {
       const r = wrap.current!.getBoundingClientRect();
       const mx = e.clientX - r.left, my = e.clientY - r.top;
-      const z = Math.min(60, Math.max(0.5, zoom * Math.exp(-e.deltaY * 0.0022)));
+      const z = Math.min(60, Math.max(0.5, zoom * Math.exp(-e.deltaY * 0.0055)));
       const wx = (mx - pan.x) / zoom, wy = (my - pan.y) / zoom;
       lastZoom.current = z;
       useStore.getState().setZoom(z);

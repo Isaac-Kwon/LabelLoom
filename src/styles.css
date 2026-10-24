@@ -47,6 +47,8 @@
 
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; margin: 0; }
+/* 터치패드 두 손가락 가로 스와이프가 브라우저 뒤로/앞으로 가기로 이어지지 않게 한다 */
+html, body { overscroll-behavior-x: none; }
 #root { display: flex; flex-direction: column; }
 #root > .app, #root > .quick-app { flex: 1; min-height: 0; height: auto; }
 body { background: var(--bg); color: var(--text); overflow: hidden; }
