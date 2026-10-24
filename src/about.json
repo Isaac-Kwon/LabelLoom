@@ -4,10 +4,10 @@
   "subtitle": "라벨·명찰 디자이너",
   "description": "",
   "info": [
-    { "label": "제작자", "value": "", "url": "" },
-    { "label": "소속", "value": "", "url": "" },
+    { "label": "제작자", "value": "Minjae Isaac Kwon", "url": "" },
+    { "label": "소속", "value": "Dipartimento di Fisica, Università degli Studi di Torino", "url": "" },
     { "label": "연락처", "value": "", "url": "" },
-    { "label": "웹사이트", "value": "", "url": "" },
+    { "label": "웹사이트", "value": "https://www.isaack.dev", "url": "https://www.isaack.dev" },
     { "label": "소스 코드", "value": "github.com/Isaac-Kwon/LabelLoom", "url": "https://github.com/Isaac-Kwon/LabelLoom" },
     { "label": "라이선스", "value": "GNU LGPL v3 이상 (LGPL-3.0-or-later)", "url": "https://www.gnu.org/licenses/lgpl-3.0.html" }
   ],
