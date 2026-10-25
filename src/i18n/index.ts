@@ -1,13 +1,17 @@
 import { createElement, Fragment, type ReactNode } from 'react';
+import { de } from './de';
 import { en } from './en';
+import { es } from './es';
 import { fr } from './fr';
 import { it } from './it';
+import { pt } from './pt';
+import { ur } from './ur';
 
 /**
  * UI language. The Korean text is the message key (and the Korean translation), so code reads
- * as before; en.ts lists every key and it.ts / fr.ts must match it (TypeScript checks both ways).
- * en.ts, it.ts and fr.ts are generated from src/i18n/messages.tsv (npm run i18n), so a new
- * message is one line there: Korean, English, Italian, French separated by tabs.
+ * as before; en.ts lists every key and the other languages must match it (TypeScript checks both ways).
+ * Every dictionary is generated from src/i18n/messages.tsv (npm run i18n), so a new message is
+ * one line there: Korean, English, Italian, French, Portuguese, Spanish, German, Urdu separated by tabs.
  *
  *   t('저장했습니다: {name}', { name })   text, with {placeholders}
  *   tn('… {link} …', { link: <b>…</b> })  same, with React nodes in the placeholders
@@ -15,7 +19,7 @@ import { it } from './it';
  *   tx(name)                               translates data that may be a key (preset names), else returns it
  */
 
-export type Lang = 'ko' | 'en' | 'it' | 'fr';
+export type Lang = 'ko' | 'en' | 'it' | 'fr' | 'pt' | 'es' | 'de' | 'ur';
 export type Msg = keyof typeof en;
 type Vars = Record<string, string | number>;
 
@@ -24,10 +28,14 @@ export const LANGS: { value: Lang; label: string }[] = [
   { value: 'en', label: 'English' },
   { value: 'it', label: 'Italiano' },
   { value: 'fr', label: 'Français' },
+  { value: 'pt', label: 'Português' },
+  { value: 'es', label: 'Español' },
+  { value: 'de', label: 'Deutsch' },
+  { value: 'ur', label: 'اردو' },
 ];
 
-const DICT: Record<Exclude<Lang, 'ko'>, Record<Msg, string>> = { en, it, fr };
-const LOCALE: Record<Lang, string> = { ko: 'ko-KR', en: 'en-US', it: 'it-IT', fr: 'fr-FR' };
+const DICT: Record<Exclude<Lang, 'ko'>, Record<Msg, string>> = { en, it, fr, pt, es, de, ur };
+const LOCALE: Record<Lang, string> = { ko: 'ko-KR', en: 'en-US', it: 'it-IT', fr: 'fr-FR', pt: 'pt-BR', es: 'es-ES', de: 'de-DE', ur: 'ur-PK' };
 const KEY = 'labelloom.lang';
 const isLang = (s: string | null): s is Lang => LANGS.some((l) => l.value === s);
 
@@ -83,7 +91,7 @@ export function tx(s: string): string {
 /** A message in every language, for reading files written in any of them. */
 export const everyLang = (key: Msg): string[] => [...new Set([key, ...Object.values(DICT).map((d) => d[key])])];
 
-/** Value in the current language from a plain string or { ko, en, it, fr } (about.json). */
+/** Value in the current language from a plain string or { ko, en, it, … } (about.json). */
 export function loc(v: string | Partial<Record<Lang, string>>): string {
   return typeof v === 'string' ? v : v[lang] ?? v.en ?? v.ko ?? '';
 }

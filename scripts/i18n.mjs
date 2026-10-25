@@ -1,9 +1,9 @@
-// Builds src/i18n/{en,it,fr}.ts from src/i18n/messages.tsv: `npm run i18n`.
+// Builds src/i18n/{en,it,fr,pt,es,de,ur}.ts from src/i18n/messages.tsv: `npm run i18n`.
 //
 // messages.tsv has one message per line: the Korean text (the key used in t('…')), then its
-// English, Italian and French translations, separated by tabs. "\n" stands for a line break,
-// lines starting with # are comments. The Korean text may end in "#context" when the same
-// words need different translations in different places ('전체#plenary').
+// English, Italian, French, Portuguese, Spanish, German and Urdu translations, separated by
+// tabs. "\n" stands for a line break, lines starting with # are comments. The Korean text may
+// end in "#context" when the same words need different translations in different places ('전체#plenary').
 // The script stops on a missing column, a repeated key or a {placeholder} that differs.
 
 import { readFileSync, writeFileSync } from 'node:fs';

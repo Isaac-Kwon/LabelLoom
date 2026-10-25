@@ -218,8 +218,8 @@ function SheetThumb({ p }: { p: Paper }) {
 const STOCK_VENDORS = Object.keys(STOCK_VENDOR_LABEL) as StockVendor[];
 type CountryFilter = StockCountry | 'EU' | 'all';
 const COUNTRY_FILTERS: CountryFilter[] = ['all', 'KR', 'US', 'EU', 'IT', 'FR', 'DE', 'GB', 'ES', 'JP'];
-/** The stock sold where the UI language is spoken comes first; English is spoken too widely to guess. */
-const LANG_COUNTRY: Record<string, CountryFilter> = { ko: 'KR', it: 'IT', fr: 'FR', en: 'all' };
+/** The stock sold where the UI language is spoken comes first; English, Spanish and Portuguese are spoken too widely to guess. */
+const LANG_COUNTRY: Record<string, CountryFilter> = { ko: 'KR', it: 'IT', fr: 'FR', de: 'DE', en: 'all' };
 
 function regionName(code: string) {
   try { return new Intl.DisplayNames([locale()], { type: 'region' }).of(code) ?? code; } catch { return code; }

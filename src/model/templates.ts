@@ -121,6 +121,54 @@ const attendees = (): Attendee[] => pick<Attendee[]>({
     ['Hiroshi Tanaka', 'The University of Tokyo', 'Associate Professor', m('일반'), 'A0009', 'tanaka@example.jp'],
     ['Hugo Fontaine', 'Université de Bordeaux', 'Étudiant en licence', m('학생'), 'A0010', 'hugo.f@example.fr'],
   ],
+  pt: [
+    ['Ana Souza', 'Universidade de São Paulo, Instituto de Física', 'Professora titular', m('연사'), 'A0001', 'ana.souza@example.br'],
+    ['Pedro Almeida', 'Universidade Estadual de Campinas, Engenharia Mecânica', 'Professor associado', m('좌장'), 'A0002', 'p.almeida@example.br'],
+    ['Beatriz Lima', 'Universidade Federal do Rio de Janeiro', 'Doutoranda', m('학생'), 'A0003', 'beatriz.l@example.br'],
+    ['Rafael Costa', 'LabelTech Ltda. – Pesquisa e Desenvolvimento', 'Pesquisador sênior', m('일반'), 'A0004', 'r.costa@example.com'],
+    ['Mariana Ferreira', 'Universidade Federal de Minas Gerais, Engenharia Química', 'Mestranda', m('학생'), 'A0005', 'mariana.f@example.br'],
+    ['Emily Johnson', 'University of California, Berkeley', 'Professor', m('연사'), 'A0006', 'emily@example.edu'],
+    ['Lucas Oliveira', 'Universidade Federal de São Paulo, Escola Paulista de Medicina, Departamento de Ciências Biomédicas', 'Pesquisador', m('일반'), 'A0007', 'l.oliveira@example.br'],
+    ['Juliana Ribeiro', 'Secretaria do congresso', '', m('스태프'), 'A0008', 'secretaria@example.org'],
+    ['Hiroshi Tanaka', 'The University of Tokyo', 'Associate Professor', m('일반'), 'A0009', 'tanaka@example.jp'],
+    ['Gabriel Santos', 'Universidade Federal do Rio Grande do Sul', 'Aluno de graduação', m('학생'), 'A0010', 'gabriel.s@example.br'],
+  ],
+  es: [
+    ['Lucía García', 'Universidad Complutense de Madrid, Facultad de Física', 'Catedrática', m('연사'), 'A0001', 'lucia.garcia@example.es'],
+    ['Javier Martínez', 'Universidad Politécnica de Madrid, Ingeniería Mecánica', 'Profesor titular', m('좌장'), 'A0002', 'j.martinez@example.es'],
+    ['Carmen López', 'Universidad de Barcelona', 'Doctoranda', m('학생'), 'A0003', 'carmen.l@example.es'],
+    ['Pablo Sánchez', 'LabelTech S.L. – I+D', 'Investigador sénior', m('일반'), 'A0004', 'p.sanchez@example.com'],
+    ['Elena Romero', 'Universidad de Valencia, Ingeniería Química', 'Estudiante de máster', m('학생'), 'A0005', 'elena.r@example.es'],
+    ['Emily Johnson', 'University of California, Berkeley', 'Professor', m('연사'), 'A0006', 'emily@example.edu'],
+    ['Diego Fernández', 'Universidad de Sevilla, Facultad de Medicina, Departamento de Ciencias Biomédicas', 'Investigador', m('일반'), 'A0007', 'd.fernandez@example.es'],
+    ['Marta Ruiz', 'Secretaría del congreso', '', m('스태프'), 'A0008', 'secretaria@example.org'],
+    ['Hiroshi Tanaka', 'The University of Tokyo', 'Associate Professor', m('일반'), 'A0009', 'tanaka@example.jp'],
+    ['Álvaro Torres', 'Universidad de Granada', 'Estudiante de grado', m('학생'), 'A0010', 'alvaro.t@example.es'],
+  ],
+  de: [
+    ['Anna Schmidt', 'Ludwig-Maximilians-Universität München, Fakultät für Physik', 'Professorin', m('연사'), 'A0001', 'anna.schmidt@example.de'],
+    ['Jonas Müller', 'RWTH Aachen, Maschinenbau', 'Außerordentlicher Professor', m('좌장'), 'A0002', 'j.mueller@example.de'],
+    ['Lena Fischer', 'Universität Heidelberg', 'Doktorandin', m('학생'), 'A0003', 'lena.f@example.de'],
+    ['Felix Wagner', 'LabelTech GmbH – Forschung und Entwicklung', 'Leitender Wissenschaftler', m('일반'), 'A0004', 'f.wagner@example.com'],
+    ['Sophie Becker', 'Technische Universität Berlin, Chemieingenieurwesen', 'Masterstudentin', m('학생'), 'A0005', 'sophie.b@example.de'],
+    ['Emily Johnson', 'University of California, Berkeley', 'Professor', m('연사'), 'A0006', 'emily@example.edu'],
+    ['Maximilian Hoffmann', 'Charité – Universitätsmedizin Berlin, Institut für Biomedizinische Wissenschaften', 'Wissenschaftlicher Mitarbeiter', m('일반'), 'A0007', 'm.hoffmann@example.de'],
+    ['Katharina Weber', 'Tagungsbüro', '', m('스태프'), 'A0008', 'tagungsbuero@example.org'],
+    ['Hiroshi Tanaka', 'The University of Tokyo', 'Associate Professor', m('일반'), 'A0009', 'tanaka@example.jp'],
+    ['Paul Schneider', 'Universität Hamburg', 'Bachelorstudent', m('학생'), 'A0010', 'paul.s@example.de'],
+  ],
+  ur: [
+    ['عائشہ خان', 'جامعہ پنجاب، شعبۂ طبیعیات', 'پروفیسر', m('연사'), 'A0001', 'ayesha.khan@example.edu.pk'],
+    ['علی رضا', 'نسٹ، اسکول آف مکینیکل انجینئرنگ', 'ایسوسی ایٹ پروفیسر', m('좌장'), 'A0002', 'ali.raza@example.edu.pk'],
+    ['فاطمہ احمد', 'لمز، لاہور', 'پی ایچ ڈی اسکالر', m('학생'), 'A0003', 'fatima.a@example.edu.pk'],
+    ['عمران ملک', 'لیبل ٹیک (پرائیویٹ) لمیٹڈ، تحقیق و ترقی', 'سینئر محقق', m('일반'), 'A0004', 'i.malik@example.com'],
+    ['زینب حسین', 'جامعہ کراچی، شعبۂ کیمیکل انجینئرنگ', 'ایم ایس طالبہ', m('학생'), 'A0005', 'zainab.h@example.edu.pk'],
+    ['Emily Johnson', 'University of California, Berkeley', 'Professor', m('연사'), 'A0006', 'emily@example.edu'],
+    ['حمزہ قریشی', 'آغا خان یونیورسٹی، میڈیکل کالج، شعبۂ حیاتیاتی طبی علوم', 'محقق', m('일반'), 'A0007', 'h.qureshi@example.edu.pk'],
+    ['سارہ بٹ', 'کانفرنس سیکرٹریٹ', '', m('스태프'), 'A0008', 'secretariat@example.org'],
+    ['Hiroshi Tanaka', 'The University of Tokyo', 'Associate Professor', m('일반'), 'A0009', 'tanaka@example.jp'],
+    ['عثمان چوہدری', 'جامعہ پشاور', 'انڈرگریجویٹ طالب علم', m('학생'), 'A0010', 'usman.c@example.edu.pk'],
+  ],
 });
 
 const attendeeCols = () => [c('이름'), c('소속'), c('직함'), c('참가구분'), 'ID', c('이메일')];
@@ -132,6 +180,10 @@ const people = () => pick({
   en: ['Emily Johnson', 'Daniel Okafor', 'Sophie Turner'],
   it: ['Giulia Rossi', 'Marco Bianchi', 'Chiara Ferrari'],
   fr: ['Camille Martin', 'Julien Bernard', 'Léa Dubois'],
+  pt: ['Ana Souza', 'Pedro Almeida', 'Beatriz Lima'],
+  es: ['Lucía García', 'Javier Martínez', 'Carmen López'],
+  de: ['Anna Schmidt', 'Jonas Müller', 'Lena Fischer'],
+  ur: ['عائشہ خان', 'علی رضا', 'فاطمہ احمد'],
 });
 
 function badge(paper: Paper): Project {
@@ -217,6 +269,10 @@ function ticket(paper: Paper): Project {
     en: ['Winter Concert 2026', 'Sat, Dec 19, 2026 · 7:30 PM', 'Main Hall', ['Row A, Seat 12', 'Row A, Seat 13', 'Row B, Seat 1']],
     it: ['Concerto di fine anno 2026', 'Sab 19/12/2026 · ore 19:30', 'Aula Magna', ['Fila A, posto 12', 'Fila A, posto 13', 'Fila B, posto 1']],
     fr: ['Concert de fin d\'année 2026', 'Sam. 19/12/2026 · 19 h 30', 'Grand amphithéâtre', ['Rang A, place 12', 'Rang A, place 13', 'Rang B, place 1']],
+    pt: ['Concerto de fim de ano 2026', 'Sáb., 19/12/2026 · 19h30', 'Auditório principal', ['Fila A, assento 12', 'Fila A, assento 13', 'Fila B, assento 1']],
+    es: ['Concierto de fin de año 2026', 'Sáb. 19/12/2026 · 19:30', 'Salón de actos', ['Fila A, butaca 12', 'Fila A, butaca 13', 'Fila B, butaca 1']],
+    de: ['Jahresabschlusskonzert 2026', 'Sa., 19.12.2026 · 19:30 Uhr', 'Großer Saal', ['Reihe A, Platz 12', 'Reihe A, Platz 13', 'Reihe B, Platz 1']],
+    ur: ['سالانہ موسیقی شام 2026', 'ہفتہ، 19/12/2026 · شام 7:30', 'مرکزی ہال', ['قطار A، نشست 12', 'قطار A، نشست 13', 'قطار B، نشست 1']],
   });
   return project(paper, t('입장권'), objects, t('입장권·티켓'), table([c('행사명'), c('일시'), c('장소'), c('좌석')], seats.map((s) => [event, when, venue, s])));
 }
@@ -234,6 +290,10 @@ function address(paper: Paper): Project {
     en: [['94720', '110 Sproul Hall, Berkeley, CA'], ['02139', '77 Massachusetts Ave, Cambridge, MA'], ['EH8 9YL', 'Old College, South Bridge, Edinburgh']],
     it: [['10125', 'Via Pietro Giuria 1, Torino (TO)'], ['20133', 'Piazza Leonardo da Vinci 32, Milano (MI)'], ['40126', 'Via Zamboni 33, Bologna (BO)']],
     fr: [['75005', '4 place Jussieu, Paris'], ['91120', 'Route de Saclay, Palaiseau'], ['69007', '15 parvis René Descartes, Lyon']],
+    pt: [['05508-090', 'Rua do Matão, 1371, Cidade Universitária, São Paulo – SP'], ['13083-970', 'Rua Mendeleyev, 200, Campinas – SP'], ['21941-901', 'Av. Athos da Silveira Ramos, 149, Rio de Janeiro – RJ']],
+    es: [['28040', 'Plaza de las Ciencias, 1, Madrid'], ['08028', 'Avinguda Diagonal, 645, Barcelona'], ['46010', 'Avenida de Blasco Ibáñez, 13, Valencia']],
+    de: [['80539', 'Geschwister-Scholl-Platz 1, München'], ['52062', 'Templergraben 55, Aachen'], ['69117', 'Grabengasse 1, Heidelberg']],
+    ur: [['54590', 'جامعہ پنجاب، قائداعظم کیمپس، لاہور'], ['44000', 'نسٹ، سیکٹر H-12، اسلام آباد'], ['75270', 'جامعہ کراچی، یونیورسٹی روڈ، کراچی']],
   });
   return project(paper, t('주소'), objects, t('주소 라벨'), table([c('우편번호'), c('주소'), c('이름')], addr.map(([zip, a], i) => [zip, a, people()[i]])));
 }
@@ -257,6 +317,10 @@ function shipping(paper: Paper): Project {
     en: { phone: (i: number) => '+1 555 010 000' + i, to: (i: number) => `${100 + i} Sproul Hall, Berkeley, CA 94720`, from: 'LabelLoom Supply Co.', fromPhone: '+1 555 010 0000', fromAddr: '500 Market St, San Francisco, CA 94105', items: ['Books', 'Clothing', 'Electronic parts'] },
     it: { phone: (i: number) => '+39 333 000 000' + i, to: (i: number) => `Via Pietro Giuria ${i}, 10125 Torino (TO)`, from: 'LabelLoom S.r.l.', fromPhone: '+39 011 000 0000', fromAddr: 'Corso Vittorio Emanuele II 1, 10123 Torino (TO)', items: ['Libri', 'Abbigliamento', 'Componenti elettronici'] },
     fr: { phone: (i: number) => '+33 6 00 00 00 0' + i, to: (i: number) => `${i} place Jussieu, 75005 Paris`, from: 'LabelLoom SARL', fromPhone: '+33 1 00 00 00 00', fromAddr: '10 rue de Rivoli, 75004 Paris', items: ['Livres', 'Vêtements', 'Composants électroniques'] },
+    pt: { phone: (i: number) => '+55 11 90000-000' + i, to: (i: number) => `Rua do Matão, ${1370 + i}, 05508-090 São Paulo – SP`, from: 'LabelLoom Ltda.', fromPhone: '+55 11 3000-0000', fromAddr: 'Av. Paulista, 1000, 01310-100 São Paulo – SP', items: ['Livros', 'Roupas', 'Componentes eletrônicos'] },
+    es: { phone: (i: number) => '+34 600 000 00' + i, to: (i: number) => `Plaza de las Ciencias, ${i}, 28040 Madrid`, from: 'LabelLoom S.L.', fromPhone: '+34 910 000 000', fromAddr: 'Calle de Alcalá, 1, 28014 Madrid', items: ['Libros', 'Ropa', 'Componentes electrónicos'] },
+    de: { phone: (i: number) => '+49 151 0000000' + i, to: (i: number) => `Geschwister-Scholl-Platz ${i}, 80539 München`, from: 'LabelLoom GmbH', fromPhone: '+49 89 0000000', fromAddr: 'Marienplatz 1, 80331 München', items: ['Bücher', 'Kleidung', 'Elektronische Bauteile'] },
+    ur: { phone: (i: number) => '+92 300 000000' + i, to: (i: number) => `مکان ${i}، جامعہ پنجاب، قائداعظم کیمپس، لاہور 54590`, from: 'لیبل لوم ٹریڈرز', fromPhone: '+92 42 0000000', fromAddr: 'مال روڈ، لاہور 54000', items: ['کتابیں', 'کپڑے', 'الیکٹرانک پرزے'] },
   });
   const cols = [c('운송장번호'), c('받는분'), c('받는분연락처'), c('받는주소'), c('보내는분'), c('보내는분연락처'), c('보내는주소'), c('품목')];
   p.data = table(cols, [1, 2, 3].map((i) => [`52410000${i}234`, people()[i - 1], s.phone(i), s.to(i), s.from, s.fromPhone, s.fromAddr, s.items[i - 1]]));
@@ -278,6 +342,10 @@ function asset(paper: Paper): Project {
     en: [['Laptop', 'Monitor', 'Printer'], ['Research', 'Admin', 'Engineering']],
     it: [['Portatile', 'Monitor', 'Stampante'], ['Ricerca', 'Amministrazione', 'Sviluppo']],
     fr: [['Ordinateur portable', 'Écran', 'Imprimante'], ['Recherche', 'Services généraux', 'Développement']],
+    pt: [['Notebook', 'Monitor', 'Impressora'], ['Pesquisa', 'Administração', 'Desenvolvimento']],
+    es: [['Portátil', 'Monitor', 'Impresora'], ['Investigación', 'Administración', 'Desarrollo']],
+    de: [['Laptop', 'Monitor', 'Drucker'], ['Forschung', 'Verwaltung', 'Entwicklung']],
+    ur: [['لیپ ٹاپ', 'مانیٹر', 'پرنٹر'], ['تحقیق', 'انتظامیہ', 'ترقی']],
   });
   return project(paper, t('자산'), objects, t('자산관리 라벨'), table([c('자산번호'), c('품명'), c('부서')],
     Array.from({ length: 12 }, (_, i) => [`IT-2026-${String(i + 1).padStart(4, '0')}`, items[i % 3], depts[i % 3]])));
@@ -301,6 +369,10 @@ function fileLabel(paper: Paper): Project {
     en: [['Corporate card receipts Q1', 'Admin', '5 years', 'Accounting'], ['Recruitment files', 'HR', '3 years', 'HR'], ['Research project final report', 'Research', 'Permanent', 'Projects']],
     it: [['Ricevute carta aziendale 1° trimestre', 'Amministrazione', '5 anni', 'Contabilità'], ['Documenti di selezione', 'Risorse umane', '3 anni', 'Personale'], ['Relazione finale del progetto di ricerca', 'Ricerca', 'Permanente', 'Progetti']],
     fr: [['Reçus carte entreprise T1', 'Services généraux', '5 ans', 'Comptabilité'], ['Dossiers de recrutement', 'Ressources humaines', '3 ans', 'Personnel'], ['Rapport final du projet de recherche', 'Recherche', 'Permanente', 'Projets']],
+    pt: [['Recibos do cartão corporativo – 1º trimestre', 'Administração', '5 anos', 'Contabilidade'], ['Documentos de recrutamento', 'Recursos humanos', '3 anos', 'Pessoal'], ['Relatório final do projeto de pesquisa', 'Pesquisa', 'Permanente', 'Projetos']],
+    es: [['Recibos de la tarjeta de empresa T1', 'Administración', '5 años', 'Contabilidad'], ['Documentación de selección', 'Recursos humanos', '3 años', 'Personal'], ['Informe final del proyecto de investigación', 'Investigación', 'Permanente', 'Proyectos']],
+    de: [['Firmenkartenbelege Q1', 'Verwaltung', '5 Jahre', 'Buchhaltung'], ['Bewerbungsunterlagen', 'Personalabteilung', '3 Jahre', 'Personal'], ['Abschlussbericht Forschungsprojekt', 'Forschung', 'Dauerhaft', 'Projekte']],
+    ur: [['کمپنی کارڈ کی رسیدیں، پہلی سہ ماہی', 'انتظامیہ', '5 سال', 'حسابات'], ['بھرتی کے کاغذات', 'شعبۂ انسانی وسائل', '3 سال', 'عملہ'], ['تحقیقی منصوبے کی حتمی رپورٹ', 'تحقیق', 'مستقل', 'منصوبے']],
   }).map(([title, dept, keep, cat], i) => [i === 2 ? '2025' : '2026', i === 0 ? t('회계') : i === 1 ? t('인사') : cat, title, dept, keep])));
 }
 
@@ -308,7 +380,7 @@ function food(paper: Paper): Project {
   const objects = fitTo([
     text(3, 2, 54, 9, f('품명'), { name: c('품명'), fontSize: 16, bold: true }),
     obj('line', 3, 11.5, 54, 1, { stroke: '#9ca3af', strokeWidth: 0.3 }),
-    text(3, 13.5, 54, 5.5, t('제조일  {date}', { date: pick({ ko: '{{@date:YYYY.MM.DD}}', en: '{{@date:YYYY-MM-DD}}', it: '{{@date:DD/MM/YYYY}}', fr: '{{@date:DD/MM/YYYY}}' }) }), { name: t('제조일'), fontSize: 9 }),
+    text(3, 13.5, 54, 5.5, t('제조일  {date}', { date: pick({ ko: '{{@date:YYYY.MM.DD}}', en: '{{@date:YYYY-MM-DD}}', it: '{{@date:DD/MM/YYYY}}', fr: '{{@date:DD/MM/YYYY}}', pt: '{{@date:DD/MM/YYYY}}', es: '{{@date:DD/MM/YYYY}}', de: '{{@date:DD.MM.YYYY}}', ur: '{{@date:DD/MM/YYYY}}' }) }), { name: t('제조일'), fontSize: 9 }),
     text(3, 19.5, 54, 6.5, t('소비기한  {date}', { date: f('소비기한') }), { name: c('소비기한'), fontSize: 10, bold: true, fill: solid('#b91c1c') }),
     text(3, 26.5, 54, 5, t('보관  {how}', { how: f('보관방법') }), { name: c('보관방법'), fontSize: 8 }),
     text(3, 32, 54, 6, f('원재료'), { name: c('원재료'), fontSize: 7, minFontSize: 4, multiline: true, fill: solid('#4b5563') }),
@@ -318,6 +390,10 @@ function food(paper: Paper): Project {
     en: [['Homemade strawberry jam', '2027-04-30', 'Refrigerate after opening', 'Strawberries 70%, sugar, lemon juice'], ['Granola', '2026-12-31', 'Room temperature, away from sunlight', 'Oats, almonds, honey, coconut oil']],
     it: [['Confettura di fragole fatta in casa', '30/04/2027', 'Dopo l\'apertura conservare in frigorifero', 'Fragole 70%, zucchero, succo di limone'], ['Granola', '31/12/2026', 'A temperatura ambiente, lontano dalla luce del sole', 'Avena, mandorle, miele, olio di cocco']],
     fr: [['Confiture de fraises maison', '30/04/2027', 'Au réfrigérateur après ouverture', 'Fraises 70 %, sucre, jus de citron'], ['Granola', '31/12/2026', 'À température ambiante, à l\'abri de la lumière', 'Avoine, amandes, miel, huile de coco']],
+    pt: [['Geleia de morango caseira', '30/04/2027', 'Após aberto, manter refrigerado', 'Morango 70%, açúcar, suco de limão'], ['Granola', '31/12/2026', 'Em temperatura ambiente, longe da luz do sol', 'Aveia, amêndoas, mel, óleo de coco']],
+    es: [['Mermelada de fresa casera', '30/04/2027', 'Una vez abierto, conservar en el frigorífico', 'Fresas 70 %, azúcar, zumo de limón'], ['Granola', '31/12/2026', 'A temperatura ambiente, protegido de la luz solar', 'Avena, almendras, miel, aceite de coco']],
+    de: [['Hausgemachte Erdbeerkonfitüre', '30.04.2027', 'Nach dem Öffnen gekühlt lagern', 'Erdbeeren 70 %, Zucker, Zitronensaft'], ['Granola', '31.12.2026', 'Bei Raumtemperatur, vor Sonnenlicht geschützt', 'Haferflocken, Mandeln, Honig, Kokosöl']],
+    ur: [['گھر کا بنا اسٹرابیری جام', '30/04/2027', 'کھولنے کے بعد فریج میں رکھیں', 'اسٹرابیری 70%، چینی، لیموں کا رس'], ['گرانولا', '31/12/2026', 'کمرے کے درجۂ حرارت پر، دھوپ سے دور', 'جئی، بادام، شہد، ناریل کا تیل']],
   })));
 }
 
@@ -326,11 +402,11 @@ function sample(paper: Paper): Project {
     obj('qr', 1.5, 2.5, 16, 16, { name: t('데이터매트릭스'), content: f('시료ID'), symbology: 'datamatrix' }),
     text(19, 1.5, 18, 6, f('시료ID'), { name: c('시료ID'), fontSize: 8, bold: true }),
     text(19, 7.5, 18, 5, f('시료명'), { name: c('시료명'), fontSize: 7 }),
-    text(19, 12.5, 18, 4, pick({ ko: '{{@date:YY.MM.DD}}', en: '{{@date:YY-MM-DD}}', it: '{{@date:DD/MM/YY}}', fr: '{{@date:DD/MM/YY}}' }), { name: t('날짜'), fontSize: 6, fill: solid('#4b5563') }),
+    text(19, 12.5, 18, 4, pick({ ko: '{{@date:YY.MM.DD}}', en: '{{@date:YY-MM-DD}}', it: '{{@date:DD/MM/YY}}', fr: '{{@date:DD/MM/YY}}', pt: '{{@date:DD/MM/YY}}', es: '{{@date:DD/MM/YY}}', de: '{{@date:DD.MM.YY}}', ur: '{{@date:DD/MM/YY}}' }), { name: t('날짜'), fontSize: 6, fill: solid('#4b5563') }),
     text(19, 16.5, 18, 4, f('담당자'), { name: c('담당자'), fontSize: 6, fill: solid('#4b5563') }),
   ], 38.1, 21.2, paper);
-  const kinds = pick({ ko: ['혈청', '세포 lysate', 'DNA'], en: ['Serum', 'Cell lysate', 'DNA'], it: ['Siero', 'Lisato cellulare', 'DNA'], fr: ['Sérum', 'Lysat cellulaire', 'ADN'] });
-  const who = pick({ ko: ['박서연', '정예린'], en: ['Sophie Turner', 'Priya Raman'], it: ['Chiara Ferrari', 'Sara Colombo'], fr: ['Léa Dubois', 'Manon Leroy'] });
+  const kinds = pick({ ko: ['혈청', '세포 lysate', 'DNA'], en: ['Serum', 'Cell lysate', 'DNA'], it: ['Siero', 'Lisato cellulare', 'DNA'], fr: ['Sérum', 'Lysat cellulaire', 'ADN'], pt: ['Soro', 'Lisado celular', 'DNA'], es: ['Suero', 'Lisado celular', 'ADN'], de: ['Serum', 'Zelllysat', 'DNA'], ur: ['سیرم', 'سیل لائسیٹ', 'ڈی این اے'] });
+  const who = pick({ ko: ['박서연', '정예린'], en: ['Sophie Turner', 'Priya Raman'], it: ['Chiara Ferrari', 'Sara Colombo'], fr: ['Léa Dubois', 'Manon Leroy'], pt: ['Beatriz Lima', 'Mariana Ferreira'], es: ['Carmen López', 'Elena Romero'], de: ['Lena Fischer', 'Sophie Becker'], ur: ['فاطمہ احمد', 'زینب حسین'] });
   return project(paper, t('시료'), objects, t('시료·튜브 라벨'), table([c('시료ID'), c('시료명'), c('담당자')],
     Array.from({ length: 8 }, (_, i) => [`S26-${String(i + 1).padStart(4, '0')}`, kinds[i % 3], who[i % 2]])));
 }
@@ -348,6 +424,10 @@ function price(paper: Paper): Project {
     en: [['Organic green tea 500 g', '12.90', '880123456789'], ['Brown rice 2 kg', '8.50', '880987654321']],
     it: [['Tè verde biologico 500 g', '12,90', '880123456789'], ['Riso integrale 2 kg', '8,50', '880987654321']],
     fr: [['Thé vert bio 500 g', '12,90', '880123456789'], ['Riz complet 2 kg', '8,50', '880987654321']],
+    pt: [['Chá verde orgânico 500 g', '12,90', '880123456789'], ['Arroz integral 2 kg', '8,50', '880987654321']],
+    es: [['Té verde ecológico 500 g', '12,90', '880123456789'], ['Arroz integral 2 kg', '8,50', '880987654321']],
+    de: [['Bio-Grüntee 500 g', '12,90', '880123456789'], ['Naturreis 2 kg', '8,50', '880987654321']],
+    ur: [['نامیاتی سبز چائے 500 گرام', '1,290', '880123456789'], ['بھورے چاول 2 کلو', '850', '880987654321']],
   })));
 }
 

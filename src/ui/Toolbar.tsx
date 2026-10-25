@@ -107,7 +107,7 @@ function LangMenu() {
 /** Language picker for places without a menu (quick print page). */
 export function LangSelect() {
   return (
-    <select value={getLang()} onChange={(e) => setLang(e.target.value as typeof LANGS[number]['value'])} title="Language · 언어 · Lingua · Langue" aria-label="Language">
+    <select value={getLang()} onChange={(e) => setLang(e.target.value as typeof LANGS[number]['value'])} title="Language · 언어 · Lingua · Langue · Idioma · Sprache · زبان" aria-label="Language">
       {LANGS.map((l) => <option key={l.value} value={l.value}>{l.label}</option>)}
     </select>
   );
