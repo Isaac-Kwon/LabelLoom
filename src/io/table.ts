@@ -41,10 +41,21 @@ export function sourceUrl(url: string): string {
   return u;
 }
 
+/** Text pasted from the clipboard: a range copied from Excel or Google Sheets (tab-separated), or CSV. */
+export function readTableText(text: string): ParsedSheet {
+  return parseWorkbook(readText(text.replace(/^﻿/, '')));
+}
+
+function readText(text: string) {
+  // SheetJS picks the most frequent separator, so commas inside cells would win over a few tabs
+  return XLSX.read(text, { type: 'string', raw: true, ...(/^[^\n]*\t/.test(text) ? { FS: '\t' } : {}) });
+}
+
 function parseTable(bytes: Uint8Array, isText: boolean, sheet?: string): ParsedSheet {
-  const wb = isText
-    ? XLSX.read(decodeText(bytes), { type: 'string', raw: true })
-    : XLSX.read(bytes, { type: 'array', cellDates: true });
+  return parseWorkbook(isText ? readText(decodeText(bytes)) : XLSX.read(bytes, { type: 'array', cellDates: true }), sheet);
+}
+
+function parseWorkbook(wb: XLSX.WorkBook, sheet?: string): ParsedSheet {
   const name = sheet && wb.SheetNames.includes(sheet) ? sheet : wb.SheetNames[0];
   const ws = wb.Sheets[name];
   const grid = XLSX.utils.sheet_to_json<string[]>(ws, { header: 1, raw: false, defval: '', blankrows: false })
