@@ -1,14 +1,18 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { t } from '../i18n';
 import { pickFile } from '../io/project';
-import { absorbMeta, fetchTable, findDuplicates, gridToRows, guessKey, isMetaColumn, mergeTable, readTableFile, suggestMapping, type ImportOptions, type ParsedSheet } from '../io/table';
-import type { DataSource } from '../model/types';
+import { absorbMeta, fetchTable, findDuplicates, gridToRows, guessKey, isMetaColumn, mergeTable, readTableFile, readTableText, suggestMapping, syncTable, type ImportOptions, type ParsedSheet } from '../io/table';
+import type { DataSource, DataTable } from '../model/types';
 import { usedColumns } from '../render/resolve';
 import { useStore } from '../store';
 import { Check, Modal, Num, Row, Seg } from './controls';
 
 const SKIP = '__skip__';
 const COPIES = '__copies__';
+
+/** Text pasted into the dialog, read like a file (no link to a source). */
+type Pasted = { text: string };
+type Source = File | string | Pasted;
 
 /** Seconds between automatic refreshes of a URL source. */
 export const INTERVALS = [0, 15, 30, 60, 300];
@@ -18,7 +22,7 @@ export function ImportDialog() {
   const project = useStore((s) => s.project);
   const { close, commit, notify, setCurrentRow, setSync } = useStore.getState();
   const initial = useStore((s) => s.dialogArg) as File | undefined;
-  const [src, setSrc] = useState<File | string | null>(null);
+  const [src, setSrc] = useState<Source | null>(null);
   const [url, setUrl] = useState(project.dataSource?.url ?? '');
   const [busy, setBusy] = useState(false);
   const [key, setKey] = useState<string | null>(null);
@@ -33,11 +37,11 @@ export function ImportDialog() {
 
   const targets = useMemo(() => [...new Set([...usedColumns(project), ...project.data.columns])], [project]);
 
-  const load = async (f: File | string, sheet?: string) => {
+  const load = async (f: Source, sheet?: string) => {
     setErr('');
     setBusy(true);
     try {
-      const p = typeof f === 'string' ? await fetchTable(f, sheet) : await readTableFile(f, sheet);
+      const p = typeof f === 'string' ? await fetchTable(f, sheet) : f instanceof File ? await readTableFile(f, sheet) : readTableText(f.text);
       setSrc(f);
       setParsed(p);
       const hr = guessHeaderRow(p.grid);
@@ -49,6 +53,37 @@ export function ImportDialog() {
     setBusy(false);
   };
   useEffect(() => { if (initial) void load(initial); }, [initial]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const paste = (text: string) => {
+    // a single line without tabs is not a table (most likely a URL or a word)
+    if (/[\t\n]/.test(text.trim())) void load({ text });
+    else setErr(t('붙여넣은 내용이 표가 아닙니다. 엑셀·스프레드시트에서 범위를 복사하거나, 탭이나 쉼표로 나뉜 여러 줄의 텍스트를 붙여넣으세요.'));
+  };
+  const pasteRef = useRef(paste);
+  pasteRef.current = paste;
+  useEffect(() => {
+    const onPaste = (e: ClipboardEvent) => {
+      // inside a text field (the URL box) the paste goes there as usual
+      if (e.target instanceof HTMLElement && e.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+      const text = e.clipboardData?.getData('text/plain');
+      if (!text) return;
+      e.preventDefault();
+      pasteRef.current(text);
+    };
+    document.addEventListener('paste', onPaste);
+    return () => document.removeEventListener('paste', onPaste);
+  }, []);
+  const pasteClipboard = async () => {
+    let text: string;
+    try {
+      text = await navigator.clipboard.readText();
+    } catch {
+      // no Clipboard API (file://, older browsers) or permission denied
+      setErr(t('클립보드를 직접 읽을 수 없습니다. 대화상자를 누른 뒤 Ctrl+V(Mac은 ⌘V)로 붙여넣으세요.'));
+      return;
+    }
+    paste(text);
+  };
 
   const headers = parsed ? headersOf(parsed.grid, headerRow - 1) : [];
   const opts = useMemo((): ImportOptions => {
@@ -63,6 +98,8 @@ export function ImportDialog() {
   }, [headers.join('\u0001'), mapping, trim, headerRow]); // eslint-disable-line react-hooks/exhaustive-deps
   const resolved = useMemo(() => (parsed ? gridToRows(parsed.grid, opts) : null), [parsed, opts]);
   const fromUrl = typeof src === 'string';
+  // pasting the same list again into it updates the rows that share a key instead of repeating them
+  const syncPaste = !!src && typeof src === 'object' && !(src instanceof File) && mode === 'append';
   const keyCol = resolved ? (key !== null && (key === '' || resolved.columns.includes(key)) ? key : guessKey(resolved.columns)) : '';
 
   const missing = resolved ? usedColumns(project).filter((c) => !resolved.columns.includes(c) && !(mode === 'append' && project.data.columns.includes(c))) : [];
@@ -75,16 +112,24 @@ export function ImportDialog() {
     const rows = absorbMeta(resolved.rows);
     const cols = resolved.columns.filter((c) => !isMetaColumn(c));
     const source: DataSource | undefined = typeof src === 'string' && parsed ? { url: src, sheet: parsed.sheet, ...opts, key: keyCol, interval } : undefined;
-    // a file that replaces the table ends the link to a URL; a file appended to it keeps the link
-    commit((p) => ({ ...p, data: mergeTable(p.data, { columns: cols, rows }, mode), dataSource: source ?? (mode === 'replace' ? undefined : p.dataSource) }));
+    const add = { columns: cols, rows };
+    const sync = syncPaste && keyCol;
+    let added = 0, updated = 0;
+    // a file or pasted text that replaces the table ends the link to a URL; appended to it, the link stays
+    commit((p) => {
+      let data: DataTable;
+      if (sync) ({ table: data, added, updated } = syncTable(p.data, add, keyCol, !!opts.copiesColumn));
+      else data = mergeTable(p.data, add, mode);
+      return { ...p, data, dataSource: source ?? (mode === 'replace' ? undefined : p.dataSource) };
+    });
     if (source) setSync({ at: new Date().toISOString(), error: undefined });
     if (mode === 'replace') setCurrentRow(0);
-    notify(t('{n}행을 가져왔습니다.', { n: rows.length }));
+    notify(sync ? t('{added}행을 추가하고 {updated}행을 갱신했습니다.', { added, updated }) : t('{n}행을 가져왔습니다.', { n: rows.length }));
     close();
   };
 
   return (
-    <Modal title={t('데이터 가져오기 (xlsx · xls · csv · URL)')} onClose={close} wide="xl" footer={
+    <Modal title={t('데이터 가져오기 (xlsx · xls · csv · URL · 붙여넣기)')} onClose={close} wide="xl" footer={
       <>
         {resolved && <span className="muted">{t('{rows}행 · {cols}열', { rows: resolved.rows.length, cols: resolved.columns.length })}</span>}
         <span className="spacer" />
@@ -96,7 +141,8 @@ export function ImportDialog() {
         onDragOver={(e) => { e.preventDefault(); setHover(true); }} onDragLeave={() => setHover(false)}
         onDrop={(e) => { e.preventDefault(); setHover(false); const f = e.dataTransfer.files[0]; if (f) void load(f); }}>
         <button onClick={async () => { const f = await pickFile('.xlsx,.xls,.xlsm,.csv,.tsv,.txt,.ods'); if (f) void load(f); }}>{t('파일 선택…')}</button>
-        <span className="muted">{src instanceof File ? src.name : t('또는 파일을 여기로 끌어오세요. 첫 행은 열 이름이어야 합니다.')}</span>
+        <button onClick={() => void pasteClipboard()}>{t('클립보드에서 붙여넣기')}</button>
+        <span className="muted">{src instanceof File ? src.name : src && typeof src === 'object' ? t('붙여넣은 텍스트 ({n}행)', { n: resolved?.rows.length ?? 0 }) : t('또는 파일을 여기로 끌어오거나, 엑셀·스프레드시트에서 복사한 범위를 Ctrl+V로 붙여넣으세요. 첫 행은 열 이름이어야 합니다.')}</span>
       </div>
       <div className="url-row">
         <input type="url" placeholder={t('또는 URL (CSV · xlsx · Google 스프레드시트 링크)')} value={url}
@@ -117,18 +163,24 @@ export function ImportDialog() {
             <Row label={t('열 이름 행')}><Num value={headerRow} step={1} min={1} max={Math.max(1, parsed.grid.length)} onChange={(v) => { setHeaderRow(v); setMapping(suggestMapping(headersOf(parsed.grid, v - 1), targets)); }} /></Row>
             <Row label={t('방식')}><Seg value={mode} onChange={setMode} options={[{ value: 'replace', label: t('기존 데이터 바꾸기') }, { value: 'append', label: t('뒤에 추가') }]} /></Row>
             <Check label={t('앞뒤 공백·중복 공백 정리')} checked={trim} onChange={setTrim} />
-            {fromUrl && resolved && (
+            {(fromUrl || syncPaste) && resolved && (
               <>
-                <Row label={t('자동 새로고침')}>
-                  <select value={interval} onChange={(e) => setRefresh(Number(e.target.value))}>{INTERVALS.map((s) => <option key={s} value={s}>{intervalLabel(s)}</option>)}</select>
-                </Row>
+                {fromUrl && (
+                  <Row label={t('자동 새로고침')}>
+                    <select value={interval} onChange={(e) => setRefresh(Number(e.target.value))}>{INTERVALS.map((s) => <option key={s} value={s}>{intervalLabel(s)}</option>)}</select>
+                  </Row>
+                )}
                 <Row label={t('키 열')}>
                   <select value={keyCol} onChange={(e) => setKey(e.target.value)}>
-                    <option value="">{t('(행 전체 비교)')}</option>
+                    <option value="">{fromUrl ? t('(행 전체 비교)') : t('(키 없음)')}</option>
                     {resolved.columns.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </Row>
-                <div className="note">{t('새로고침하면 키 열 값이 같은 행은 서버의 값으로 바꾸고 (인쇄 체크·출력 기록은 유지), 새 행은 뒤에 추가합니다. 서버에서 사라진 행은 지우지 않습니다. 등록번호·이메일처럼 겹치지 않는 열을 고르세요.')}</div>
+                <div className="note">{fromUrl
+                  ? t('새로고침하면 키 열 값이 같은 행은 서버의 값으로 바꾸고 (인쇄 체크·출력 기록은 유지), 새 행은 뒤에 추가합니다. 서버에서 사라진 행은 지우지 않습니다. 등록번호·이메일처럼 겹치지 않는 열을 고르세요.')
+                  : keyCol
+                    ? t('키 열 값이 이미 있는 행은 새 값으로 바꾸고 (인쇄 체크·출력 기록은 유지), 새 행만 뒤에 추가합니다. 같은 명단을 다시 붙여넣어도 행이 겹치지 않습니다.')
+                    : t('키 열이 없으면 모든 행을 뒤에 추가합니다.')}</div>
               </>
             )}
           </div>

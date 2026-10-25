@@ -60,6 +60,10 @@ Open **On-site reprint** in the toolbar.
 - Leave this screen open on the registration desk PC and nobody changes the design by accident.
 - Add `?quick` to the address (for example `https://isaac-kwon.github.io/LabelLoom/?quick`) to start on the quick print screen, then open a saved `.labelloom.json` template there.
 
+## Pasting a list
+
+You can also bring in a list through the clipboard instead of a file. Copy a range from Excel or Google Sheets, header row included, or press the copy button of your conference management site, then press **Ctrl+V** (**⌘V** on a Mac) in the **Import (xlsx·csv)** window, or press **Paste from clipboard**. Tab- or comma-separated text is read as a table and you get the same column mapping screen as for a file. When the list changes and you paste it again, choose **Append** and keep a **Key column** (ID by default): people already in the table only get their values updated (print checks and print history stay) and only new registrations are added at the end. Pasted data is not refreshed automatically the way a URL is.
+
 ## Event-day checklist
 
 - [ ] Import the final list and run **More › Find duplicates…**
