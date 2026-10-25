@@ -35,8 +35,8 @@ const TOOL_KEYS: Record<string, Parameters<ReturnType<typeof useStore.getState>[
 
 /** Startup state for this page. App remounts when coming back from the quick print page, and StrictMode runs effects twice in dev. */
 const boot = { started: false, done: false, initial: undefined as Project | undefined };
-/** when the last automatic snapshot was taken (the session start counts as one) */
-let lastSnapshot = Date.now();
+/** the work as of the last automatic snapshot (the session start counts as one), as JSON */
+let snapped = '';
 
 export default function App({ initial, onQuick }: { initial?: Project; onQuick: () => void }) {
   const dialog = useStore((s) => s.dialog);
@@ -105,12 +105,22 @@ export default function App({ initial, onQuick }: { initial?: Project; onQuick: 
   /* ---------- autosave ---------- */
   useEffect(() => {
     if (!ready) return;
-    const t = setTimeout(() => {
-      void saveAutosave(project);
-      if (Date.now() - lastSnapshot > AUTO_SNAPSHOT_MS) { lastSnapshot = Date.now(); void addSnapshot(project, project.name, true); }
-    }, 800);
+    const t = setTimeout(() => void saveAutosave(project), 800);
     return () => clearTimeout(t);
   }, [project, ready]);
+
+  /* ---------- version history: every AUTO_SNAPSHOT_MS, only when the work changed since the last one ---------- */
+  useEffect(() => {
+    if (!ready) return;
+    if (!snapped) snapped = JSON.stringify(useStore.getState().project);
+    const id = window.setInterval(() => {
+      const p = useStore.getState().project, json = JSON.stringify(p);
+      if (json === snapped) return;
+      snapped = json;
+      void addSnapshot(p, p.name, true);
+    }, AUTO_SNAPSHOT_MS);
+    return () => window.clearInterval(id);
+  }, [ready]);
 
   useRemoteSync(ready);
 

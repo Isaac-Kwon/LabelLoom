@@ -61,14 +61,16 @@ export interface Snapshot { id: string; name: string; at: string; auto: boolean;
 
 const SNAP_KEY = 'snapshots';
 const MAX_AUTO = 12, MAX_NAMED = 30;
-/** taken automatically at most this often while the work changes */
+/** taken automatically this often, but only if the work changed in between */
 export const AUTO_SNAPSHOT_MS = 10 * 60 * 1000;
 
 export const loadSnapshots = async () => (await kvGet<Snapshot[]>(SNAP_KEY)) ?? [];
 
-/** Adds a snapshot, newest first; keeps the last MAX_AUTO automatic ones and MAX_NAMED named ones. */
+/** Adds a snapshot, newest first; keeps the last MAX_AUTO automatic ones and MAX_NAMED named ones.
+ *  An automatic one that matches the newest snapshot is skipped, so it doesn't push out older ones. */
 export async function addSnapshot(p: Project, name: string, auto: boolean) {
   const list = await loadSnapshots();
+  if (auto && list[0] && JSON.stringify(list[0].project) === JSON.stringify(p)) return;
   const s: Snapshot = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), name, at: new Date().toISOString(), auto, project: p };
   const next = [s, ...list];
   const autos = next.filter((x) => x.auto).slice(0, MAX_AUTO), named = next.filter((x) => !x.auto).slice(0, MAX_NAMED);
