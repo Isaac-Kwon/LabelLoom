@@ -655,6 +655,7 @@ export const fr: Record<Msg, string> = {
   "(행 전체 비교)": "(comparer les lignes entières)",
   "새로고침하면 키 열 값이 같은 행은 서버의 값으로 바꾸고 (인쇄 체크·출력 기록은 유지), 새 행은 뒤에 추가합니다. 서버에서 사라진 행은 지우지 않습니다. 등록번호·이메일처럼 겹치지 않는 열을 고르세요.": "À l'actualisation, les lignes ayant la même valeur clé prennent les valeurs du serveur (case d'impression et historique conservés), et les nouvelles lignes sont ajoutées à la fin. Les lignes disparues du serveur ne sont pas supprimées. Choisissez une colonne aux valeurs uniques, comme un numéro d'inscription ou un e-mail.",
   "클립보드에서 붙여넣기": "Coller depuis le presse-papiers",
+  "클립보드에서 붙여넣기를 누르면 브라우저가 클립보드 읽기 권한을 물을 수 있습니다. 허용하지 않았거나 파일(file://)로 연 경우에는 이 창에서 Ctrl+V(Mac은 ⌘V)를 누르세요. 붙여넣은 내용은 이 브라우저 안에서만 읽고 어디로도 보내지 않습니다.": "Avec Coller depuis le presse-papiers, le navigateur peut demander l'autorisation de lire le presse-papiers. Si vous ne l'avez pas accordée, ou avez ouvert LabelLoom comme fichier (file://), appuyez plutôt sur Ctrl+V (⌘V sur Mac) dans cette fenêtre. Le contenu collé est lu uniquement dans ce navigateur et n'est envoyé nulle part.",
   "붙여넣은 텍스트 ({n}행)": "Texte collé ({n} lignes)",
   "붙여넣은 내용이 표가 아닙니다. 엑셀·스프레드시트에서 범위를 복사하거나, 탭이나 쉼표로 나뉜 여러 줄의 텍스트를 붙여넣으세요.": "Le contenu collé n'est pas un tableau. Copiez une plage depuis Excel ou un tableur, ou collez plusieurs lignes de texte séparées par des tabulations ou des virgules.",
   "클립보드를 직접 읽을 수 없습니다. 대화상자를 누른 뒤 Ctrl+V(Mac은 ⌘V)로 붙여넣으세요.": "Impossible de lire directement le presse-papiers. Cliquez dans la fenêtre, puis collez avec Ctrl+V (⌘V sur Mac).",

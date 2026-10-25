@@ -653,6 +653,7 @@ export const en = {
   "(행 전체 비교)": "(compare whole rows)",
   "새로고침하면 키 열 값이 같은 행은 서버의 값으로 바꾸고 (인쇄 체크·출력 기록은 유지), 새 행은 뒤에 추가합니다. 서버에서 사라진 행은 지우지 않습니다. 등록번호·이메일처럼 겹치지 않는 열을 고르세요.": "On refresh, rows with the same key value take the server's values (print check and print history stay), and new rows are added at the end. Rows gone from the server are not deleted. Pick a column with unique values, such as a registration number or e-mail.",
   "클립보드에서 붙여넣기": "Paste from clipboard",
+  "클립보드에서 붙여넣기를 누르면 브라우저가 클립보드 읽기 권한을 물을 수 있습니다. 허용하지 않았거나 파일(file://)로 연 경우에는 이 창에서 Ctrl+V(Mac은 ⌘V)를 누르세요. 붙여넣은 내용은 이 브라우저 안에서만 읽고 어디로도 보내지 않습니다.": "Paste from clipboard may make the browser ask for permission to read the clipboard. If you did not allow it, or opened LabelLoom as a file (file://), press Ctrl+V (⌘V on a Mac) in this window instead. Pasted content is read only inside this browser and is not sent anywhere.",
   "붙여넣은 텍스트 ({n}행)": "Pasted text ({n} rows)",
   "붙여넣은 내용이 표가 아닙니다. 엑셀·스프레드시트에서 범위를 복사하거나, 탭이나 쉼표로 나뉜 여러 줄의 텍스트를 붙여넣으세요.": "The pasted content is not a table. Copy a range from Excel or a spreadsheet, or paste several lines of text separated by tabs or commas.",
   "클립보드를 직접 읽을 수 없습니다. 대화상자를 누른 뒤 Ctrl+V(Mac은 ⌘V)로 붙여넣으세요.": "Cannot read the clipboard directly. Click the dialog, then paste with Ctrl+V (⌘V on a Mac).",

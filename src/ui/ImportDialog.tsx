@@ -144,6 +144,7 @@ export function ImportDialog() {
         <button onClick={() => void pasteClipboard()}>{t('클립보드에서 붙여넣기')}</button>
         <span className="muted">{src instanceof File ? src.name : src && typeof src === 'object' ? t('붙여넣은 텍스트 ({n}행)', { n: resolved?.rows.length ?? 0 }) : t('또는 파일을 여기로 끌어오거나, 엑셀·스프레드시트에서 복사한 범위를 Ctrl+V로 붙여넣으세요. 첫 행은 열 이름이어야 합니다.')}</span>
       </div>
+      <p className="muted small">{t('클립보드에서 붙여넣기를 누르면 브라우저가 클립보드 읽기 권한을 물을 수 있습니다. 허용하지 않았거나 파일(file://)로 연 경우에는 이 창에서 Ctrl+V(Mac은 ⌘V)를 누르세요. 붙여넣은 내용은 이 브라우저 안에서만 읽고 어디로도 보내지 않습니다.')}</p>
       <div className="url-row">
         <input type="url" placeholder={t('또는 URL (CSV · xlsx · Google 스프레드시트 링크)')} value={url}
           onChange={(e) => setUrl(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && url.trim()) void load(url.trim()); }} />

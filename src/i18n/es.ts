@@ -655,6 +655,7 @@ export const es: Record<Msg, string> = {
   "(행 전체 비교)": "(comparar filas completas)",
   "새로고침하면 키 열 값이 같은 행은 서버의 값으로 바꾸고 (인쇄 체크·출력 기록은 유지), 새 행은 뒤에 추가합니다. 서버에서 사라진 행은 지우지 않습니다. 등록번호·이메일처럼 겹치지 않는 열을 고르세요.": "Al actualizar, las filas con el mismo valor clave toman los valores del servidor (la marca y el historial de impresión se mantienen), y las filas nuevas se añaden al final. Las filas que desaparecen del servidor no se eliminan. Elige una columna con valores únicos, como un número de inscripción o un correo.",
   "클립보드에서 붙여넣기": "Pegar del portapapeles",
+  "클립보드에서 붙여넣기를 누르면 브라우저가 클립보드 읽기 권한을 물을 수 있습니다. 허용하지 않았거나 파일(file://)로 연 경우에는 이 창에서 Ctrl+V(Mac은 ⌘V)를 누르세요. 붙여넣은 내용은 이 브라우저 안에서만 읽고 어디로도 보내지 않습니다.": "Con Pegar del portapapeles, el navegador puede pedir permiso para leer el portapapeles. Si no lo permitiste, o abriste LabelLoom como archivo (file://), pulsa Ctrl+V (⌘V en Mac) en esta ventana. El contenido pegado se lee solo en este navegador y no se envía a ningún sitio.",
   "붙여넣은 텍스트 ({n}행)": "Texto pegado ({n} filas)",
   "붙여넣은 내용이 표가 아닙니다. 엑셀·스프레드시트에서 범위를 복사하거나, 탭이나 쉼표로 나뉜 여러 줄의 텍스트를 붙여넣으세요.": "El contenido pegado no es una tabla. Copia un rango de Excel o de una hoja de cálculo, o pega varias líneas de texto separadas por tabulaciones o comas.",
   "클립보드를 직접 읽을 수 없습니다. 대화상자를 누른 뒤 Ctrl+V(Mac은 ⌘V)로 붙여넣으세요.": "No se puede leer el portapapeles directamente. Haz clic en la ventana y pega con Ctrl+V (⌘V en Mac).",

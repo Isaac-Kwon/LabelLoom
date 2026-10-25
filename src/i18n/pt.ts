@@ -655,6 +655,7 @@ export const pt: Record<Msg, string> = {
   "(행 전체 비교)": "(comparar linhas inteiras)",
   "새로고침하면 키 열 값이 같은 행은 서버의 값으로 바꾸고 (인쇄 체크·출력 기록은 유지), 새 행은 뒤에 추가합니다. 서버에서 사라진 행은 지우지 않습니다. 등록번호·이메일처럼 겹치지 않는 열을 고르세요.": "Ao atualizar, linhas com o mesmo valor-chave recebem os valores do servidor (marca de impressão e histórico ficam), e linhas novas são adicionadas ao final. Linhas que sumiram do servidor não são excluídas. Escolha uma coluna com valores únicos, como número de inscrição ou e-mail.",
   "클립보드에서 붙여넣기": "Colar da área de transferência",
+  "클립보드에서 붙여넣기를 누르면 브라우저가 클립보드 읽기 권한을 물을 수 있습니다. 허용하지 않았거나 파일(file://)로 연 경우에는 이 창에서 Ctrl+V(Mac은 ⌘V)를 누르세요. 붙여넣은 내용은 이 브라우저 안에서만 읽고 어디로도 보내지 않습니다.": "Com Colar da área de transferência, o navegador pode pedir permissão para ler a área de transferência. Se você não permitiu, ou abriu o LabelLoom como arquivo (file://), pressione Ctrl+V (⌘V no Mac) nesta janela. O conteúdo colado é lido só neste navegador e não é enviado a lugar nenhum.",
   "붙여넣은 텍스트 ({n}행)": "Texto colado ({n} linhas)",
   "붙여넣은 내용이 표가 아닙니다. 엑셀·스프레드시트에서 범위를 복사하거나, 탭이나 쉼표로 나뉜 여러 줄의 텍스트를 붙여넣으세요.": "O conteúdo colado não é uma tabela. Copie um intervalo do Excel ou de uma planilha, ou cole várias linhas de texto separadas por tabulações ou vírgulas.",
   "클립보드를 직접 읽을 수 없습니다. 대화상자를 누른 뒤 Ctrl+V(Mac은 ⌘V)로 붙여넣으세요.": "Não foi possível ler a área de transferência diretamente. Clique na janela e cole com Ctrl+V (⌘V no Mac).",
