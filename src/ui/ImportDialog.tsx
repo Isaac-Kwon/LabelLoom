@@ -35,7 +35,9 @@ export function ImportDialog() {
   const [err, setErr] = useState('');
   const [hover, setHover] = useState(false);
 
-  const targets = useMemo(() => [...new Set([...usedColumns(project), ...project.data.columns])], [project]);
+  const designCols = useMemo(() => usedColumns(project), [project]);
+  const dataCols = useMemo(() => project.data.columns.filter((c) => !designCols.includes(c)), [project, designCols]);
+  const targets = useMemo(() => [...new Set([...designCols, ...dataCols])], [designCols, dataCols]);
 
   const load = async (f: Source, sheet?: string) => {
     setErr('');
@@ -187,21 +189,27 @@ export function ImportDialog() {
           </div>
           {parsed.merged > 0 && <div className="warn">⚠ {t('병합된 셀 {n}개가 있습니다. 병합 셀은 첫 칸에만 값이 들어갑니다. 원본에서 병합을 풀고 다시 시도하는 것이 좋습니다.', { n: parsed.merged })}</div>}
           <h3>{t('열 매핑')}</h3>
-          <p className="muted small">{t('디자인에서 쓰는 열 이름으로 자동 연결했습니다 (이름·성명·Name, 소속·Affiliation 등). 필요하면 바꾸세요.')}</p>
+          <p className="muted small">{t('디자인에서 쓰는 열과 기존 데이터의 열 이름으로 자동 연결했습니다 (이름·성명·Name, 소속·Affiliation 등). 필요하면 바꾸세요.')}</p>
           <div className="mapping">
             {headers.map((h) => {
               const v = mapping[h] ?? h;
+              const others = (cols: string[]) => cols.filter((x) => x !== h).map((x) => <option key={x} value={x}>{x}</option>);
               return (
                 <div key={h} className="map-row">
                   <span className="src" title={h}>{h}</span>
                   <span>→</span>
                   <select value={v} onChange={(e) => setMapping({ ...mapping, [h]: e.target.value })}>
                     <option value={h}>{h} {t('(그대로)')}</option>
-                    {targets.filter((x) => x !== h).map((x) => <option key={x} value={x}>{x}</option>)}
+                    {designCols.some((x) => x !== h) && <optgroup label={t('디자인에서 쓰는 열')}>{others(designCols)}</optgroup>}
+                    {dataCols.some((x) => x !== h) && <optgroup label={t('기존 데이터 열')}>{others(dataCols)}</optgroup>}
                     <option value={COPIES}>{t('[매수 열로 사용]')}</option>
                     <option value={SKIP}>{t('[가져오지 않음]')}</option>
                   </select>
-                  {targets.includes(v) && <span className="ok small">✓ {t('디자인 연결')}</span>}
+                  {/* replacing drops the existing table, so nothing is merged into its columns then */}
+                  {v === SKIP || v === COPIES ? null
+                    : designCols.includes(v) ? <span className="ok small">✓ {t('디자인에서 사용')}</span>
+                    : mode === 'append' && dataCols.includes(v) ? <span className="small">{t('기존 열에 합침')}</span>
+                    : <span className="muted small">{t('새 열')}</span>}
                 </div>
               );
             })}

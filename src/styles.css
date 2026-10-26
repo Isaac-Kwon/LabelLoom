@@ -238,7 +238,10 @@ body.canvas-dragging { user-select: none; -webkit-user-select: none; }
 .grid-row.dup { box-shadow: inset 3px 0 0 #f59e0b; background: color-mix(in srgb, #f59e0b 12%, transparent); }
 .grid-row.off .cell { opacity: 0.45; }
 .grid-row > span { padding: 0 6px; display: flex; align-items: center; }
-.idx { color: var(--muted); font-size: 11px; justify-content: center; cursor: pointer; height: 100%; }
+.idx { color: var(--muted); font-size: 11px; justify-content: center; cursor: pointer; height: 100%; user-select: none; }
+.idx-head { display: flex; flex-direction: column; align-items: center; line-height: 1.15; padding: 0 2px !important; }
+.idx-head small { font-size: 9.5px; font-weight: 500; white-space: nowrap; }
+.idx-head:hover { color: var(--accent); }
 .cell { border: none !important; border-left: 1px solid var(--border) !important; border-radius: 0 !important; background: transparent !important; height: 100%; padding: 0 6px !important; width: 100%; }
 .cell:focus { outline: 2px solid var(--accent) !important; outline-offset: -2px; background: var(--input) !important; }
 input.copies { width: 42px; padding: 1px 3px; }

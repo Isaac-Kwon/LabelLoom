@@ -93,17 +93,45 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
     const id = setTimeout(() => setArmed(false), 3000);
     return () => clearTimeout(id);
   }, [armed]);
+  const removeRows = (ids: Set<string>) => {
+    // the row that slides into the first deleted spot becomes current; past the end, the new last row
+    const first = rows.findIndex((r) => ids.has(r.id));
+    const left = rows.filter((r) => !ids.has(r.id)).length;
+    setTable((rs) => ({ rows: rs.filter((r) => !ids.has(r.id)) }));
+    setCurrentRow(Math.max(0, Math.min(first, left - 1)));
+    setSel(new Set());
+    setArmed(false);
+  };
   const deleteRows = () => {
     const ids = sel.size ? sel : new Set(curRow ? [curRow.id] : []);
     if (!ids.size) return;
     if (!armed) { setArmed(true); return; }
-    // the row that slides into the first deleted spot becomes current; past the end, the new last row
-    const first = rows.findIndex((r) => ids.has(r.id));
-    setTable((rs) => ({ rows: rs.filter((r) => !ids.has(r.id)) }));
-    setCurrentRow(Math.max(0, Math.min(first, rows.length - ids.size - 1)));
-    setSel(new Set());
-    setArmed(false);
+    removeRows(ids);
   };
+  // every row, or only the rows the filter shows; the columns stay
+  const deleteAll = () => {
+    if (!view.length) return;
+    let msg = filtered
+      ? t('필터 결과 {n}행을 삭제할까요? 열은 그대로 남고, 실행 취소(Ctrl+Z)로 되돌릴 수 있습니다.', { n: view.length })
+      : t('모든 행({n}행)을 삭제할까요? 열은 그대로 남고, 실행 취소(Ctrl+Z)로 되돌릴 수 있습니다.', { n: view.length });
+    if (source) msg += '\n' + t('URL 연결은 남아 있으므로 다음 새로고침 때 서버의 행이 다시 들어옵니다.');
+    if (confirm(msg)) removeRows(new Set(view.map((x) => x.r.id)));
+  };
+  const pickRow = (e: React.MouseEvent, id: string) => {
+    const add = e.ctrlKey || e.metaKey;
+    const at = view.findIndex((x) => x.r.id === id);
+    // a Shift+click range starts at the current row (a plain click on a row moves it there)
+    const from = view.findIndex((x) => x.r.id === rows[currentRow]?.id);
+    if (e.shiftKey && from >= 0) {
+      const [a, b] = from < at ? [from, at] : [at, from];
+      setSel(new Set([...(add ? sel : []), ...view.slice(a, b + 1).map((x) => x.r.id)]));
+      return;
+    }
+    const n = new Set(add ? sel : []);
+    if (sel.has(id) && (add || sel.size === 1)) n.delete(id); else n.add(id);
+    setSel(n);
+  };
+  const allPicked = view.length > 0 && view.every((x) => sel.has(x.r.id));
   const checkAll = (v: boolean) => {
     const ids = new Set(view.map((x) => x.r.id));
     setTable((rs) => ({ rows: rs.map((r) => (ids.has(r.id) ? { ...r, print: v } : r)) }));
@@ -129,7 +157,7 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
   };
 
   const colW = 'minmax(110px, 1fr)';
-  const template = `44px 34px 52px ${multiDesign ? '96px ' : ''}64px ${columns.map(() => colW).join(' ')} 34px`;
+  const template = `56px 34px 52px ${multiDesign ? '96px ' : ''}64px ${columns.map(() => colW).join(' ')} 34px`;
 
   return (
     <section className="data-panel" data-tour="data" style={{ height }}>
@@ -165,9 +193,10 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
         <button onClick={addRow}>＋ {t('행')}</button>
         <button onClick={addColumn}>＋ {t('열')}</button>
         <button className={armed ? 'danger' : ''} onClick={deleteRows} onBlur={() => setArmed(false)} disabled={!sel.size && !curRow}
-          title={sel.size ? undefined : t('행 번호를 클릭해 여러 행을 고를 수 있습니다')}>
+          title={sel.size ? undefined : t('행 번호 클릭: 행 선택 · Shift+클릭: 범위 선택 · Ctrl+클릭: 추가/빼기 · # 클릭: 모두 선택')}>
           {armed ? t('한 번 더 눌러 삭제') : t('행 삭제')}{sel.size ? ` (${sel.size})` : armed ? ` (${t('{n}행', { n: currentRow + 1 })})` : ''}
         </button>
+        {sel.size > 0 && <button onClick={() => setSel(new Set())}>{t('선택 해제')}</button>}
         <span className="spacer" />
         <input className="search" type="search" placeholder={t('검색…')} value={filter.text} onChange={(e) => setFilter({ text: e.target.value })} />
         <select value={filter.column} onChange={(e) => setFilter({ column: e.target.value, value: '' })} title={t('열 값으로 거르기')}>
@@ -199,6 +228,7 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
             <button onClick={() => open('reprint')}>{t('현장 재발행 / 현장 등록')}</button>
             <button onClick={() => open('replace')}>{t('찾아 바꾸기…')}</button>
             <button onClick={() => open('remap')}>{t('열 다시 연결…')}</button>
+            <button onClick={deleteAll} disabled={!view.length}>{filtered ? t('필터 결과 {n}행 삭제…', { n: view.length }) : t('모든 행 삭제…')}</button>
           </div>
         </div>
       </div>
@@ -211,7 +241,8 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
         ) : (
           <div className="grid-inner" style={{ minWidth: 300 + columns.length * 110 }}>
             <div className="grid-head" style={{ gridTemplateColumns: template }}>
-              <span>#</span>
+              <span className="idx idx-head" title={`${allPicked ? t('선택 해제') : filtered ? t('필터 결과 모두 선택') : t('모든 행 선택')}\n${t('행 번호 클릭: 행 선택 · Shift+클릭: 범위 선택 · Ctrl+클릭: 추가/빼기 · # 클릭: 모두 선택')}`}
+                onClick={() => setSel(allPicked ? new Set() : new Set(view.map((x) => x.r.id)))}>#<small>{t('행 선택')}</small></span>
               <span title={t('인쇄 여부')}><input type="checkbox" checked={view.length > 0 && view.every((x) => x.r.print)} onChange={(e) => checkAll(e.target.checked)} /></span>
               <span>{t('매수')}</span>
               {multiDesign && <span>{t('디자인')}</span>}
@@ -233,11 +264,8 @@ export function DataPanel({ height, onResize }: { height: number; onResize: (h: 
                 <div key={r.id} className={`grid-row ${i === currentRow ? 'cur' : ''} ${sel.has(r.id) ? 'sel' : ''} ${dups.has(r.id) ? 'dup' : ''} ${r.print ? '' : 'off'}`}
                   style={{ gridTemplateColumns: template, top: (start + k) * ROW_H, height: ROW_H }}
                   onMouseDown={() => setCurrentRow(i)}>
-                  <span className="idx" onClick={(e) => {
-                    const n = new Set(e.shiftKey || e.ctrlKey || e.metaKey ? sel : []);
-                    if (n.has(r.id)) n.delete(r.id); else n.add(r.id);
-                    setSel(n);
-                  }} title={t('클릭: 행 선택')}>{i + 1}</span>
+                  <span className="idx" onClick={(e) => pickRow(e, r.id)} onMouseDown={(e) => { if (e.shiftKey) e.stopPropagation(); /* keep the range start */ }}
+                    title={t('행 번호 클릭: 행 선택 · Shift+클릭: 범위 선택 · Ctrl+클릭: 추가/빼기 · # 클릭: 모두 선택')}>{i + 1}</span>
                   <span><input type="checkbox" checked={r.print} onChange={(e) => setRow(r.id, { print: e.target.checked })} /></span>
                   <span><input className="copies" type="number" min={0} value={r.copies} onChange={(e) => setRow(r.id, { copies: Math.max(0, parseInt(e.target.value, 10) || 0) })} /></span>
                   {multiDesign && <span className="muted small ellipsis">{pickDesign(project, r).name}</span>}
